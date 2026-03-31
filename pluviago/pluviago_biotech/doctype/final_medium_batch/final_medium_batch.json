@@ -1,0 +1,328 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "preparation_date",
+  "prepared_by",
+  "final_required_volume",
+  "green_medium_batch",
+  "green_medium_volume",
+  "red_medium_batch",
+  "red_medium_volume",
+  "column_break_1",
+  "mixing_date",
+  "mixing_done",
+  "aseptic_mixing_done",
+  "aseptic_mixing_date",
+  "sop_reference",
+  "section_break_qc",
+  "qc_status",
+  "qc_checkpoint_5_clarity",
+  "ph_value",
+  "turbidity",
+  "assay_result",
+  "qc_remarks",
+  "qc_checked_by",
+  "qc_date",
+  "section_break_links",
+  "warehouse",
+  "status",
+  "remarks",
+  "section_break_corrective",
+  "corrective_actions",
+  "quality_flag"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "FMB-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "preparation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Preparation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "prepared_by",
+   "fieldtype": "Link",
+   "label": "Prepared By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "final_required_volume",
+   "fieldtype": "Float",
+   "label": "Final Required Volume (L)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "green_medium_batch",
+   "fieldtype": "Link",
+   "label": "Green Medium Batch",
+   "options": "Green Medium Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "green_medium_volume",
+   "fieldtype": "Float",
+   "label": "Green Medium Volume (L) [75%]",
+   "read_only": 1
+  },
+  {
+   "fieldname": "red_medium_batch",
+   "fieldtype": "Link",
+   "label": "Red Medium Batch",
+   "options": "Red Medium Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "red_medium_volume",
+   "fieldtype": "Float",
+   "label": "Red Medium Volume (L) [25%]",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mixing_date",
+   "fieldtype": "Date",
+   "label": "Mixing Date"
+  },
+  {
+   "fieldname": "mixing_done",
+   "fieldtype": "Check",
+   "label": "Mixing Done"
+  },
+  {
+   "fieldname": "aseptic_mixing_done",
+   "fieldtype": "Check",
+   "label": "Aseptic Mixing Confirmed"
+  },
+  {
+   "fieldname": "aseptic_mixing_date",
+   "fieldtype": "Datetime",
+   "label": "Mixing Date & Time"
+  },
+  {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference Number"
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC Checkpoint"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "QC Status",
+   "options": "Pending\nPassed\nFailed"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_5_clarity",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 5: Clarity",
+   "options": "Pass\nFail\nPending"
+  },
+  {
+   "fieldname": "ph_value",
+   "fieldtype": "Float",
+   "label": "pH Value"
+  },
+  {
+   "fieldname": "turbidity",
+   "fieldtype": "Float",
+   "label": "Turbidity"
+  },
+  {
+   "fieldname": "assay_result",
+   "fieldtype": "Float",
+   "label": "Assay Result (%)"
+  },
+  {
+   "fieldname": "qc_remarks",
+   "fieldtype": "Text",
+   "label": "QC Remarks"
+  },
+  {
+   "fieldname": "qc_checked_by",
+   "fieldtype": "Link",
+   "label": "QC Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "qc_date",
+   "fieldtype": "Date",
+   "label": "QC Date"
+  },
+  {
+   "fieldname": "section_break_links",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nRejected\nUsed"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_corrective",
+   "fieldtype": "Section Break",
+   "label": "Corrective Actions & QC Recovery"
+  },
+  {
+   "fieldname": "corrective_actions",
+   "fieldtype": "Table",
+   "label": "Corrective Actions",
+   "options": "Medium Batch Corrective Action",
+   "description": "Log each corrective action attempt. Re-QC result tracks whether the action resolved the failure."
+  },
+  {
+   "fieldname": "quality_flag",
+   "fieldtype": "Select",
+   "label": "Quality Flag",
+   "options": "Normal\nConditional Release\nRejected",
+   "default": "Normal",
+   "in_list_view": 1,
+   "description": "Normal = clean pass. Conditional Release = passed after corrective action. Rejected = batch unrecoverable."
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Final Medium Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

@@ -1,0 +1,85 @@
+{
+ "doctype": "Workspace",
+ "module": "Pluviago Biotech",
+ "name": "Pluviago Biotech",
+ "label": "Pluviago Biotech",
+ "title": "Pluviago Biotech",
+ "icon": "octicon octicon-beaker",
+ "is_standard": 1,
+ "public": 1,
+ "roles": [],
+ "content": "[{\"type\": \"header\", \"data\": {\"text\": \"<span class='h2'>🧬 Pluviago Biotech ERP</span><p class='text-muted'>Complete Production Pipeline: Procurement → Media Preparation → Cultivation → Harvest → Extraction</p>\", \"col\": 12}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Production Pipeline Overview\", \"col\": 12}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>📦 Stage 0: Procurement & Raw Materials</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Raw Material Batch\", \"format\": \"List\", \"link_to\": \"Raw Material Batch\", \"type\": \"DocType\", \"color\": \"#4285F4\", \"icon\": \"package\", \"description\": \"Track incoming chemicals and raw materials\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Stock Consumption Log\", \"format\": \"List\", \"link_to\": \"Stock Consumption Log\", \"type\": \"DocType\", \"color\": \"#757575\", \"icon\": \"list\", \"description\": \"Audit trail for chemical consumption\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Raw Material\", \"format\": \"Create\", \"link_to\": \"Raw Material Batch\", \"type\": \"DocType\", \"color\": \"#4285F4\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>🧪 Stage 0A: Stock Solution Preparation</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Stock Solution Batch\", \"format\": \"List\", \"link_to\": \"Stock Solution Batch\", \"type\": \"DocType\", \"color\": \"#34A853\", \"icon\": \"beaker\", \"description\": \"Prepare concentrated stock solutions (A1-A7)\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Stock Solution\", \"format\": \"Create\", \"link_to\": \"Stock Solution Batch\", \"type\": \"DocType\", \"color\": \"#34A853\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>🧪 Stage 0B: Medium Preparation (Green & Red)</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Green Medium Batch\", \"format\": \"List\", \"link_to\": \"Green Medium Batch\", \"type\": \"DocType\", \"color\": \"#0F9D58\", \"icon\": \"beaker\", \"description\": \"Green medium with A1, A2, A3\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Red Medium Batch\", \"format\": \"List\", \"link_to\": \"Red Medium Batch\", \"type\": \"DocType\", \"color\": \"#EA4335\", \"icon\": \"beaker\", \"description\": \"Red medium with A4-A7, A5M\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Green Medium\", \"format\": \"Create\", \"link_to\": \"Green Medium Batch\", \"type\": \"DocType\", \"color\": \"#0F9D58\", \"icon\": \"plus\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Red Medium\", \"format\": \"Create\", \"link_to\": \"Red Medium Batch\", \"type\": \"DocType\", \"color\": \"#EA4335\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>🧪 Stage 0C: Final Medium Preparation</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Final Medium Batch\", \"format\": \"List\", \"link_to\": \"Final Medium Batch\", \"type\": \"DocType\", \"color\": \"#FBBC04\", \"icon\": \"beaker\", \"description\": \"Combine Green + Red media\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Final Medium\", \"format\": \"Create\", \"link_to\": \"Final Medium Batch\", \"type\": \"DocType\", \"color\": \"#FBBC04\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>🌿 Stage 1-6: Cultivation Pipeline</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Pluviago Strain\", \"format\": \"List\", \"link_to\": \"Pluviago Strain\", \"type\": \"DocType\", \"color\": \"#0F9D58\", \"icon\": \"dna\", \"description\": \"Master data for cell culture strains\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Production Batch\", \"format\": \"List\", \"link_to\": \"Production Batch\", \"type\": \"DocType\", \"color\": \"#0F9D58\", \"icon\": \"microscope\", \"description\": \"Flask → 25L → 275L → 925L → 6600L → Harvest\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Contamination Incident\", \"format\": \"List\", \"link_to\": \"Contamination Incident\", \"type\": \"DocType\", \"color\": \"#EA4335\", \"icon\": \"alert-triangle\", \"description\": \"Track contamination events\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Cultivation Return Event\", \"format\": \"List\", \"link_to\": \"Cultivation Return Event\", \"type\": \"DocType\", \"color\": \"#FF6D00\", \"icon\": \"arrow-left\", \"description\": \"Back-propagation to Flask\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Production Batch\", \"format\": \"Create\", \"link_to\": \"Production Batch\", \"type\": \"DocType\", \"color\": \"#0F9D58\", \"icon\": \"plus\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Strain\", \"format\": \"Create\", \"link_to\": \"Pluviago Strain\", \"type\": \"DocType\", \"color\": \"#0F9D58\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>🏭 Stage 7-8: Downstream Processing</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Harvest Batch\", \"format\": \"List\", \"link_to\": \"Harvest Batch\", \"type\": \"DocType\", \"color\": \"#9C27B0\", \"icon\": \"package\", \"description\": \"Record harvest from production\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Extraction Batch\", \"format\": \"List\", \"link_to\": \"Extraction Batch\", \"type\": \"DocType\", \"color\": \"#673AB7\", \"icon\": \"droplet\", \"description\": \"Extract compounds from biomass\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Harvest\", \"format\": \"Create\", \"link_to\": \"Harvest Batch\", \"type\": \"DocType\", \"color\": \"#9C27B0\", \"icon\": \"plus\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New Extraction\", \"format\": \"Create\", \"link_to\": \"Extraction Batch\", \"type\": \"DocType\", \"color\": \"#673AB7\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>✅ Quality Control & Compliance</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"OOS Investigation\", \"format\": \"List\", \"link_to\": \"OOS Investigation\", \"type\": \"DocType\", \"color\": \"#F4511E\", \"icon\": \"search\", \"description\": \"Out-of-Specification investigations\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"QC Parameter Spec\", \"format\": \"List\", \"link_to\": \"QC Parameter Spec\", \"type\": \"DocType\", \"color\": \"#039BE5\", \"icon\": \"file-text\", \"description\": \"Define QC specifications\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New OOS Investigation\", \"format\": \"Create\", \"link_to\": \"OOS Investigation\", \"type\": \"DocType\", \"color\": \"#F4511E\", \"icon\": \"plus\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"New QC Spec\", \"format\": \"Create\", \"link_to\": \"QC Parameter Spec\", \"type\": \"DocType\", \"color\": \"#039BE5\", \"icon\": \"plus\"}}, {\"type\": \"spacer\", \"data\": {\"col\": 12}}, {\"type\": \"header\", \"data\": {\"text\": \"<span class='h4'>📊 Analytics & Reports</span>\", \"col\": 12}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Production Summary\", \"format\": \"Report\", \"link_to\": \"Production Summary\", \"type\": \"Report\", \"color\": \"#4285F4\", \"icon\": \"bar-chart\", \"description\": \"All production batches with metrics\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"QC Compliance Report\", \"format\": \"Report\", \"link_to\": \"QC Compliance Report\", \"type\": \"Report\", \"color\": \"#34A853\", \"icon\": \"check-circle\", \"description\": \"QC entries across all batches\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Batch Genealogy\", \"format\": \"Report\", \"link_to\": \"Batch Genealogy\", \"type\": \"Report\", \"color\": \"#FF6D00\", \"icon\": \"git-commit\", \"description\": \"Trace lineage Flask to Harvest\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Raw Material Traceability\", \"format\": \"Report\", \"link_to\": \"Raw Material Traceability\", \"type\": \"Report\", \"color\": \"#9C27B0\", \"icon\": \"link\", \"description\": \"Complete audit trail\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"COA Validation History\", \"format\": \"Report\", \"link_to\": \"COA Validation History\", \"type\": \"Report\", \"color\": \"#0F9D58\", \"icon\": \"file-minus\", \"description\": \"Certificate of Analysis tracking\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"Batch Yield Analytics\", \"format\": \"Report\", \"link_to\": \"Batch Yield Analytics\", \"type\": \"Report\", \"color\": \"#4285F4\", \"icon\": \"trending-up\", \"description\": \"Yield trends and performance\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"SSB Consumption Report\", \"format\": \"Report\", \"link_to\": \"SSB Consumption Report\", \"type\": \"Report\", \"color\": \"#34A853\", \"icon\": \"activity\", \"description\": \"Stock solution usage tracking\"}}, {\"type\": \"shortcut\", \"data\": {\"label\": \"OOS Trend Report\", \"format\": \"Report\", \"link_to\": \"OOS Trend Report\", \"type\": \"Report\", \"color\": \"#EA4335\", \"icon\": \"alert-triangle\", \"description\": \"Out-of-Spec trend analysis\"}}]",
+ "shortcuts": [
+  {
+   "label": "Raw Material Batch",
+   "format": "List",
+   "link_to": "Raw Material Batch",
+   "type": "DocType",
+   "color": "#4285F4",
+   "icon": "package"
+  },
+  {
+   "label": "Stock Solution Batch",
+   "format": "List",
+   "link_to": "Stock Solution Batch",
+   "type": "DocType",
+   "color": "#34A853",
+   "icon": "beaker"
+  },
+  {
+   "label": "Green Medium Batch",
+   "format": "List",
+   "link_to": "Green Medium Batch",
+   "type": "DocType",
+   "color": "#0F9D58",
+   "icon": "beaker"
+  },
+  {
+   "label": "Red Medium Batch",
+   "format": "List",
+   "link_to": "Red Medium Batch",
+   "type": "DocType",
+   "color": "#EA4335",
+   "icon": "beaker"
+  },
+  {
+   "label": "Final Medium Batch",
+   "format": "List",
+   "link_to": "Final Medium Batch",
+   "type": "DocType",
+   "color": "#FBBC04",
+   "icon": "beaker"
+  },
+  {
+   "label": "Production Batch",
+   "format": "List",
+   "link_to": "Production Batch",
+   "type": "DocType",
+   "color": "#0F9D58",
+   "icon": "microscope"
+  },
+  {
+   "label": "Harvest Batch",
+   "format": "List",
+   "link_to": "Harvest Batch",
+   "type": "DocType",
+   "color": "#9C27B0",
+   "icon": "package"
+  },
+  {
+   "label": "Extraction Batch",
+   "format": "List",
+   "link_to": "Extraction Batch",
+   "type": "DocType",
+   "color": "#673AB7",
+   "icon": "droplet"
+  }
+ ],
+ "charts": [],
+ "cards": [
+  {
+   "card_name": "Production Pipeline Overview",
+   "label": "Production Pipeline Overview"
+  }
+ ]
+}

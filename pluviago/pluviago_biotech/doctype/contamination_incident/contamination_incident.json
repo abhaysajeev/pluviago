@@ -1,0 +1,245 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "incident_date",
+  "production_batch",
+  "reactor_stage",
+  "reported_by",
+  "section_break_details",
+  "contamination_type",
+  "visual_observation",
+  "microscopy_observation",
+  "section_break_decision",
+  "decision",
+  "decision_date",
+  "decision_by",
+  "decision_rationale",
+  "section_break_actions",
+  "action_taken",
+  "batch_disposed",
+  "disposal_date",
+  "disposal_by",
+  "status",
+  "corrective_action",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "CI-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "incident_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Incident Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "production_batch",
+   "fieldtype": "Link",
+   "label": "Production Batch",
+   "options": "Production Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reactor_stage",
+   "fieldtype": "Select",
+   "label": "Stage Where Detected",
+   "options": "Flask\n25L PBR\n275L PBR\n925L PBR\n6600L PBR"
+  },
+  {
+   "fieldname": "reported_by",
+   "fieldtype": "Link",
+   "label": "Reported By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_details",
+   "fieldtype": "Section Break",
+   "label": "Contamination Details"
+  },
+  {
+   "fieldname": "contamination_type",
+   "fieldtype": "Select",
+   "label": "Contamination Type",
+   "options": "Bacterial\nFungal\nMixed\nUnknown",
+   "reqd": 1
+  },
+  {
+   "fieldname": "visual_observation",
+   "fieldtype": "Text",
+   "label": "Visual Observation / Symptoms"
+  },
+  {
+   "fieldname": "microscopy_observation",
+   "fieldtype": "Text",
+   "label": "Microscopy Observation"
+  },
+  {
+   "fieldname": "section_break_decision",
+   "fieldtype": "Section Break",
+   "label": "Decision"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "decision",
+   "fieldtype": "Select",
+   "label": "Decision",
+   "options": "Harvest Immediately\nDispose\nContinue with Monitoring\nPending"
+  },
+  {
+   "fieldname": "decision_date",
+   "fieldtype": "Date",
+   "label": "Decision Date"
+  },
+  {
+   "fieldname": "decision_by",
+   "fieldtype": "Link",
+   "label": "Decision By",
+   "options": "User"
+  },
+  {
+   "fieldname": "decision_rationale",
+   "fieldtype": "Text",
+   "label": "Decision Rationale"
+  },
+  {
+   "fieldname": "section_break_actions",
+   "fieldtype": "Section Break",
+   "label": "Actions Taken"
+  },
+  {
+   "fieldname": "action_taken",
+   "fieldtype": "Text",
+   "label": "Action Taken"
+  },
+  {
+   "fieldname": "batch_disposed",
+   "fieldtype": "Check",
+   "label": "Batch Disposed"
+  },
+  {
+   "fieldname": "disposal_date",
+   "fieldtype": "Date",
+   "label": "Disposal Date"
+  },
+  {
+   "fieldname": "disposal_by",
+   "fieldtype": "Link",
+   "label": "Disposal By",
+   "options": "User"
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Open\nUnder Investigation\nResolved\nClosed"
+  },
+  {
+   "fieldname": "corrective_action",
+   "fieldtype": "Text",
+   "label": "Corrective Action & Prevention"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Contamination Incident",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "incident_date",
+ "track_changes": 1
+}

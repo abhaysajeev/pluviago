@@ -1,0 +1,15 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "module": "Pluviago Biotech",
+ "name": "COA Validation History",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Raw Material Batch",
+ "report_name": "COA Validation History",
+ "report_type": "Script Report",
+ "roles": [{"role": "QA Head"}, {"role": "QC Manager"}, {"role": "Pluviago Admin"}, {"role": "System Manager"}]
+}

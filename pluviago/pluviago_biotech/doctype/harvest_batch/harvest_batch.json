@@ -1,0 +1,335 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "production_batch",
+  "harvest_date",
+  "harvested_by",
+  "harvested_volume",
+  "sop_reference",
+  "section_break_drying",
+  "drying_method",
+  "drying_start",
+  "drying_end",
+  "target_dry_weight",
+  "actual_dry_weight",
+  "yield_percentage",
+  "section_break_qc",
+  "qc_status",
+  "assay_type",
+  "assay_results",
+  "extract_purity",
+  "qc_checked_by",
+  "qc_date",
+  "section_break_packing",
+  "packing_date",
+  "packed_by",
+  "batch_size_packed",
+  "no_of_units",
+  "label_batch_no",
+  "section_break_links",
+  "warehouse",
+  "item_code",
+  "erpnext_batch",
+  "status",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "HB-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "production_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Production Batch",
+   "options": "Production Batch",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "harvest_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Harvest Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "harvested_by",
+   "fieldtype": "Link",
+   "label": "Harvested By",
+   "options": "User"
+  },
+  {
+   "fieldname": "harvested_volume",
+   "fieldtype": "Float",
+   "label": "Harvested Volume (L)"
+  },
+  {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference"
+  },
+  {
+   "fieldname": "section_break_drying",
+   "fieldtype": "Section Break",
+   "label": "Drying"
+  },
+  {
+   "fieldname": "drying_method",
+   "fieldtype": "Select",
+   "label": "Drying Method",
+   "options": "Spray Drying\nFreeze Drying\nOven Drying\nNone"
+  },
+  {
+   "fieldname": "drying_start",
+   "fieldtype": "Datetime",
+   "label": "Drying Start"
+  },
+  {
+   "fieldname": "drying_end",
+   "fieldtype": "Datetime",
+   "label": "Drying End"
+  },
+  {
+   "fieldname": "target_dry_weight",
+   "fieldtype": "Float",
+   "label": "Target Dry Weight (kg)"
+  },
+  {
+   "fieldname": "actual_dry_weight",
+   "fieldtype": "Float",
+   "label": "Actual Dry Weight (kg)"
+  },
+  {
+   "fieldname": "yield_percentage",
+   "fieldtype": "Float",
+   "label": "Yield %",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC & Assay"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "QC Status",
+   "options": "Pending\nPassed\nFailed"
+  },
+  {
+   "fieldname": "assay_type",
+   "fieldtype": "Select",
+   "label": "Assay Method",
+   "options": "HPLC\nSpectrophotometry\nGravimetric\nOther"
+  },
+  {
+   "fieldname": "assay_results",
+   "fieldtype": "Text",
+   "label": "Assay Results"
+  },
+  {
+   "fieldname": "extract_purity",
+   "fieldtype": "Float",
+   "label": "Extract Purity (%)"
+  },
+  {
+   "fieldname": "qc_checked_by",
+   "fieldtype": "Link",
+   "label": "QC Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "qc_date",
+   "fieldtype": "Date",
+   "label": "QC Date"
+  },
+  {
+   "fieldname": "section_break_packing",
+   "fieldtype": "Section Break",
+   "label": "Packing"
+  },
+  {
+   "fieldname": "packing_date",
+   "fieldtype": "Date",
+   "label": "Packing Date"
+  },
+  {
+   "fieldname": "packed_by",
+   "fieldtype": "Link",
+   "label": "Packed By",
+   "options": "User"
+  },
+  {
+   "fieldname": "batch_size_packed",
+   "fieldtype": "Float",
+   "label": "Packed Quantity (kg)"
+  },
+  {
+   "fieldname": "no_of_units",
+   "fieldtype": "Int",
+   "label": "Number of Units"
+  },
+  {
+   "fieldname": "label_batch_no",
+   "fieldtype": "Data",
+   "label": "Label Batch Number"
+  },
+  {
+   "fieldname": "section_break_links",
+   "fieldtype": "Section Break",
+   "label": "Traceability"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "erpnext_batch",
+   "fieldtype": "Link",
+   "label": "ERPNext Batch",
+   "options": "Batch"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nDispatched\nRejected"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Harvest Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "attempt_number",
+  "action_date",
+  "action_by",
+  "corrective_action_taken",
+  "re_qc_required",
+  "re_qc_result",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "attempt_number",
+   "fieldtype": "Int",
+   "label": "Attempt #",
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "action_date",
+   "fieldtype": "Date",
+   "label": "Action Date",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "action_by",
+   "fieldtype": "Link",
+   "label": "Action By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "corrective_action_taken",
+   "fieldtype": "Text",
+   "label": "Corrective Action Taken",
+   "reqd": 1
+  },
+  {
+   "fieldname": "re_qc_required",
+   "fieldtype": "Check",
+   "label": "Re-QC Required",
+   "description": "Check if a new QC reading must be taken after this action"
+  },
+  {
+   "fieldname": "re_qc_result",
+   "fieldtype": "Select",
+   "label": "Re-QC Result",
+   "options": "\nPass\nFail",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  }
+ ],
+ "istable": 1,
+ "module": "Pluviago Biotech",
+ "name": "Medium Batch Corrective Action",
+ "parent_node_doctype": "",
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -1,0 +1,73 @@
+{
+ "name": "Production Pipeline Overview",
+ "label": "Production Pipeline Overview",
+ "doctype": "Workspace Card",
+ "is_standard": 1,
+ "public": 1,
+ "links": [
+  {
+   "label": "Raw Materials",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Raw Material Batch",
+   "icon": "package",
+   "description": "Active raw material batches"
+  },
+  {
+   "label": "Stock Solutions",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Stock Solution Batch",
+   "icon": "beaker",
+   "description": "Released stock solutions (A1-A7)"
+  },
+  {
+   "label": "Green Medium",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Green Medium Batch",
+   "icon": "beaker",
+   "description": "Released green medium batches"
+  },
+  {
+   "label": "Red Medium",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Red Medium Batch",
+   "icon": "beaker",
+   "description": "Released red medium batches"
+  },
+  {
+   "label": "Final Medium",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Final Medium Batch",
+   "icon": "beaker",
+   "description": "Released final medium batches"
+  },
+  {
+   "label": "Active Cultivations",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Production Batch",
+   "icon": "microscope",
+   "description": "Production batches in cultivation"
+  },
+  {
+   "label": "Harvests",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Harvest Batch",
+   "icon": "package",
+   "description": "Completed harvests"
+  },
+  {
+   "label": "Extractions",
+   "type": "Link",
+   "link_type": "DocType",
+   "link_to": "Extraction Batch",
+   "icon": "droplet",
+   "description": "Extraction batches"
+  }
+ ]
+}

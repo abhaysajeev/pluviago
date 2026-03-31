@@ -1,0 +1,15 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "module": "Pluviago Biotech",
+ "name": "QC Compliance Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Production Batch",
+ "report_name": "QC Compliance Report",
+ "report_type": "Script Report",
+ "roles": [{"role": "QA Head"}, {"role": "QC Manager"}, {"role": "Production Manager"}, {"role": "Pluviago Admin"}]
+}

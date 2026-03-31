@@ -1,0 +1,170 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "source_batch",
+  "child_batch",
+  "section_break_withdrawal",
+  "withdrawal_volume",
+  "dilution_medium_batch",
+  "dilution_volume",
+  "section_break_meta",
+  "return_date",
+  "returned_by",
+  "reason",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "CRE-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "source_batch",
+   "fieldtype": "Link",
+   "label": "Source Batch (275L / 6600L)",
+   "options": "Production Batch",
+   "reqd": 1,
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "child_batch",
+   "fieldtype": "Link",
+   "label": "Child Flask Batch Created",
+   "options": "Production Batch",
+   "reqd": 1,
+   "in_list_view": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_withdrawal",
+   "fieldtype": "Section Break",
+   "label": "Withdrawal & Dilution Details"
+  },
+  {
+   "fieldname": "withdrawal_volume",
+   "fieldtype": "Float",
+   "label": "Withdrawal Volume (L)",
+   "description": "Volume of culture withdrawn from source reactor",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "dilution_medium_batch",
+   "fieldtype": "Link",
+   "label": "Dilution Medium Batch",
+   "options": "Final Medium Batch",
+   "read_only": 1
+  },
+  {
+   "fieldname": "dilution_volume",
+   "fieldtype": "Float",
+   "label": "Dilution Volume (L)",
+   "description": "Volume of fresh medium added for dilution",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_meta",
+   "fieldtype": "Section Break",
+   "label": "Event Details"
+  },
+  {
+   "fieldname": "return_date",
+   "fieldtype": "Date",
+   "label": "Return Date",
+   "reqd": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "returned_by",
+   "fieldtype": "Link",
+   "label": "Returned By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Text",
+   "label": "Reason / Notes",
+   "read_only": 1
+  },
+  {
+   "default": "Completed",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Completed\nCancelled",
+   "read_only": 1
+  }
+ ],
+ "is_submittable": 0,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Cultivation Return Event",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 0,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "write": 0
+  },
+  {
+   "read": 1,
+   "role": "QC Manager"
+  },
+  {
+   "read": 1,
+   "role": "QA Head"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "source_batch",
+ "track_changes": 1
+}

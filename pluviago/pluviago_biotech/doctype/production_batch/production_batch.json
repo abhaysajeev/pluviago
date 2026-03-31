@@ -1,0 +1,316 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "strain",
+  "generation_number",
+  "parent_batch",
+  "phase",
+  "sop_reference",
+  "section_break_stage",
+  "current_stage",
+  "reactor_volume",
+  "inoculation_date",
+  "section_break_medium",
+  "final_medium_batch",
+  "medium_volume_used",
+  "section_break_qc",
+  "qc_readings",
+  "section_break_decision",
+  "stage_decision",
+  "decision_date",
+  "decision_by",
+  "decision_remarks",
+  "section_break_harvest",
+  "harvest_batch",
+  "contamination_status",
+  "contamination_incident",
+  "status",
+  "lineage_status",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "PB-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "strain",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Strain",
+   "options": "Pluviago Strain",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "generation_number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Generation Number",
+   "reqd": 1
+  },
+  {
+   "fieldname": "parent_batch",
+   "fieldtype": "Link",
+   "label": "Parent Batch",
+   "options": "Production Batch"
+  },
+  {
+   "default": "N/A",
+   "fieldname": "phase",
+   "fieldtype": "Select",
+   "label": "Culture Phase (6600L only)",
+   "options": "Green Phase\nRed Phase\nN/A"
+  },
+  {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference"
+  },
+  {
+   "fieldname": "section_break_stage",
+   "fieldtype": "Section Break",
+   "label": "Current Stage"
+  },
+  {
+   "default": "Flask",
+   "fieldname": "current_stage",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Current Stage",
+   "options": "Flask\n25L PBR\n275L PBR\n925L PBR\n6600L PBR\nHarvested\nDisposed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reactor_volume",
+   "fieldtype": "Float",
+   "label": "Reactor Volume (L)"
+  },
+  {
+   "fieldname": "inoculation_date",
+   "fieldtype": "Date",
+   "label": "Inoculation Date"
+  },
+  {
+   "fieldname": "section_break_medium",
+   "fieldtype": "Section Break",
+   "label": "Medium Used"
+  },
+  {
+   "fieldname": "final_medium_batch",
+   "fieldtype": "Link",
+   "label": "Final Medium Batch",
+   "options": "Final Medium Batch"
+  },
+  {
+   "fieldname": "medium_volume_used",
+   "fieldtype": "Float",
+   "label": "Medium Volume Used (L)"
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC Readings"
+  },
+  {
+   "fieldname": "qc_readings",
+   "fieldtype": "Table",
+   "label": "QC Readings",
+   "options": "Production Batch QC"
+  },
+  {
+   "fieldname": "section_break_decision",
+   "fieldtype": "Section Break",
+   "label": "Stage Decision"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "stage_decision",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Stage Decision",
+   "options": "Pending\nScale Up\nHarvest\nDispose"
+  },
+  {
+   "fieldname": "decision_date",
+   "fieldtype": "Date",
+   "label": "Decision Date"
+  },
+  {
+   "fieldname": "decision_by",
+   "fieldtype": "Link",
+   "label": "Decision By",
+   "options": "User"
+  },
+  {
+   "fieldname": "decision_remarks",
+   "fieldtype": "Text",
+   "label": "Decision Remarks"
+  },
+  {
+   "fieldname": "section_break_harvest",
+   "fieldtype": "Section Break",
+   "label": "Harvest Info"
+  },
+  {
+   "fieldname": "harvest_batch",
+   "fieldtype": "Link",
+   "label": "Harvest Batch",
+   "options": "Harvest Batch",
+   "read_only": 1
+  },
+  {
+   "default": "Clean",
+   "fieldname": "contamination_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Contamination Status",
+   "options": "Clean\nContaminated\nSuspect\nUnder Investigation"
+  },
+  {
+   "fieldname": "contamination_incident",
+   "fieldtype": "Link",
+   "label": "Contamination Incident",
+   "options": "Contamination Incident"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nHarvested\nDisposed\nScaled Up\nContaminated"
+  },
+  {
+   "fieldname": "lineage_status",
+   "fieldtype": "Select",
+   "label": "Lineage Status",
+   "options": "Active\nReturned\nArchived",
+   "default": "Active",
+   "in_list_view": 0,
+   "description": "Biological lineage state. Active = normal run; Returned = culture withdrawn and sent back to Flask; Archived = batch permanently closed."
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Production Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

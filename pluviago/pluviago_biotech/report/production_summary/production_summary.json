@@ -1,0 +1,20 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "doctype": "Report",
+ "filters": [],
+ "is_standard": "Yes",
+ "modified": "2024-01-01 00:00:00",
+ "module": "Pluviago Biotech",
+ "name": "Production Summary",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Harvest Batch",
+ "report_name": "Production Summary",
+ "report_type": "Script Report",
+ "roles": [
+  {"role": "Production Manager"},
+  {"role": "QA Head"},
+  {"role": "Pluviago Admin"}
+ ]
+}

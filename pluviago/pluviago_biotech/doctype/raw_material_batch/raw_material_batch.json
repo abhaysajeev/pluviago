@@ -1,0 +1,373 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "status",
+  "section_break_identity",
+  "material_name",
+  "col_break_identity",
+  "item_code",
+  "supplier",
+  "col_break_supplier",
+  "supplier_batch_no",
+  "coa_number",
+  "col_break_dates",
+  "mfg_date",
+  "expiry_date",
+  "section_break_stock",
+  "received_date",
+  "col_break_stock",
+  "received_qty",
+  "received_qty_uom",
+  "consumed_qty",
+  "col_break_storage",
+  "remaining_qty",
+  "storage_condition",
+  "warehouse",
+  "section_break_qc",
+  "qc_status",
+  "col_break_qc",
+  "qc_checked_by",
+  "qc_date",
+  "qc_remarks",
+  "section_break_coa",
+  "coa_attachment",
+  "col_break_coa",
+  "coa_verified",
+  "coa_verified_by",
+  "section_break_procurement",
+  "purchase_order",
+  "col_break_procurement",
+  "purchase_receipt",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "RMB-CHEM-.YYYY.-.####"
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "Received",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Received\nQC Pending\nApproved\nRejected\nIn Use\nExhausted"
+  },
+  {
+   "fieldname": "section_break_identity",
+   "fieldtype": "Section Break",
+   "label": "Chemical Identity"
+  },
+  {
+   "fieldname": "material_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Material Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_supplier",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier_batch_no",
+   "fieldtype": "Data",
+   "label": "Supplier / Vendor Batch No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "coa_number",
+   "fieldtype": "Data",
+   "label": "COA Number"
+  },
+  {
+   "fieldname": "col_break_dates",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mfg_date",
+   "fieldtype": "Date",
+   "label": "Manufacturing Date"
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_stock",
+   "fieldtype": "Section Break",
+   "label": "Stock Details"
+  },
+  {
+   "default": "Today",
+   "fieldname": "received_date",
+   "fieldtype": "Date",
+   "label": "Received Date"
+  },
+  {
+   "fieldname": "col_break_stock",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "received_qty",
+   "fieldtype": "Float",
+   "label": "Received Qty"
+  },
+  {
+   "fieldname": "received_qty_uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "default": "0",
+   "fieldname": "consumed_qty",
+   "fieldtype": "Float",
+   "label": "Consumed Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "col_break_storage",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "remaining_qty",
+   "fieldtype": "Float",
+   "label": "Remaining Qty",
+   "read_only": 1
+  },
+  {
+   "fieldname": "storage_condition",
+   "fieldtype": "Select",
+   "label": "Storage Condition",
+   "options": "Room Temperature\n2-8\u00b0C\n-20\u00b0C\n-80\u00b0C\nDry Place"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC Verification"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_status",
+   "fieldtype": "Select",
+   "label": "QC Status",
+   "options": "Pending\nApproved\nRejected"
+  },
+  {
+   "fieldname": "col_break_qc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qc_checked_by",
+   "fieldtype": "Link",
+   "label": "QC Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "qc_date",
+   "fieldtype": "Date",
+   "label": "QC Date"
+  },
+  {
+   "fieldname": "qc_remarks",
+   "fieldtype": "Text",
+   "label": "QC Remarks"
+  },
+  {
+   "fieldname": "section_break_coa",
+   "fieldtype": "Section Break",
+   "label": "COA & Documentation"
+  },
+  {
+   "fieldname": "coa_attachment",
+   "fieldtype": "Attach",
+   "label": "COA Document"
+  },
+  {
+   "fieldname": "col_break_coa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "coa_verified",
+   "fieldtype": "Check",
+   "label": "COA Verified"
+  },
+  {
+   "fieldname": "coa_verified_by",
+   "fieldtype": "Link",
+   "label": "COA Verified By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_procurement",
+   "fieldtype": "Section Break",
+   "label": "Procurement Reference"
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "label": "Purchase Order",
+   "options": "Purchase Order"
+  },
+  {
+   "fieldname": "col_break_procurement",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "purchase_receipt",
+   "fieldtype": "Link",
+   "label": "Purchase Receipt",
+   "options": "Purchase Receipt"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Raw Material Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "write": 1,
+   "create": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "material_name",
+ "track_changes": 1
+}

@@ -1,0 +1,310 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "harvest_batch",
+  "section_break_dispatch",
+  "dispatch_date",
+  "dispatched_by",
+  "extraction_partner",
+  "dispatch_qty",
+  "dispatch_doc_ref",
+  "section_break_incoming",
+  "incoming_qc_date",
+  "incoming_qc_by",
+  "incoming_qc_status",
+  "incoming_qc_remarks",
+  "assay_type",
+  "extract_purity",
+  "extract_concentration",
+  "coa_attachment",
+  "section_break_repacking",
+  "repacking_date",
+  "repacked_by",
+  "extract_qty",
+  "extract_batch_no",
+  "section_break_final_dispatch",
+  "final_dispatch_date",
+  "final_customer",
+  "final_dispatch_qty",
+  "coa_issued",
+  "status",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "EB-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "harvest_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Harvest Batch",
+   "options": "Harvest Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_dispatch",
+   "fieldtype": "Section Break",
+   "label": "Dispatch to Partner"
+  },
+  {
+   "fieldname": "dispatch_date",
+   "fieldtype": "Date",
+   "label": "Dispatch Date"
+  },
+  {
+   "fieldname": "dispatched_by",
+   "fieldtype": "Link",
+   "label": "Dispatched By",
+   "options": "User"
+  },
+  {
+   "fieldname": "extraction_partner",
+   "fieldtype": "Link",
+   "label": "Extraction Partner",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "dispatch_qty",
+   "fieldtype": "Float",
+   "label": "Dispatched Quantity (kg)"
+  },
+  {
+   "fieldname": "dispatch_doc_ref",
+   "fieldtype": "Data",
+   "label": "Dispatch Document Reference"
+  },
+  {
+   "fieldname": "section_break_incoming",
+   "fieldtype": "Section Break",
+   "label": "Incoming QC Check"
+  },
+  {
+   "fieldname": "incoming_qc_date",
+   "fieldtype": "Date",
+   "label": "Incoming QC Date"
+  },
+  {
+   "fieldname": "incoming_qc_by",
+   "fieldtype": "Link",
+   "label": "Incoming QC By",
+   "options": "User"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "incoming_qc_status",
+   "fieldtype": "Select",
+   "label": "Incoming QC Status",
+   "options": "Pending\nPassed\nFailed"
+  },
+  {
+   "fieldname": "incoming_qc_remarks",
+   "fieldtype": "Text",
+   "label": "Incoming QC Remarks"
+  },
+  {
+   "fieldname": "assay_type",
+   "fieldtype": "Select",
+   "label": "Assay Method",
+   "options": "HPLC\nSpectrophotometry\nGravimetric\nOther"
+  },
+  {
+   "fieldname": "extract_purity",
+   "fieldtype": "Float",
+   "label": "Extract Purity (%)"
+  },
+  {
+   "fieldname": "extract_concentration",
+   "fieldtype": "Float",
+   "label": "Extract Concentration (%)"
+  },
+  {
+   "fieldname": "coa_attachment",
+   "fieldtype": "Attach",
+   "label": "COA Document"
+  },
+  {
+   "fieldname": "section_break_repacking",
+   "fieldtype": "Section Break",
+   "label": "Repacking"
+  },
+  {
+   "fieldname": "repacking_date",
+   "fieldtype": "Date",
+   "label": "Repacking Date"
+  },
+  {
+   "fieldname": "repacked_by",
+   "fieldtype": "Link",
+   "label": "Repacked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "extract_qty",
+   "fieldtype": "Float",
+   "label": "Extract Quantity (kg)"
+  },
+  {
+   "fieldname": "extract_batch_no",
+   "fieldtype": "Data",
+   "label": "Extract Batch Number"
+  },
+  {
+   "fieldname": "section_break_final_dispatch",
+   "fieldtype": "Section Break",
+   "label": "Final Dispatch"
+  },
+  {
+   "fieldname": "final_dispatch_date",
+   "fieldtype": "Date",
+   "label": "Final Dispatch Date"
+  },
+  {
+   "fieldname": "final_customer",
+   "fieldtype": "Link",
+   "label": "Final Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "final_dispatch_qty",
+   "fieldtype": "Float",
+   "label": "Final Dispatch Quantity (kg)"
+  },
+  {
+   "fieldname": "coa_issued",
+   "fieldtype": "Check",
+   "label": "COA Issued"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nDispatched\nProcessing\nCompleted\nRejected"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Extraction Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

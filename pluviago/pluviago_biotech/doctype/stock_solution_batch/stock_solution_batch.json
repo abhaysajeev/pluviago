@@ -1,0 +1,368 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "solution_type",
+  "preparation_date",
+  "prepared_by",
+  "target_volume",
+  "target_volume_uom",
+  "shelf_life_days",
+  "expiry_date",
+  "sop_reference",
+  "section_break_ingredients",
+  "ingredients",
+  "section_break_sterilization",
+  "sterilization_method",
+  "sterilization_temp",
+  "sterilization_duration",
+  "sterilization_done",
+  "sterilization_date",
+  "section_break_qc",
+  "qc_status",
+  "ph_value",
+  "concentration",
+  "concentration_unit",
+  "qc_remarks",
+  "qc_checked_by",
+  "qc_date",
+  "section_break_links",
+  "chemical_vendor",
+  "vendor_batch_ref",
+  "warehouse",
+  "status",
+  "preparation_status",
+  "released_date",
+  "released_by",
+  "available_volume",
+  "volume_used",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "SSB-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "solution_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Solution Type",
+   "options": "A1\nA2\nA3\nA4\nA5\nA6\nA7",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "preparation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Preparation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "prepared_by",
+   "fieldtype": "Link",
+   "label": "Prepared By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "target_volume",
+   "fieldtype": "Float",
+   "label": "Target Volume",
+   "reqd": 1
+  },
+  {
+   "default": "L",
+   "fieldname": "target_volume_uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM"
+  },
+  {
+   "fieldname": "shelf_life_days",
+   "fieldtype": "Int",
+   "label": "Shelf Life (days)"
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date"
+  },
+  {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference"
+  },
+  {
+   "fieldname": "section_break_ingredients",
+   "fieldtype": "Section Break",
+   "label": "Ingredients Used"
+  },
+  {
+   "fieldname": "ingredients",
+   "fieldtype": "Table",
+   "label": "Ingredients",
+   "options": "Stock Solution Ingredient"
+  },
+  {
+   "fieldname": "section_break_sterilization",
+   "fieldtype": "Section Break",
+   "label": "Sterilization"
+  },
+  {
+   "fieldname": "sterilization_method",
+   "fieldtype": "Select",
+   "label": "Sterilization Method",
+   "options": "Autoclaving\nFilter Sterilization\nNone"
+  },
+  {
+   "fieldname": "sterilization_temp",
+   "fieldtype": "Float",
+   "label": "Sterilization Temp (°C)"
+  },
+  {
+   "fieldname": "sterilization_duration",
+   "fieldtype": "Float",
+   "label": "Sterilization Duration (min)"
+  },
+  {
+   "fieldname": "sterilization_done",
+   "fieldtype": "Check",
+   "label": "Sterilization Done"
+  },
+  {
+   "fieldname": "sterilization_date",
+   "fieldtype": "Date",
+   "label": "Sterilization Date"
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC Results"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "QC Status",
+   "options": "Pending\nPassed\nFailed"
+  },
+  {
+   "fieldname": "ph_value",
+   "fieldtype": "Float",
+   "label": "pH Value"
+  },
+  {
+   "fieldname": "concentration",
+   "fieldtype": "Float",
+   "label": "Concentration"
+  },
+  {
+   "fieldname": "concentration_unit",
+   "fieldtype": "Data",
+   "label": "Concentration Unit"
+  },
+  {
+   "fieldname": "qc_remarks",
+   "fieldtype": "Text",
+   "label": "QC Remarks"
+  },
+  {
+   "fieldname": "qc_checked_by",
+   "fieldtype": "Link",
+   "label": "QC Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "qc_date",
+   "fieldtype": "Date",
+   "label": "QC Date"
+  },
+  {
+   "fieldname": "section_break_links",
+   "fieldtype": "Section Break",
+   "label": "Traceability"
+  },
+  {
+   "fieldname": "chemical_vendor",
+   "fieldtype": "Link",
+   "label": "Chemical Vendor",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "vendor_batch_ref",
+   "fieldtype": "Data",
+   "label": "Vendor Batch Reference"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nRejected\nUsed\nWasted"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "preparation_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Preparation Status",
+   "options": "Draft\nQC Pending\nReleased\nWasted"
+  },
+  {
+   "fieldname": "released_date",
+   "fieldtype": "Date",
+   "label": "Released Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "released_by",
+   "fieldtype": "Link",
+   "label": "Released By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "available_volume",
+   "fieldtype": "Float",
+   "label": "Available Volume (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "volume_used",
+   "fieldtype": "Float",
+   "label": "Volume Used (mL)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Stock Solution Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

@@ -1,0 +1,192 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "strain_id",
+  "strain_name",
+  "strain_type",
+  "species",
+  "source",
+  "generation_count",
+  "parent_strain",
+  "culture_conditions",
+  "notes",
+  "status",
+  "section_break_created",
+  "created_by_user"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "STR-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "strain_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Strain ID",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "strain_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Strain Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "strain_type",
+   "fieldtype": "Select",
+   "label": "Strain Type",
+   "options": "Microalgae\nCyanobacteria\nOther"
+  },
+  {
+   "fieldname": "species",
+   "fieldtype": "Data",
+   "label": "Species"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "label": "Source"
+  },
+  {
+   "default": "0",
+   "fieldname": "generation_count",
+   "fieldtype": "Int",
+   "label": "Generation Count"
+  },
+  {
+   "fieldname": "parent_strain",
+   "fieldtype": "Link",
+   "label": "Parent Strain",
+   "options": "Pluviago Strain"
+  },
+  {
+   "fieldname": "culture_conditions",
+   "fieldtype": "Text",
+   "label": "Culture Conditions"
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Text",
+   "label": "Notes"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nRetired\nQuarantined"
+  },
+  {
+   "fieldname": "section_break_created",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "owner",
+   "fieldname": "created_by_user",
+   "fieldtype": "Data",
+   "label": "Created By",
+   "read_only": 1
+  }
+ ],
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Pluviago Strain",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

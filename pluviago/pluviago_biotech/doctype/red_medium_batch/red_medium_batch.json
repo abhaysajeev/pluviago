@@ -1,0 +1,410 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "preparation_date",
+  "prepared_by",
+  "di_water_volume",
+  "final_required_volume",
+  "red_volume_calculated",
+  "section_break_direct_chem",
+  "direct_chemicals",
+  "section_break_stocks",
+  "stock_solution_a4",
+  "a4_volume_used",
+  "stock_solution_a5",
+  "a5_volume_used",
+  "stock_solution_a6",
+  "a6_volume_used",
+  "stock_solution_a7",
+  "a7_volume_used",
+  "a5m_trace_stock_batch",
+  "a5m_volume_used",
+  "sterilization_method",
+  "sterilization_done",
+  "sterilization_checkpoint",
+  "sterilization_date",
+  "qc_checkpoint_3_clarity",
+  "qc_checkpoint_3_date",
+  "qc_checkpoint_3_by",
+  "section_break_qc",
+  "qc_entries",
+  "qc_checkpoint_4_clarity",
+  "qc_checkpoint_4_ph",
+  "qc_checkpoint_4_date",
+  "qc_checkpoint_4_by",
+  "overall_qc_status",
+  "section_break_links",
+  "warehouse",
+  "status",
+  "preparation_status",
+  "remarks",
+  "section_break_corrective",
+  "corrective_actions",
+  "quality_flag"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "RMB-.YYYY.-.####",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "preparation_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Preparation Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "prepared_by",
+   "fieldtype": "Link",
+   "label": "Prepared By",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "fieldname": "di_water_volume",
+   "fieldtype": "Float",
+   "label": "DI Water Volume (mL)"
+  },
+  {
+   "fieldname": "final_required_volume",
+   "fieldtype": "Float",
+   "label": "Final Required Volume (L)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "red_volume_calculated",
+   "fieldtype": "Float",
+   "label": "Red Volume Needed (L) [25%]",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_direct_chem",
+   "fieldtype": "Section Break",
+   "label": "Direct Chemical Ingredients"
+  },
+  {
+   "fieldname": "direct_chemicals",
+   "fieldtype": "Table",
+   "label": "Direct Chemicals (CaCl₂, MgSO₄, etc.)",
+   "options": "Medium Direct Ingredient"
+  },
+  {
+   "fieldname": "section_break_stocks",
+   "fieldtype": "Section Break",
+   "label": "Stock Solutions Used"
+  },
+  {
+   "fieldname": "stock_solution_a4",
+   "fieldtype": "Link",
+   "label": "Stock Solution A4",
+   "options": "Stock Solution Batch"
+  },
+  {
+   "fieldname": "a4_volume_used",
+   "fieldtype": "Float",
+   "label": "A4 Volume Used (mL)",
+   "description": "Volume of this stock solution used in this batch"
+  },
+  {
+   "fieldname": "stock_solution_a5",
+   "fieldtype": "Link",
+   "label": "Stock Solution A5",
+   "options": "Stock Solution Batch"
+  },
+  {
+   "fieldname": "a5_volume_used",
+   "fieldtype": "Float",
+   "label": "A5 Volume Used (mL)",
+   "description": "Volume of this stock solution used in this batch"
+  },
+  {
+   "fieldname": "stock_solution_a6",
+   "fieldtype": "Link",
+   "label": "Stock Solution A6",
+   "options": "Stock Solution Batch"
+  },
+  {
+   "fieldname": "a6_volume_used",
+   "fieldtype": "Float",
+   "label": "A6 Volume Used (mL)",
+   "description": "Volume of this stock solution used in this batch"
+  },
+  {
+   "fieldname": "stock_solution_a7",
+   "fieldtype": "Link",
+   "label": "Stock Solution A7",
+   "options": "Stock Solution Batch"
+  },
+  {
+   "fieldname": "a7_volume_used",
+   "fieldtype": "Float",
+   "label": "A7 Volume Used (mL)",
+   "description": "Volume of this stock solution used in this batch"
+  },
+  {
+   "fieldname": "a5m_trace_stock_batch",
+   "fieldtype": "Link",
+   "label": "A5M Trace Stock (A6) Batch",
+   "options": "Stock Solution Batch"
+  },
+  {
+   "fieldname": "a5m_volume_used",
+   "fieldtype": "Float",
+   "label": "A5M Volume Used (mL)",
+   "description": "Volume of this stock solution used in this batch"
+  },
+  {
+   "fieldname": "sterilization_method",
+   "fieldtype": "Select",
+   "label": "Sterilization Method",
+   "options": "Autoclaving\nFilter Sterilization\nNone"
+  },
+  {
+   "fieldname": "sterilization_done",
+   "fieldtype": "Check",
+   "label": "Sterilization Done"
+  },
+  {
+   "fieldname": "sterilization_checkpoint",
+   "fieldtype": "Check",
+   "label": "Sterilization Complete"
+  },
+  {
+   "fieldname": "sterilization_date",
+   "fieldtype": "Date",
+   "label": "Sterilization Date"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_3_clarity",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 3: Clarity Check",
+   "options": "Pass\nFail\nPending"
+  },
+  {
+   "fieldname": "qc_checkpoint_3_date",
+   "fieldtype": "Date",
+   "label": "Checkpoint 3 Date"
+  },
+  {
+   "fieldname": "qc_checkpoint_3_by",
+   "fieldtype": "Link",
+   "label": "Checkpoint 3 By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC Checkpoints (4 required)"
+  },
+  {
+   "fieldname": "qc_entries",
+   "fieldtype": "Table",
+   "label": "QC Entries",
+   "options": "Red Medium QC Entry"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_4_clarity",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 4: Clarity Check",
+   "options": "Pass\nFail\nPending"
+  },
+  {
+   "fieldname": "qc_checkpoint_4_ph",
+   "fieldtype": "Float",
+   "label": "QC Checkpoint 4: pH Value"
+  },
+  {
+   "fieldname": "qc_checkpoint_4_date",
+   "fieldtype": "Date",
+   "label": "Checkpoint 4 Date"
+  },
+  {
+   "fieldname": "qc_checkpoint_4_by",
+   "fieldtype": "Link",
+   "label": "Checkpoint 4 By",
+   "options": "User"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "overall_qc_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Overall QC Status",
+   "options": "Pending\nPassed\nFailed"
+  },
+  {
+   "fieldname": "section_break_links",
+   "fieldtype": "Section Break",
+   "label": "Traceability"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nRejected\nUsed\nWasted"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "preparation_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Preparation Status",
+   "options": "Draft\nQC Pending\nReleased\nWasted"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "section_break_corrective",
+   "fieldtype": "Section Break",
+   "label": "Corrective Actions & QC Recovery"
+  },
+  {
+   "fieldname": "corrective_actions",
+   "fieldtype": "Table",
+   "label": "Corrective Actions",
+   "options": "Medium Batch Corrective Action",
+   "description": "Log each corrective action attempt. Re-QC result tracks whether the action resolved the failure."
+  },
+  {
+   "fieldname": "quality_flag",
+   "fieldtype": "Select",
+   "label": "Quality Flag",
+   "options": "Normal\nConditional Release\nRejected",
+   "default": "Normal",
+   "in_list_view": 1,
+   "description": "Normal = clean pass. Conditional Release = passed after corrective action. Rejected = batch unrecoverable."
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Red Medium Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

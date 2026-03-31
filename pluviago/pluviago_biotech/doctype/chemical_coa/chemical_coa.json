@@ -1,0 +1,313 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "raw_material_batch",
+  "status",
+  "section_chemical_vendor",
+  "material_name",
+  "col_break_1",
+  "supplier",
+  "item_code",
+  "col_break_2",
+  "supplier_batch_no",
+  "chemical_formula",
+  "col_break_3",
+  "grade",
+  "molecular_weight",
+  "col_break_4",
+  "lot_number",
+  "section_dates",
+  "analysis_date",
+  "col_break_5",
+  "expiry_date",
+  "received_date",
+  "col_break_6",
+  "manufacture_date",
+  "coa_document_no",
+  "col_break_7",
+  "coa_attachment",
+  "section_test_parameters",
+  "test_parameters",
+  "section_verification",
+  "overall_result",
+  "col_break_8",
+  "verified_by",
+  "verification_date",
+  "col_break_9",
+  "verification_remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Series",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "COA-.YYYY.-.####"
+  },
+  {
+   "fieldname": "raw_material_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Raw Material Batch",
+   "options": "Raw Material Batch",
+   "reqd": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nVerified\nRejected"
+  },
+  {
+   "fieldname": "section_chemical_vendor",
+   "fieldtype": "Section Break",
+   "label": "Chemical & Vendor Details"
+  },
+  {
+   "fieldname": "material_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Material Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "supplier_batch_no",
+   "fieldtype": "Data",
+   "label": "Supplier Batch / Lot No",
+   "reqd": 1
+  },
+  {
+   "fieldname": "chemical_formula",
+   "fieldtype": "Data",
+   "label": "Molecular Formula"
+  },
+  {
+   "fieldname": "col_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "grade",
+   "fieldtype": "Data",
+   "label": "Grade / Purity"
+  },
+  {
+   "fieldname": "molecular_weight",
+   "fieldtype": "Float",
+   "label": "Molecular Weight"
+  },
+  {
+   "fieldname": "col_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lot_number",
+   "fieldtype": "Data",
+   "label": "COA Lot Number"
+  },
+  {
+   "fieldname": "section_dates",
+   "fieldtype": "Section Break",
+   "label": "Dates & Documentation"
+  },
+  {
+   "fieldname": "analysis_date",
+   "fieldtype": "Date",
+   "label": "Analysis Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date"
+  },
+  {
+   "fieldname": "received_date",
+   "fieldtype": "Date",
+   "label": "Received Date",
+   "default": "Today"
+  },
+  {
+   "fieldname": "col_break_6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "manufacture_date",
+   "fieldtype": "Date",
+   "label": "Manufacturing Date"
+  },
+  {
+   "fieldname": "coa_document_no",
+   "fieldtype": "Data",
+   "label": "COA Document Number"
+  },
+  {
+   "fieldname": "col_break_7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "coa_attachment",
+   "fieldtype": "Attach",
+   "label": "COA Document (PDF)"
+  },
+  {
+   "fieldname": "section_test_parameters",
+   "fieldtype": "Section Break",
+   "label": "Test Parameters"
+  },
+  {
+   "fieldname": "test_parameters",
+   "fieldtype": "Table",
+   "label": "Test Parameters",
+   "options": "COA Test Parameter"
+  },
+  {
+   "fieldname": "section_verification",
+   "fieldtype": "Section Break",
+   "label": "QC Verification"
+  },
+  {
+   "default": "",
+   "fieldname": "overall_result",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Overall Result",
+   "options": "\nPass\nFail"
+  },
+  {
+   "fieldname": "col_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User"
+  },
+  {
+   "fieldname": "verification_date",
+   "fieldtype": "Date",
+   "label": "Verification Date"
+  },
+  {
+   "fieldname": "col_break_9",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "verification_remarks",
+   "fieldtype": "Text",
+   "label": "Verification Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Chemical COA",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Manager"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "material_name",
+ "track_changes": 1
+}

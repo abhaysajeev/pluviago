@@ -1,0 +1,143 @@
+{
+ "actions": [],
+ "creation": "2024-01-01 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "phase",
+  "qc_type",
+  "qc_date",
+  "qc_by",
+  "par_value",
+  "automation_notes",
+  "ph_value",
+  "od_value",
+  "cell_count",
+  "cell_size",
+  "dry_weight",
+  "assay_value",
+  "microscopy_result",
+  "overall_result",
+  "contamination_detected",
+  "corrective_action",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "phase",
+   "fieldtype": "Select",
+   "label": "Cultivation Phase",
+   "options": "\nGreen Phase\nRed Phase",
+   "description": "Applicable for 6600L batches only — tag which phase this reading belongs to."
+  },
+  {
+   "fieldname": "qc_type",
+   "fieldtype": "Select",
+   "label": "QC Type",
+   "options": "Process QC\nBiological QC",
+   "default": "Process QC",
+   "reqd": 1,
+   "in_list_view": 1,
+   "description": "Process QC: pH, PAR, OD, automation. Biological QC: microscopy, cell count, cell size, dry weight, assay, contamination."
+  },
+  {
+   "default": "Today",
+   "fieldname": "qc_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "QC Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "qc_by",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "QC By",
+   "options": "User"
+  },
+  {
+   "fieldname": "par_value",
+   "fieldtype": "Float",
+   "label": "PAR Value"
+  },
+  {
+   "fieldname": "automation_notes",
+   "fieldtype": "Small Text",
+   "label": "Automation / PAR Notes",
+   "description": "Automation log notes, PAR setting and observations."
+  },
+  {
+   "fieldname": "ph_value",
+   "fieldtype": "Float",
+   "label": "pH"
+  },
+  {
+   "fieldname": "od_value",
+   "fieldtype": "Float",
+   "label": "OD (Optical Density)"
+  },
+  {
+   "fieldname": "cell_count",
+   "fieldtype": "Float",
+   "label": "Cell Count (cells/mL)"
+  },
+  {
+   "fieldname": "cell_size",
+   "fieldtype": "Float",
+   "label": "Cell Size (μm)"
+  },
+  {
+   "fieldname": "dry_weight",
+   "fieldtype": "Float",
+   "label": "Dry Weight (g/L)"
+  },
+  {
+   "fieldname": "assay_value",
+   "fieldtype": "Float",
+   "label": "Assay Value (%)",
+   "description": "Target compound assay result — recorded during Red Phase of 6600L."
+  },
+  {
+   "fieldname": "microscopy_result",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Microscopy Result",
+   "options": "Clean\nContaminated\nSuspect"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "overall_result",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Overall Result",
+   "options": "Pass\nFail\nPending"
+  },
+  {
+   "fieldname": "contamination_detected",
+   "fieldtype": "Check",
+   "label": "Contamination Detected"
+  },
+  {
+   "fieldname": "corrective_action",
+   "fieldtype": "Text",
+   "label": "Corrective Action"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2024-01-01 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Production Batch QC",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
