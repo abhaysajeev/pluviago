@@ -1,10 +1,12 @@
 import frappe
+from frappe.utils import nowdate
 
 
 def validate(doc, method=None):
 	"""
 	On Purchase Order validate:
-	  - Warn if supplier is not in Approved Vendor list for any ordered chemical item.
+	  - Warn if supplier is not in Approved Vendor list for any ordered chemical item,
+	    or if their qualification has expired (valid_upto < today).
 	  - Does not hard-block (warning only) — COA verification is the real quality gate.
 	"""
 	if not doc.items:
@@ -25,11 +27,12 @@ def validate(doc, method=None):
 		if item_group not in chemical_groups:
 			continue
 
-		approved = frappe.db.exists("Approved Vendor", {
-			"supplier": doc.supplier,
-			"item_code": row.item_code,
-			"approval_status": "Approved",
-		})
+		approved = frappe.db.get_value("Approved Vendor", [
+			["supplier", "=", doc.supplier],
+			["item_code", "=", row.item_code],
+			["approval_status", "=", "Approved"],
+			["valid_upto", ">=", nowdate()],
+		], "name")
 
 		if not approved:
 			unapproved.append(f"<li>{row.item_name or row.item_code}</li>")

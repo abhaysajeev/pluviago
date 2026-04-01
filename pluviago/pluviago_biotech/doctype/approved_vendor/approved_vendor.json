@@ -64,7 +64,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Code",
-   "options": "Item"
+   "options": "Item",
+   "reqd": 1
   },
   {
    "fieldname": "supplier_name",
@@ -104,7 +105,8 @@
   {
    "fieldname": "approval_date",
    "fieldtype": "Date",
-   "label": "Approval Date"
+   "label": "Approval Date",
+   "reqd": 1
   },
   {
    "fieldname": "approved_by",
@@ -119,7 +121,8 @@
   {
    "fieldname": "valid_upto",
    "fieldtype": "Date",
-   "label": "Valid Upto"
+   "label": "Valid Upto",
+   "reqd": 1
   },
   {
    "fieldname": "qualification_ref",

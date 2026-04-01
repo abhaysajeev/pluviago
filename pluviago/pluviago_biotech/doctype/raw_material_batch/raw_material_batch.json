@@ -147,7 +147,8 @@
   {
    "fieldname": "received_qty",
    "fieldtype": "Float",
-   "label": "Received Qty"
+   "label": "Received Qty",
+   "reqd": 1
   },
   {
    "fieldname": "received_qty_uom",
