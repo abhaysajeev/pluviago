@@ -47,11 +47,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
    "options": "SSB-.YYYY.-.####",
-   "set_only_once": 1
+   "set_only_once": 1,
+   "default": "SSB-.YYYY.-.####"
   },
   {
    "fieldname": "batch_number",
@@ -136,7 +137,7 @@
   {
    "fieldname": "sterilization_temp",
    "fieldtype": "Float",
-   "label": "Sterilization Temp (°C)"
+   "label": "Sterilization Temp (\u00b0C)"
   },
   {
    "fieldname": "sterilization_duration",

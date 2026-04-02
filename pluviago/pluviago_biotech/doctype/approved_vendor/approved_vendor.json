@@ -37,10 +37,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "AVL-.YYYY.-.####"
+   "options": "AVL-.YYYY.-.####",
+   "default": "AVL-.YYYY.-.####",
+   "set_only_once": 1
   },
   {
    "fieldname": "section_vendor_material",

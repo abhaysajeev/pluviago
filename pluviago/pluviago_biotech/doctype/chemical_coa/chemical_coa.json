@@ -45,10 +45,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "COA-.YYYY.-.####"
+   "options": "COA-.YYYY.-.####",
+   "default": "COA-.YYYY.-.####",
+   "set_only_once": 1
   },
   {
    "fieldname": "raw_material_batch",

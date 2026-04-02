@@ -50,11 +50,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
    "options": "GMB-.YYYY.-.####",
-   "set_only_once": 1
+   "set_only_once": 1,
+   "default": "GMB-.YYYY.-.####"
   },
   {
    "fieldname": "batch_number",
@@ -103,7 +104,7 @@
   {
    "fieldname": "direct_chemicals",
    "fieldtype": "Table",
-   "label": "Direct Chemicals (CaCl₂, MgSO₄, NaCl, etc.)",
+   "label": "Direct Chemicals (CaCl\u2082, MgSO\u2084, NaCl, etc.)",
    "options": "Medium Direct Ingredient"
   },
   {

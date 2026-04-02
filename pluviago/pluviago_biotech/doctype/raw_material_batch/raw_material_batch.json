@@ -50,10 +50,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "RMB-CHEM-.YYYY.-.####"
+   "options": "RMB-CHEM-.YYYY.-.####",
+   "default": "RMB-CHEM-.YYYY.-.####",
+   "set_only_once": 1
   },
   {
    "fieldname": "batch_number",

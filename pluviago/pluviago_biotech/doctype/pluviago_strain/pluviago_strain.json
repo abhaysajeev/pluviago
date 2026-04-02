@@ -23,11 +23,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
    "options": "STR-.YYYY.-.####",
-   "set_only_once": 1
+   "set_only_once": 1,
+   "default": "STR-.YYYY.-.####"
   },
   {
    "fieldname": "strain_id",

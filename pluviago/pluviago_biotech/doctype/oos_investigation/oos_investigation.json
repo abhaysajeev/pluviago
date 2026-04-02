@@ -30,11 +30,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
    "options": "OOS-.YYYY.-.####",
-   "set_only_once": 1
+   "set_only_once": 1,
+   "default": "OOS-.YYYY.-.####"
   },
   {
    "fieldname": "section_break_source",
@@ -103,7 +104,7 @@
    "fieldname": "expected_range",
    "fieldtype": "Data",
    "label": "Expected Range / Spec Limit",
-   "description": "e.g. 6.5–7.5"
+   "description": "e.g. 6.5\u20137.5"
   },
   {
    "fieldname": "section_break_investigation",

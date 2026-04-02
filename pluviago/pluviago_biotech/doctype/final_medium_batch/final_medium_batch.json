@@ -41,11 +41,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
    "options": "FMB-.YYYY.-.####",
-   "set_only_once": 1
+   "set_only_once": 1,
+   "default": "FMB-.YYYY.-.####"
   },
   {
    "fieldname": "batch_number",

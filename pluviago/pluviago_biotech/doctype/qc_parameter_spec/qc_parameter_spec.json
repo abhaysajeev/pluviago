@@ -28,10 +28,12 @@
  "fields": [
   {
    "fieldname": "naming_series",
-   "fieldtype": "Series",
+   "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "QCS-.YYYY.-.####"
+   "options": "QCS-.YYYY.-.####",
+   "default": "QCS-.YYYY.-.####",
+   "set_only_once": 1
   },
   {
    "fieldname": "parameter_name",
@@ -58,7 +60,7 @@
    "in_list_view": 1,
    "label": "Item / Chemical",
    "options": "Item",
-   "description": "For Raw Material Batch specs — link to the specific chemical this parameter applies to"
+   "description": "For Raw Material Batch specs \u2014 link to the specific chemical this parameter applies to"
   },
   {
    "fieldname": "col_break_2",
