@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "autoname": "field:formula_name",
+ "creation": "2026-04-07 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "formula_name",
+  "applies_to",
+  "solution_type",
+  "col_break_1",
+  "reference_volume",
+  "reference_volume_uom",
+  "notes",
+  "section_break_items",
+  "items"
+ ],
+ "fields": [
+  {
+   "fieldname": "formula_name",
+   "fieldtype": "Data",
+   "label": "Formula Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "applies_to",
+   "fieldtype": "Select",
+   "label": "Applies To",
+   "options": "Stock Solution Batch\nGreen Medium Batch\nRed Medium Batch",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "solution_type",
+   "fieldtype": "Data",
+   "label": "Solution Type",
+   "description": "Optional label to identify this formula (e.g. A1, A2, Green Medium). Used for quick reference only.",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reference_volume",
+   "fieldtype": "Float",
+   "label": "Reference Volume",
+   "reqd": 1,
+   "description": "The total volume this recipe is written for. Quantities will be scaled proportionally when loading."
+  },
+  {
+   "fieldname": "reference_volume_uom",
+   "fieldtype": "Link",
+   "label": "UOM",
+   "options": "UOM",
+   "reqd": 1
+  },
+  {
+   "fieldname": "notes",
+   "fieldtype": "Small Text",
+   "label": "Notes / SOP Reference"
+  },
+  {
+   "fieldname": "section_break_items",
+   "fieldtype": "Section Break",
+   "label": "Ingredients"
+  },
+  {
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Ingredients",
+   "options": "Formula Item",
+   "reqd": 1
+  }
+ ],
+ "links": [],
+ "modified": "2026-04-07 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Preparation Formula",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Production Manager",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "QA Head",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "QC Manager",
+   "write": 0
+  },
+  {
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 0
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Pluviago Admin",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "System Manager",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "formula_name",
+ "track_changes": 1
+}

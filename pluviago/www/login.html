@@ -4,33 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pluviago — Sign In</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --coral: #E8533F;
-            --coral-light: #F17A6A;
-            --coral-dark: #C9402E;
-            --coral-glow: #FF6F5E;
-            --charcoal: #1A1A1A;
-            --charcoal-light: #2D2D2D;
-            --warm-white: #FFF8F6;
-            --warm-gray: #F5F0EE;
-            --text-muted: #8A7E7A;
-            --gradient-coral: linear-gradient(135deg, #E8533F 0%, #F17A6A 40%, #FF6F5E 100%);
-            --gradient-coral-deep: linear-gradient(160deg, #C9402E 0%, #E8533F 50%, #F17A6A 100%);
+            --coral:      #E8533F;
+            --coral-h:    #D4422E;
+            --charcoal:   #222222;
+            --text-muted: #9A9090;
+            --border:     #E4DCDA;
+            --bg:         #F0EBEA;
+            --input-bg:   #FAFAF9;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Outfit', sans-serif;
-            background: var(--warm-gray);
+            background: var(--bg);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -38,131 +28,152 @@
             padding: 20px;
         }
 
-        .login-container {
-            background: #fff;
-            border-radius: 20px;
-            box-shadow: 0 25px 80px rgba(232, 83, 63, 0.08), 0 8px 30px rgba(0,0,0,0.06);
-            overflow: hidden;
-            max-width: 950px;
-            width: 100%;
+        /* ── Card ── */
+        .login-card {
             display: flex;
-            min-height: 540px;
+            width: 100%;
+            max-width: 920px;
+            min-height: 520px;
+            background: #fff;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 70px rgba(0,0,0,0.10), 0 4px 20px rgba(0,0,0,0.05);
         }
 
-        /* LEFT PANEL — Form */
-        .login-left {
+        /* ══════════════════════════════
+           LEFT PANEL — Form
+        ══════════════════════════════ */
+        .panel-left {
             flex: 1;
-            padding: 50px 45px;
+            padding: 52px 48px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
 
-        .login-left h2 {
-            font-size: 28px;
-            font-weight: 700;
+        .panel-left h1 {
+            font-size: 38px;
+            font-weight: 800;
             color: var(--charcoal);
-            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 8px;
         }
 
-        .login-left .subtitle {
-            color: var(--text-muted);
+        .panel-left .subtitle {
             font-size: 14px;
-            margin-bottom: 32px;
             font-weight: 400;
+            color: var(--text-muted);
+            margin-bottom: 36px;
         }
 
-        .left-logo-row {
-            margin-bottom: 28px;
-        }
-
-        .left-logo-img {
-            height: 52px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .form-label-custom {
+        /* Field labels */
+        .field-label {
+            display: block;
             font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 1.2px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
             text-transform: uppercase;
             color: var(--charcoal);
-            margin-bottom: 8px;
-            display: block;
+            margin-bottom: 9px;
         }
 
-        .form-input {
+        /* Input wrapper with icon */
+        .input-wrap {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-wrap .icon-left {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #C8BEBB;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .input-wrap .icon-left svg {
+            width: 16px;
+            height: 16px;
+            stroke: #C8BEBB;
+            fill: none;
+        }
+
+        .input-wrap input {
             width: 100%;
-            padding: 13px 16px;
-            border: 1.5px solid #e8e0dd;
+            padding: 13px 16px 13px 44px;
+            border: 1.5px solid var(--border);
             border-radius: 10px;
             font-size: 14px;
             font-family: 'Outfit', sans-serif;
             color: var(--charcoal);
-            background: var(--warm-white);
-            transition: all 0.25s ease;
+            background: var(--input-bg);
             outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
-        .form-input:focus {
+        .input-wrap input:focus {
             border-color: var(--coral);
-            box-shadow: 0 0 0 3px rgba(232, 83, 63, 0.1);
+            box-shadow: 0 0 0 3px rgba(232,83,63,0.10);
             background: #fff;
         }
 
-        .form-input::placeholder {
-            color: #c4b8b4;
+        .input-wrap input::placeholder {
+            color: #C8BEBB;
         }
 
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .btn-signin {
-            width: 100%;
-            padding: 14px;
+        /* Password right-side toggle */
+        .input-wrap .icon-right {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
             border: none;
-            border-radius: 50px;
-            background: var(--gradient-coral);
-            color: #fff;
-            font-size: 15px;
-            font-weight: 600;
-            font-family: 'Outfit', sans-serif;
+            color: #C8BEBB;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
-            box-shadow: 0 6px 25px rgba(232, 83, 63, 0.3);
-            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            padding: 4px;
+            transition: color 0.15s;
         }
 
-        .btn-signin:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 35px rgba(232, 83, 63, 0.4);
+        .input-wrap .icon-right:hover { color: var(--coral); }
+
+        .input-wrap .icon-right svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            fill: none;
         }
 
-        .btn-signin:active {
-            transform: translateY(0);
+        /* Password input needs right padding for eye icon */
+        .input-wrap.password-wrap input {
+            padding-right: 44px;
         }
 
+        /* ── Remember / Forgot row ── */
         .bottom-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 18px;
+            margin-bottom: 22px;
         }
 
-        .remember-me {
+        .remember-label {
             display: flex;
             align-items: center;
             gap: 8px;
             font-size: 13px;
-            color: var(--coral);
+            color: var(--charcoal);
             font-weight: 500;
             cursor: pointer;
         }
 
-        .remember-me input[type="checkbox"] {
+        .remember-label input[type="checkbox"] {
             accent-color: var(--coral);
             width: 16px;
             height: 16px;
@@ -174,81 +185,130 @@
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.2s;
+            transition: color 0.15s;
         }
 
-        .forgot-link:hover {
-            color: var(--coral);
+        .forgot-link:hover { color: var(--coral); }
+
+        /* ── Sign In button ── */
+        .btn-signin {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 50px;
+            background: var(--coral);
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: 'Outfit', sans-serif;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+            box-shadow: 0 6px 24px rgba(232,83,63,0.28);
         }
 
-        /* RIGHT PANEL — Welcome */
-        .login-right {
+        .btn-signin:hover {
+            background: var(--coral-h);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 32px rgba(232,83,63,0.38);
+        }
+
+        .btn-signin:active { transform: translateY(0); }
+
+        .btn-signin.loading {
+            opacity: 0.80;
+            pointer-events: none;
+        }
+
+        /* ── Error message ── */
+        .error-msg {
+            background: rgba(232,83,63,0.08);
+            border: 1px solid rgba(232,83,63,0.22);
+            border-radius: 10px;
+            padding: 11px 15px;
+            color: var(--coral-h);
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+        }
+
+        .error-msg.show { display: block; }
+
+        /* ══════════════════════════════
+           RIGHT PANEL — Welcome
+           Solid coral, static decorative circles only
+        ══════════════════════════════ */
+        .panel-right {
             flex: 1;
-            background: var(--gradient-coral-deep);
+            background: var(--coral);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 50px 40px;
+            padding: 52px 44px;
             position: relative;
             overflow: hidden;
+            text-align: center;
         }
 
-        .login-right::before {
+        /* Static circle — top-right */
+        .panel-right::before {
             content: '';
             position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 200px;
-            height: 200px;
+            top: -90px;
+            right: -90px;
+            width: 320px;
+            height: 320px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255,255,255,0.13);
+            pointer-events: none;
         }
 
-        .login-right::after {
+        /* Static circle — bottom-left */
+        .panel-right::after {
             content: '';
             position: absolute;
-            bottom: -40px;
-            left: -40px;
-            width: 150px;
-            height: 150px;
+            bottom: -90px;
+            left: -70px;
+            width: 280px;
+            height: 280px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.04);
+            background: rgba(255,255,255,0.10);
+            pointer-events: none;
         }
 
-        .right-brand-name {
-            font-size: 20px;
+        .right-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .right-brand {
+            font-size: 13px;
             font-weight: 700;
             letter-spacing: 4px;
             text-transform: uppercase;
-            color: rgba(255,255,255,0.95);
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
+            color: rgba(255,255,255,0.90);
+            margin-bottom: 20px;
         }
 
-        .login-right h2 {
-            color: #fff;
-            font-size: 28px;
+        .panel-right h2 {
+            font-size: 34px;
             font-weight: 700;
+            color: #fff;
+            letter-spacing: -0.4px;
+            line-height: 1.2;
             margin-bottom: 10px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
-        .login-right p {
-            color: rgba(255,255,255,0.8);
+        .panel-right p {
             font-size: 14px;
+            color: rgba(255,255,255,0.80);
             margin-bottom: 28px;
-            text-align: center;
-            position: relative;
-            z-index: 1;
         }
 
         .btn-signup {
-            padding: 11px 36px;
-            border: 2px solid rgba(255,255,255,0.7);
+            padding: 12px 40px;
+            border: 2px solid rgba(255,255,255,0.80);
             border-radius: 50px;
             background: transparent;
             color: #fff;
@@ -256,129 +316,46 @@
             font-weight: 600;
             font-family: 'Outfit', sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
-            letter-spacing: 0.5px;
-            position: relative;
-            z-index: 1;
+            letter-spacing: 0.3px;
+            transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
         }
 
         .btn-signup:hover {
             background: #fff;
             color: var(--coral);
             border-color: #fff;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
 
-        /* Loading spinner */
-        .btn-signin .spinner-border {
-            width: 18px;
-            height: 18px;
-            border-width: 2px;
-            margin-right: 8px;
-            display: none;
-        }
-
-        .btn-signin.loading .spinner-border {
-            display: inline-block;
-        }
-
-        .btn-signin.loading {
-            opacity: 0.85;
-            pointer-events: none;
-        }
-
-        /* Error message */
-        .error-msg {
-            background: rgba(232, 83, 63, 0.08);
-            border: 1px solid rgba(232, 83, 63, 0.2);
-            border-radius: 10px;
-            padding: 12px 16px;
-            color: var(--coral-dark);
-            font-size: 13px;
-            margin-bottom: 18px;
-            display: none;
-        }
-
-        .error-msg.show {
-            display: block;
-        }
-
-        /* Password toggle */
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-toggle {
-            position: absolute;
-            right: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            font-size: 14px;
-            padding: 4px;
-            transition: color 0.2s;
-        }
-
-        .password-toggle:hover {
-            color: var(--coral);
-        }
-
-        .login-left {
-            position: relative;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .login-container {
+        /* ── Responsive ── */
+        @media (max-width: 720px) {
+            .login-card {
                 flex-direction: column-reverse;
-                max-width: 440px;
+                max-width: 420px;
                 min-height: auto;
             }
 
-            .login-right {
+            .panel-right {
                 padding: 36px 30px;
-                min-height: 200px;
-                border-radius: 0;
+                min-height: 210px;
             }
 
-            .login-left {
-                padding: 36px 30px;
+            .panel-left {
+                padding: 36px 28px;
             }
 
-            .left-logo-row {
-                position: static;
-                margin-bottom: 16px;
-            }
-
-            .left-logo-img {
-                height: 40px;
-            }
-
-            .login-right h2 {
-                font-size: 22px;
-            }
+            .panel-left h1 { font-size: 28px; }
+            .panel-right h2 { font-size: 24px; }
         }
-
-        /* Frappe overrides — strip Frappe's default page styles */
-        .page-card { border: none !important; box-shadow: none !important; padding: 0 !important; }
-        .for-login .page-card-head { display: none !important; }
-        .for-login #login_area { padding: 0 !important; }
-        .for-login .field-area { margin: 0 !important; }
     </style>
 </head>
 <body>
 
-<div class="login-container">
-    <!-- LEFT: Sign In Form -->
-    <div class="login-left">
-        <div class="left-logo-row">
-            <img src="/files/pluviago-logo.jpeg" alt="Pluviago" class="left-logo-img" onerror="this.style.display='none'">
-        </div>
+<div class="login-card">
 
-        <h2>Sign In</h2>
+    <!-- LEFT: Sign In Form -->
+    <div class="panel-left">
+        <h1>Sign In</h1>
         <p class="subtitle">Welcome back to Pluviago</p>
 
         <div class="error-msg" id="errorMsg">
@@ -386,161 +363,149 @@
         </div>
 
         <form id="loginForm" autocomplete="on">
-            <div class="form-group">
-                <label class="form-label-custom" for="login_email">Username</label>
-                <input type="text" class="form-input" id="login_email" name="usr" placeholder="Enter your email or username" autocomplete="username" required>
+
+            <!-- USERNAME -->
+            <label class="field-label" for="login_email">Username</label>
+            <div class="input-wrap">
+                <span class="icon-left">
+                    <!-- Person icon -->
+                    <svg viewBox="0 0 24 24" stroke-width="1.8"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </span>
+                <input type="text" id="login_email" name="usr"
+                       placeholder="Enter your email or username"
+                       autocomplete="username" required>
             </div>
 
-            <div class="form-group">
-                <label class="form-label-custom" for="login_password">Password</label>
-                <div class="password-wrapper">
-                    <input type="password" class="form-input" id="login_password" name="pwd" placeholder="Enter your password" autocomplete="current-password" required>
-                    <button type="button" class="password-toggle" id="togglePwd" tabindex="-1">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </div>
+            <!-- PASSWORD -->
+            <label class="field-label" for="login_password">Password</label>
+            <div class="input-wrap password-wrap">
+                <span class="icon-left">
+                    <!-- Lock icon -->
+                    <svg viewBox="0 0 24 24" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </span>
+                <input type="password" id="login_password" name="pwd"
+                       placeholder="Enter your password"
+                       autocomplete="current-password" required>
+                <button type="button" class="icon-right" id="togglePwd" tabindex="-1">
+                    <!-- Eye icon -->
+                    <svg id="eyeIcon" viewBox="0 0 24 24" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
             </div>
 
-            <button type="submit" class="btn-signin" id="btnSignin">
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                Sign In
-            </button>
+            <!-- Remember Me + Forgot Password -->
+            <div class="bottom-row">
+                <label class="remember-label">
+                    <input type="checkbox" checked> Remember Me
+                </label>
+                <a href="/forgot-password" class="forgot-link">Forgot Password</a>
+            </div>
+
+            <!-- Sign In -->
+            <button type="submit" class="btn-signin" id="btnSignin">Sign In</button>
+
         </form>
-
-        <div class="bottom-row">
-            <label class="remember-me">
-                <input type="checkbox" checked> Remember Me
-            </label>
-            <a href="/forgot-password" class="forgot-link">Forgot Password</a>
-        </div>
     </div>
 
     <!-- RIGHT: Welcome Panel -->
-    <div class="login-right">
-        <div class="right-brand-name">PLUVIAGO</div>
-        <h2>Welcome to login</h2>
-        <p>Don't have an account?</p>
-        <button class="btn-signup" onclick="window.location.href='/signup'">Sign Up</button>
+    <div class="panel-right">
+        <div class="right-inner">
+            <div class="right-brand">PLUVIAGO</div>
+            <h2>Welcome to login</h2>
+            <p>Don't have an account?</p>
+            <button class="btn-signup" onclick="window.location.href='/signup'">Sign Up</button>
+        </div>
     </div>
+
 </div>
 
 <script>
-    // Helper function to get cookie value
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return '';
-    }
-
     // Password visibility toggle
     const togglePwd = document.getElementById('togglePwd');
-    const pwdInput = document.getElementById('login_password');
+    const pwdInput  = document.getElementById('login_password');
+    const eyeIcon   = document.getElementById('eyeIcon');
+
+    const eyeOpen   = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    const eyeClosed = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+
     togglePwd.addEventListener('click', function () {
-        const isPassword = pwdInput.type === 'password';
-        pwdInput.type = isPassword ? 'text' : 'password';
-        this.querySelector('i').classList.toggle('fa-eye');
-        this.querySelector('i').classList.toggle('fa-eye-slash');
+        const show = pwdInput.type === 'password';
+        pwdInput.type = show ? 'text' : 'password';
+        eyeIcon.innerHTML = show ? eyeClosed : eyeOpen;
     });
 
     // Form submission — Frappe login API
     const loginForm = document.getElementById('loginForm');
     const btnSignin = document.getElementById('btnSignin');
-    const errorMsg = document.getElementById('errorMsg');
+    const errorMsg  = document.getElementById('errorMsg');
+
+    function getCookie(name) {
+        const v = `; ${document.cookie}`, parts = v.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return '';
+    }
 
     loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         errorMsg.classList.remove('show');
         btnSignin.classList.add('loading');
+        btnSignin.textContent = 'Signing in…';
 
         const usr = document.getElementById('login_email').value.trim();
         const pwd = document.getElementById('login_password').value;
 
         if (!usr || !pwd) {
-            errorMsg.textContent = 'Please enter both username and password.';
-            errorMsg.classList.add('show');
-            btnSignin.classList.remove('loading');
+            showError('Please enter both username and password.');
             return;
         }
 
         try {
-            // Get CSRF token first - handle different response formats
             let csrfToken = '';
             try {
-                const csrfResponse = await fetch('/api/method/frappe.sessions.get_csrf_token', {
-                    method: 'GET',
-                    credentials: 'same-origin'
-                });
-                
-                if (csrfResponse.ok) {
-                    const csrfData = await csrfResponse.json();
-                    // Handle different response formats
-                    if (typeof csrfData.message === 'string') {
-                        csrfToken = csrfData.message;
-                    } else if (csrfData.message && typeof csrfData.message === 'object' && csrfData.message.csrf_token) {
-                        csrfToken = csrfData.message.csrf_token;
-                    } else if (csrfData.csrf_token) {
-                        csrfToken = csrfData.csrf_token;
-                    }
+                const r = await fetch('/api/method/frappe.sessions.get_csrf_token', { credentials: 'same-origin' });
+                if (r.ok) {
+                    const d = await r.json();
+                    csrfToken = (typeof d.message === 'string') ? d.message
+                              : (d.message?.csrf_token || d.csrf_token || '');
                 }
-            } catch (csrfErr) {
-                console.warn('CSRF token fetch failed, trying cookie fallback:', csrfErr);
-                // Try to get from cookie as fallback
-                csrfToken = getCookie('csrf_token') || getCookie('frappe.csrf_token') || '';
+            } catch (_) {
+                csrfToken = getCookie('csrf_token') || '';
             }
 
-            // Prepare headers
-            const headers = {
-                'Content-Type': 'application/json'
-            };
-            if (csrfToken) {
-                headers['X-Frappe-CSRF-Token'] = csrfToken;
-            }
+            const headers = { 'Content-Type': 'application/json' };
+            if (csrfToken) headers['X-Frappe-CSRF-Token'] = csrfToken;
 
-            // Perform login
-            const res = await fetch('/api/method/login', {
-                method: 'POST',
-                headers: headers,
+            const res  = await fetch('/api/method/login', {
+                method: 'POST', headers,
                 body: JSON.stringify({ usr, pwd }),
                 credentials: 'same-origin'
             });
-
             const data = await res.json();
 
             if (res.ok && data.message) {
-                // Check if login was successful
-                if (data.message.full_name || data.message === 'Logged In' || (typeof data.message === 'object' && data.message.full_name)) {
-                    // Login successful - redirect to desk
-                    const redirectTo = new URLSearchParams(window.location.search).get('redirect-to') || '/app';
-                    window.location.href = redirectTo;
-                } else {
-                    // Login failed
-                    errorMsg.textContent = data.message || 'Invalid credentials. Please try again.';
-                    errorMsg.classList.add('show');
+                const ok = data.message.full_name || data.message === 'Logged In'
+                        || (typeof data.message === 'object' && data.message.full_name);
+                if (ok) {
+                    const to = new URLSearchParams(window.location.search).get('redirect-to') || '/app';
+                    window.location.href = to;
+                    return;
                 }
+                showError(data.message || 'Invalid credentials.');
             } else {
-                // Login failed - handle different error formats
-                let errorText = 'Invalid credentials. Please try again.';
-                if (data.message) {
-                    errorText = typeof data.message === 'string' ? data.message : JSON.stringify(data.message);
-                } else if (data.exc) {
-                    errorText = typeof data.exc === 'string' ? data.exc : 'An error occurred during login.';
-                } else if (data.error) {
-                    errorText = typeof data.error === 'string' ? data.error : JSON.stringify(data.error);
-                }
-                errorMsg.textContent = errorText;
-                errorMsg.classList.add('show');
+                const msg = data.message || data.exc || data.error || 'Invalid credentials.';
+                showError(typeof msg === 'string' ? msg : 'An error occurred during login.');
             }
         } catch (err) {
-            console.error('Login error:', err);
-            errorMsg.textContent = 'Unable to connect. Please check your network and try again.';
-            errorMsg.classList.add('show');
+            showError('Unable to connect. Please check your network and try again.');
         }
-
-        btnSignin.classList.remove('loading');
     });
 
-    // Auto-focus on email field
+    function showError(msg) {
+        errorMsg.textContent = msg;
+        errorMsg.classList.add('show');
+        btnSignin.classList.remove('loading');
+        btnSignin.textContent = 'Sign In';
+    }
+
     document.getElementById('login_email').focus();
 </script>
 

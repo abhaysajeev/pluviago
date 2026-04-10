@@ -11,10 +11,16 @@
   "preparation_date",
   "prepared_by",
   "final_required_volume",
+  "shelf_life_days",
+  "expiry_date",
+  "storage_condition",
   "green_medium_batch",
   "green_medium_volume",
   "red_medium_batch",
   "red_medium_volume",
+  "actual_final_volume",
+  "remaining_volume",
+  "volume_consumed",
   "column_break_1",
   "mixing_date",
   "mixing_done",
@@ -24,6 +30,7 @@
   "section_break_qc",
   "qc_status",
   "qc_checkpoint_5_clarity",
+  "qc_checkpoint_5_sterility",
   "ph_value",
   "turbidity",
   "assay_result",
@@ -77,6 +84,26 @@
    "reqd": 1
   },
   {
+   "fieldname": "shelf_life_days",
+   "fieldtype": "Int",
+   "label": "Shelf Life (days)",
+   "description": "Typical: 3–7 days. Final Medium should be used as soon as possible."
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date",
+   "read_only": 1,
+   "description": "Auto-calculated from Preparation Date + Shelf Life Days"
+  },
+  {
+   "fieldname": "storage_condition",
+   "fieldtype": "Select",
+   "label": "Storage Condition",
+   "options": "2-8°C\nRoom Temperature",
+   "default": "2-8°C"
+  },
+  {
    "fieldname": "green_medium_batch",
    "fieldtype": "Link",
    "label": "Green Medium Batch",
@@ -100,6 +127,25 @@
    "fieldname": "red_medium_volume",
    "fieldtype": "Float",
    "label": "Red Medium Volume (L) [25%]",
+   "read_only": 1
+  },
+  {
+   "fieldname": "actual_final_volume",
+   "fieldtype": "Float",
+   "label": "Actual Volume Prepared (L)",
+   "description": "Actual volume after top-up. Defaults to Final Required Volume if not entered."
+  },
+  {
+   "fieldname": "remaining_volume",
+   "fieldtype": "Float",
+   "label": "Remaining Volume (L)",
+   "read_only": 1,
+   "description": "Auto-decremented when consumed by Production Batch"
+  },
+  {
+   "fieldname": "volume_consumed",
+   "fieldtype": "Float",
+   "label": "Volume Consumed (L)",
    "read_only": 1
   },
   {
@@ -152,6 +198,14 @@
    "options": "Pass\nFail\nPending"
   },
   {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_5_sterility",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 5: Sterility",
+   "options": "Pass\nFail\nPending\nBy Process",
+   "description": "By Process = sterility assured via validated aseptic technique, no direct test performed"
+  },
+  {
    "fieldname": "ph_value",
    "fieldtype": "Float",
    "label": "pH Value"
@@ -198,7 +252,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Draft\nApproved\nRejected\nUsed"
+   "options": "Draft\nApproved\nPartially Used\nUsed\nRejected"
   },
   {
    "fieldname": "remarks",

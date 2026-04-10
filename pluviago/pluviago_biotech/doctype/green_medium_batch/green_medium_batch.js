@@ -1,9 +1,59 @@
+function calc_gmb_expiry(frm) {
+    if (frm.doc.shelf_life_days && frm.doc.preparation_date) {
+        frm.set_value('expiry_date',
+            frappe.datetime.add_days(frm.doc.preparation_date, frm.doc.shelf_life_days));
+    }
+}
+
 frappe.ui.form.on('Green Medium Batch', {
     final_required_volume(frm) {
         frm.set_value('green_volume_calculated', (frm.doc.final_required_volume || 0) * 0.75);
     },
 
+    shelf_life_days(frm) { calc_gmb_expiry(frm); },
+    preparation_date(frm) { calc_gmb_expiry(frm); },
+
     refresh(frm) {
+        frm.set_query('di_water_rmb', () => ({
+            filters: { batch_source: 'In-house', docstatus: 1, qc_status: 'Approved' }
+        }));
+
+        // Lineage: show downstream Final Medium and Production Batches
+        if (frm.doc.docstatus === 1) {
+            frm.add_custom_button(__('View Lineage'), () => {
+                frappe.call({
+                    method: 'pluviago.pluviago_biotech.utils.stock_utils.get_medium_lineage',
+                    args: { batch_name: frm.doc.name, batch_doctype: 'Green Medium Batch' },
+                    callback(r) {
+                        const d = r.message || {};
+                        const fmbs = d.final_medium_batches || [];
+                        const prods = d.production_batches || [];
+                        let html = '';
+                        if (fmbs.length) {
+                            html += `<b>Final Medium Batches:</b><br>` + fmbs.map(f =>
+                                `<a href="/app/final-medium-batch/${f.name}">${f.name}</a> (${f.status})`
+                            ).join('<br>') + '<br><br>';
+                        }
+                        if (prods.length) {
+                            html += `<b>Production Batches:</b><br>` + prods.map(p =>
+                                `<a href="/app/production-batch/${p.name}">${p.name}</a> (${p.status})`
+                            ).join('<br>');
+                        }
+                        if (!html) html = 'Not yet consumed by any downstream batch.';
+                        frappe.msgprint({ title: __('Downstream Lineage'), message: html, indicator: 'blue' });
+                    }
+                });
+            }, __('Actions'));
+        }
+
+        // Load Formula button
+        pluviago.add_load_formula_button(frm, {
+            applies_to: 'Green Medium Batch',
+            volume_field: 'final_required_volume',
+            child_table: 'direct_chemicals',
+            qty_fieldname: 'quantity',
+        });
+
         // Mark Preparation Complete button
         if (frm.doc.docstatus === 0 && frm.doc.preparation_status === 'Draft') {
             frm.add_custom_button(__('Mark Preparation Complete'), function () {

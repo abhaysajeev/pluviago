@@ -8,6 +8,7 @@
  "field_order": [
   "naming_series",
   "batch_number",
+  "batch_source",
   "status",
   "section_break_identity",
   "material_name",
@@ -65,6 +66,15 @@
    "read_only": 1
   },
   {
+   "default": "Purchased",
+   "fieldname": "batch_source",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Batch Source",
+   "options": "Purchased\nIn-house",
+   "reqd": 1
+  },
+  {
    "default": "Received",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -75,7 +85,7 @@
   {
    "fieldname": "section_break_identity",
    "fieldtype": "Section Break",
-   "label": "Chemical Identity"
+   "label": "Identity"
   },
   {
    "fieldname": "material_name",
@@ -98,8 +108,7 @@
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
-   "options": "Supplier",
-   "reqd": 1
+   "options": "Supplier"
   },
   {
    "fieldname": "col_break_supplier",
@@ -108,8 +117,7 @@
   {
    "fieldname": "supplier_batch_no",
    "fieldtype": "Data",
-   "label": "Supplier / Vendor Batch No",
-   "reqd": 1
+   "label": "Supplier / Vendor Batch No"
   },
   {
    "fieldname": "coa_number",
@@ -128,8 +136,7 @@
   {
    "fieldname": "expiry_date",
    "fieldtype": "Date",
-   "label": "Expiry Date",
-   "reqd": 1
+   "label": "Expiry Date"
   },
   {
    "fieldname": "section_break_stock",
@@ -274,7 +281,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "modified": "2026-04-07 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Raw Material Batch",
@@ -282,6 +289,7 @@
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -292,10 +300,10 @@
    "role": "Production Manager",
    "share": 1,
    "submit": 1,
-   "cancel": 1,
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 0,
    "email": 1,
@@ -306,7 +314,6 @@
    "role": "QA Head",
    "share": 1,
    "submit": 1,
-   "cancel": 1,
    "write": 1
   },
   {
@@ -334,12 +341,13 @@
    "role": "Production Operator"
   },
   {
+   "create": 1,
    "read": 1,
    "write": 1,
-   "create": 1,
    "role": "Store Keeper"
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -350,10 +358,10 @@
    "role": "Pluviago Admin",
    "share": 1,
    "submit": 1,
-   "cancel": 1,
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -364,7 +372,6 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
-   "cancel": 1,
    "write": 1
   }
  ],

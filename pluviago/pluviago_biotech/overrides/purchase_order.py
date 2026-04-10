@@ -1,50 +1,61 @@
 import frappe
 from frappe.utils import nowdate
+from pluviago.pluviago_biotech.utils.item_utils import (
+    PURCHASED_RAW_MATERIAL_GROUPS,
+    get_item_groups,
+)
 
 
 def validate(doc, method=None):
-	"""
-	On Purchase Order validate:
-	  - Warn if supplier is not in Approved Vendor list for any ordered chemical item,
-	    or if their qualification has expired (valid_upto < today).
-	  - Does not hard-block (warning only) — COA verification is the real quality gate.
-	"""
-	if not doc.items:
-		return
+    """
+    On Purchase Order validate: hard-block if supplier is not in the Approved
+    Vendor List for any purchased raw material item, or if qualification expired.
+    Detection is item-group based — not dependent on item code naming.
+    """
+    if not doc.items:
+        return
 
-	unapproved = []
+    # One query to get item groups for all items on this PO
+    all_codes = list({row.item_code for row in doc.items if row.item_code})
+    item_groups = get_item_groups(all_codes)
 
-	for row in doc.items:
-		if not row.item_code:
-			continue
+    # Only check items whose group requires AVL (purchased raw materials)
+    trackable = [
+        code for code in all_codes
+        if item_groups.get(code, "") in PURCHASED_RAW_MATERIAL_GROUPS
+    ]
+    if not trackable:
+        return
 
-		# Only check items that are chemicals (item_group in chemical groups)
-		item_group = frappe.db.get_value("Item", row.item_code, "item_group")
-		chemical_groups = {
-			"Base Salts", "Trace Elements", "Nutrients",
-			"Vitamins", "Media Chemicals", "Raw Materials", "Raw Material"
-		}
-		if item_group not in chemical_groups:
-			continue
+    # Single query — find which trackable items ARE approved for this supplier
+    placeholders = ", ".join(["%s"] * len(trackable))
+    approved_rows = frappe.db.sql(
+        f"""
+        SELECT avi.item_code
+        FROM `tabApproved Vendor` av
+        JOIN `tabApproved Vendor Item` avi ON avi.parent = av.name
+        WHERE av.supplier = %s
+          AND avi.item_code IN ({placeholders})
+          AND av.approval_status = 'Approved'
+          AND av.valid_upto >= %s
+        """,
+        [doc.supplier] + trackable + [nowdate()],
+    )
+    approved_set = {row[0] for row in approved_rows}
 
-		approved = frappe.db.get_value("Approved Vendor", [
-			["supplier", "=", doc.supplier],
-			["item_code", "=", row.item_code],
-			["approval_status", "=", "Approved"],
-			["valid_upto", ">=", nowdate()],
-		], "name")
+    unapproved = []
+    for row in doc.items:
+        if (row.item_code
+                and item_groups.get(row.item_code, "") in PURCHASED_RAW_MATERIAL_GROUPS
+                and row.item_code not in approved_set):
+            unapproved.append(f"<li>{row.item_name or row.item_code}</li>")
 
-		if not approved:
-			unapproved.append(f"<li>{row.item_name or row.item_code}</li>")
-
-	if unapproved:
-		items_html = "".join(unapproved)
-		frappe.msgprint(
-			msg=f"""
-				Supplier <b>{doc.supplier}</b> is not in the Approved Vendor List for:<ul>{items_html}</ul>
-				Proceed only if vendor qualification is in progress.
-				Create an Approved Vendor record to suppress this warning.
-			""",
-			title="Vendor Not Qualified",
-			indicator="orange",
-		)
+    if unapproved:
+        frappe.throw(
+            msg=f"""
+                Supplier <b>{doc.supplier}</b> is not in the Approved Vendor List for:
+                <ul>{"".join(unapproved)}</ul>
+                Create an Approved Vendor record with status <b>Approved</b> before raising a Purchase Order.
+            """,
+            title="Vendor Not Approved",
+        )

@@ -9,11 +9,13 @@
   "naming_series",
   "section_vendor_material",
   "supplier",
-  "col_break_1",
-  "item_code",
   "supplier_name",
-  "col_break_2",
+  "item_code",
   "material_name",
+  "col_break_1",
+  "col_break_2",
+  "section_approved_items",
+  "approved_items",
   "section_qualification",
   "approval_status",
   "col_break_3",
@@ -47,7 +49,7 @@
   {
    "fieldname": "section_vendor_material",
    "fieldtype": "Section Break",
-   "label": "Vendor & Material"
+   "label": "Vendor"
   },
   {
    "fieldname": "supplier",
@@ -58,33 +60,50 @@
    "reqd": 1
   },
   {
-   "fieldname": "col_break_1",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "item_code",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item Code",
-   "options": "Item",
-   "reqd": 1
-  },
-  {
    "fieldname": "supplier_name",
    "fieldtype": "Data",
    "fetch_from": "supplier.supplier_name",
    "label": "Supplier Name",
-   "read_only": 1
+   "read_only": 1,
+   "in_list_view": 1
   },
   {
-   "fieldname": "col_break_2",
-   "fieldtype": "Column Break"
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item",
+   "hidden": 1,
+   "reqd": 0,
+   "in_list_view": 0
   },
   {
    "fieldname": "material_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Material Name"
+   "label": "Material Name",
+   "hidden": 1,
+   "in_list_view": 0
+  },
+  {
+   "fieldname": "col_break_1",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "col_break_2",
+   "fieldtype": "Column Break",
+   "hidden": 1
+  },
+  {
+   "fieldname": "section_approved_items",
+   "fieldtype": "Section Break",
+   "label": "Approved Items"
+  },
+  {
+   "fieldname": "approved_items",
+   "fieldtype": "Table",
+   "label": "Approved Items",
+   "options": "Approved Vendor Item",
+   "reqd": 0
   },
   {
    "fieldname": "section_qualification",
@@ -186,7 +205,7 @@
   }
  ],
  "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "modified": "2026-04-07 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Approved Vendor",

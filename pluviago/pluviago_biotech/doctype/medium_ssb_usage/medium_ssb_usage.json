@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "creation": "2026-04-08 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "solution_type",
+  "stock_solution_batch",
+  "volume_used_ml"
+ ],
+ "fields": [
+  {
+   "fieldname": "solution_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Solution Type",
+   "options": "A1\nA2\nA3\nA4\nA5\nA6\nA7-I\nA7-II\nA7-III\nA7-IV\nA7-V\nA7-VI\nA5M",
+   "reqd": 1
+  },
+  {
+   "fieldname": "stock_solution_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Stock Solution Batch",
+   "options": "Stock Solution Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "volume_used_ml",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Volume Used (mL)",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-08 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Medium SSB Usage",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

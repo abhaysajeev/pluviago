@@ -4,3 +4,4 @@
 
 [post_model_sync]
 pluviago.patches.v1_0.disable_chemical_qi
+pluviago.patches.v1_0.add_pr_pharma_fields

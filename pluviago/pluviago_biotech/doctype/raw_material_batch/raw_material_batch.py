@@ -1,17 +1,44 @@
+import json
 import frappe
 from frappe.model.document import Document
 
 
 @frappe.whitelist()
+def bulk_submit_rmbs(names):
+    """
+    Bulk-submit a list of Draft Raw Material Batches.
+    Returns per-batch result so the client can show a summary.
+    Accepts a JSON-encoded list or a Python list.
+    """
+    if isinstance(names, str):
+        names = json.loads(names)
+
+    results = {"submitted": [], "failed": []}
+    for name in names:
+        try:
+            doc = frappe.get_doc("Raw Material Batch", name)
+            if doc.docstatus != 0:
+                results["failed"].append({"name": name, "reason": "Not in Draft state"})
+                continue
+            doc.submit()
+            results["submitted"].append(name)
+        except Exception as e:
+            frappe.db.rollback()
+            results["failed"].append({"name": name, "reason": str(e)})
+
+    return results
+
+
+@frappe.whitelist()
 def recalculate_stock(rmb_name):
-	"""Whitelisted entry point — called from the form button."""
-	doc = frappe.get_doc("Raw Material Batch", rmb_name)
-	doc.recalculate_remaining_qty()
-	return {
-		"consumed_qty": doc.consumed_qty,
-		"remaining_qty": doc.remaining_qty,
-		"status": doc.status,
-	}
+    """Whitelisted entry point — called from the form button."""
+    doc = frappe.get_doc("Raw Material Batch", rmb_name)
+    doc.recalculate_remaining_qty()
+    return {
+        "consumed_qty": doc.consumed_qty,
+        "remaining_qty": doc.remaining_qty,
+        "status": doc.status,
+    }
 
 
 class RawMaterialBatch(Document):
@@ -22,22 +49,42 @@ class RawMaterialBatch(Document):
     def validate(self):
         if self.expiry_date and self.mfg_date:
             if self.expiry_date <= self.mfg_date:
-                frappe.throw("Expiry Date must be after Manufacturing Date")
+                frappe.throw("Expiry Date must be after Manufacturing Date.")
         if self.expiry_date:
             from frappe.utils import getdate, nowdate
             if getdate(self.expiry_date) < getdate(nowdate()):
-                frappe.msgprint("Warning: This material batch has already expired.", indicator="orange")
+                frappe.msgprint(
+                    "Warning: This material batch has already expired.",
+                    indicator="orange",
+                )
 
     def on_submit(self):
+        # QC gate applies to ALL batches regardless of source
         if self.qc_status != "Approved":
             frappe.throw(
                 "Cannot submit: QC Status must be <b>Approved</b> before submitting a Raw Material Batch."
             )
-        if not self.coa_verified:
-            frappe.throw(
-                "Cannot submit: COA has not been verified. "
-                "QC Manager must attach the COA document and tick <b>COA Verified</b> before submission."
-            )
+
+        # Purchased batches have additional requirements
+        if self.batch_source == "Purchased":
+            if not self.supplier:
+                frappe.throw(
+                    "Cannot submit: <b>Supplier</b> is required for Purchased batches."
+                )
+            if not self.supplier_batch_no:
+                frappe.throw(
+                    "Cannot submit: <b>Supplier Batch No</b> is required for Purchased batches."
+                )
+            if not self.expiry_date:
+                frappe.throw(
+                    "Cannot submit: <b>Expiry Date</b> is required for Purchased batches."
+                )
+            if not self.coa_verified:
+                frappe.throw(
+                    "Cannot submit: <b>COA Verified</b> must be ticked for Purchased batches. "
+                    "QC Manager must verify the vendor COA before submission."
+                )
+
         self.db_set("status", "Approved")
         self.db_set("consumed_qty", 0)
         self.db_set("remaining_qty", self.received_qty)
@@ -45,8 +92,8 @@ class RawMaterialBatch(Document):
     def on_cancel(self):
         if self.consumed_qty and self.consumed_qty > 0:
             frappe.throw(
-                f"Cannot cancel: <b>{self.consumed_qty} {self.received_qty_uom}</b> has already been "
-                "consumed from this batch. Cancellation is only allowed before any consumption occurs."
+                f"Cannot cancel: <b>{self.consumed_qty} {self.received_qty_uom or ''}</b> has already "
+                "been consumed from this batch. Cancellation is only allowed before any consumption occurs."
             )
         self.db_set("status", "Received")
         self.db_set("consumed_qty", 0)
@@ -55,23 +102,20 @@ class RawMaterialBatch(Document):
     def recalculate_remaining_qty(self):
         """
         Recompute consumed_qty by summing all Consumed/Written Off SCL entries
-        and reverse-summing Reversed entries for this batch.
-        Updates consumed_qty and remaining_qty via db_set.
+        and reverse-summing Reversed entries. Updates via db_set.
         """
         from frappe.utils import flt
 
         result = frappe.db.sql("""
             SELECT
-                SUM(CASE WHEN action IN ('Consumed', 'Written Off (Loss)') THEN ABS(qty_change) ELSE 0 END) as total_consumed,
-                SUM(CASE WHEN action = 'Reversed' THEN ABS(qty_change) ELSE 0 END) as total_reversed
+                SUM(CASE WHEN action IN ('Consumed', 'Written Off (Loss)') THEN ABS(qty_change) ELSE 0 END) AS total_consumed,
+                SUM(CASE WHEN action = 'Reversed' THEN ABS(qty_change) ELSE 0 END) AS total_reversed
             FROM `tabStock Consumption Log`
             WHERE raw_material_batch = %s
         """, self.name, as_dict=True)
 
         row = result[0] if result else {}
-        total_consumed = flt(row.get("total_consumed"))
-        total_reversed = flt(row.get("total_reversed"))
-        net_consumed = max(total_consumed - total_reversed, 0)
+        net_consumed = max(flt(row.get("total_consumed")) - flt(row.get("total_reversed")), 0)
         remaining = max(flt(self.received_qty) - net_consumed, 0)
 
         self.db_set("consumed_qty", net_consumed)

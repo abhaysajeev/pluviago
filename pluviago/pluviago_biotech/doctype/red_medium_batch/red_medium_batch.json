@@ -10,22 +10,19 @@
   "batch_number",
   "preparation_date",
   "prepared_by",
+  "shelf_life_days",
+  "expiry_date",
+  "storage_condition",
+  "di_water_rmb",
   "di_water_volume",
   "final_required_volume",
   "red_volume_calculated",
+  "remaining_volume",
+  "volume_consumed",
   "section_break_direct_chem",
   "direct_chemicals",
   "section_break_stocks",
-  "stock_solution_a4",
-  "a4_volume_used",
-  "stock_solution_a5",
-  "a5_volume_used",
-  "stock_solution_a6",
-  "a6_volume_used",
-  "stock_solution_a7",
-  "a7_volume_used",
-  "a5m_trace_stock_batch",
-  "a5m_volume_used",
+  "ssb_used",
   "sterilization_method",
   "sterilization_done",
   "sterilization_checkpoint",
@@ -34,7 +31,6 @@
   "qc_checkpoint_3_date",
   "qc_checkpoint_3_by",
   "section_break_qc",
-  "qc_entries",
   "qc_checkpoint_4_clarity",
   "qc_checkpoint_4_ph",
   "qc_checkpoint_4_date",
@@ -82,6 +78,26 @@
    "reqd": 1
   },
   {
+   "fieldname": "shelf_life_days",
+   "fieldtype": "Int",
+   "label": "Shelf Life (days)",
+   "description": "Typical: 14–28 days at 2-8°C, 7 days at Room Temperature"
+  },
+  {
+   "fieldname": "expiry_date",
+   "fieldtype": "Date",
+   "label": "Expiry Date",
+   "read_only": 1,
+   "description": "Auto-calculated from Preparation Date + Shelf Life Days"
+  },
+  {
+   "fieldname": "storage_condition",
+   "fieldtype": "Select",
+   "label": "Storage Condition",
+   "options": "2-8°C\nRoom Temperature",
+   "default": "2-8°C"
+  },
+  {
    "fieldname": "di_water_volume",
    "fieldtype": "Float",
    "label": "DI Water Volume (mL)"
@@ -99,6 +115,19 @@
    "read_only": 1
   },
   {
+   "fieldname": "remaining_volume",
+   "fieldtype": "Float",
+   "label": "Remaining Volume (L)",
+   "read_only": 1,
+   "description": "Auto-decremented when consumed by Final Medium Batch"
+  },
+  {
+   "fieldname": "volume_consumed",
+   "fieldtype": "Float",
+   "label": "Volume Consumed (L)",
+   "read_only": 1
+  },
+  {
    "fieldname": "section_break_direct_chem",
    "fieldtype": "Section Break",
    "label": "Direct Chemical Ingredients"
@@ -106,73 +135,13 @@
   {
    "fieldname": "direct_chemicals",
    "fieldtype": "Table",
-   "label": "Direct Chemicals (CaCl\u2082, MgSO\u2084, etc.)",
+   "label": "Direct Chemicals (CaCl₂, MgSO₄, etc.)",
    "options": "Medium Direct Ingredient"
   },
   {
    "fieldname": "section_break_stocks",
    "fieldtype": "Section Break",
    "label": "Stock Solutions Used"
-  },
-  {
-   "fieldname": "stock_solution_a4",
-   "fieldtype": "Link",
-   "label": "Stock Solution A4",
-   "options": "Stock Solution Batch"
-  },
-  {
-   "fieldname": "a4_volume_used",
-   "fieldtype": "Float",
-   "label": "A4 Volume Used (mL)",
-   "description": "Volume of this stock solution used in this batch"
-  },
-  {
-   "fieldname": "stock_solution_a5",
-   "fieldtype": "Link",
-   "label": "Stock Solution A5",
-   "options": "Stock Solution Batch"
-  },
-  {
-   "fieldname": "a5_volume_used",
-   "fieldtype": "Float",
-   "label": "A5 Volume Used (mL)",
-   "description": "Volume of this stock solution used in this batch"
-  },
-  {
-   "fieldname": "stock_solution_a6",
-   "fieldtype": "Link",
-   "label": "Stock Solution A6",
-   "options": "Stock Solution Batch"
-  },
-  {
-   "fieldname": "a6_volume_used",
-   "fieldtype": "Float",
-   "label": "A6 Volume Used (mL)",
-   "description": "Volume of this stock solution used in this batch"
-  },
-  {
-   "fieldname": "stock_solution_a7",
-   "fieldtype": "Link",
-   "label": "Stock Solution A7",
-   "options": "Stock Solution Batch"
-  },
-  {
-   "fieldname": "a7_volume_used",
-   "fieldtype": "Float",
-   "label": "A7 Volume Used (mL)",
-   "description": "Volume of this stock solution used in this batch"
-  },
-  {
-   "fieldname": "a5m_trace_stock_batch",
-   "fieldtype": "Link",
-   "label": "A5M Trace Stock (A6) Batch",
-   "options": "Stock Solution Batch"
-  },
-  {
-   "fieldname": "a5m_volume_used",
-   "fieldtype": "Float",
-   "label": "A5M Volume Used (mL)",
-   "description": "Volume of this stock solution used in this batch"
   },
   {
    "fieldname": "sterilization_method",
@@ -217,12 +186,6 @@
    "fieldname": "section_break_qc",
    "fieldtype": "Section Break",
    "label": "QC Checkpoints (4 required)"
-  },
-  {
-   "fieldname": "qc_entries",
-   "fieldtype": "Table",
-   "label": "QC Entries",
-   "options": "Red Medium QC Entry"
   },
   {
    "default": "Pending",
@@ -272,7 +235,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Draft\nApproved\nRejected\nUsed\nWasted"
+   "options": "Draft\nApproved\nPartially Used\nUsed\nRejected\nWasted"
   },
   {
    "default": "Draft",
@@ -307,6 +270,19 @@
    "default": "Normal",
    "in_list_view": 1,
    "description": "Normal = clean pass. Conditional Release = passed after corrective action. Rejected = batch unrecoverable."
+  },
+  {
+   "fieldname": "di_water_rmb",
+   "fieldtype": "Link",
+   "label": "DI Water Batch",
+   "options": "Raw Material Batch",
+   "description": "In-house Raw Material Batch used for DI water. Stock will be deducted on Mark Preparation Complete."
+  },
+  {
+   "fieldname": "ssb_used",
+   "fieldtype": "Table",
+   "label": "Stock Solutions Used",
+   "options": "Medium SSB Usage"
   }
  ],
  "is_submittable": 1,

@@ -6,6 +6,8 @@ class StockSolutionBatch(Document):
     def before_save(self):
         if not self.batch_number:
             self.batch_number = self.name
+        if self.shelf_life_days and self.preparation_date:
+            self.expiry_date = frappe.utils.add_days(self.preparation_date, int(self.shelf_life_days))
 
     def validate(self):
         if self.qc_date and self.preparation_date:
@@ -62,8 +64,7 @@ class StockSolutionBatch(Document):
             frappe.throw("Preparation is already marked complete.")
         if not self.ingredients:
             frappe.throw("Add at least one ingredient before marking preparation complete.")
-
-        from pluviago_biotech.utils.stock_utils import deduct_raw_materials
+        from pluviago.pluviago_biotech.utils.stock_utils import deduct_raw_materials
         deduct_raw_materials(self, action="Consumed")
         self.db_set("preparation_status", "QC Pending")
         frappe.msgprint("Preparation marked complete. Stock deducted. Proceed to QC check.")
@@ -78,7 +79,7 @@ class StockSolutionBatch(Document):
         if self.preparation_status != "QC Pending":
             frappe.throw("Can only mark as Wasted when in QC Pending state.")
 
-        from pluviago_biotech.utils.stock_utils import log_waste
+        from pluviago.pluviago_biotech.utils.stock_utils import log_waste
         if reason:
             self.db_set("qc_remarks", reason)
         log_waste(self)
@@ -100,8 +101,9 @@ class StockSolutionBatch(Document):
         if self.qc_status != "Passed":
             frappe.throw("Cannot submit: QC Status must be Passed.")
 
+        released_date = frappe.utils.today()
         self.db_set("preparation_status", "Released")
-        self.db_set("released_date", frappe.utils.today())
+        self.db_set("released_date", released_date)
         self.db_set("released_by", frappe.session.user)
         self.db_set("available_volume", self.target_volume or 0)
         self.db_set("status", "Approved")
@@ -112,6 +114,6 @@ class StockSolutionBatch(Document):
                 "Cannot cancel a batch that has been physically prepared. "
                 "Use 'Mark as Wasted' if QC failed, or contact an administrator."
             )
-        from pluviago_biotech.utils.stock_utils import reverse_raw_materials
+        from pluviago.pluviago_biotech.utils.stock_utils import reverse_raw_materials
         reverse_raw_materials(self)
         self.db_set("status", "Draft")

@@ -7,6 +7,15 @@ app_license = "mit"
 
 required_apps = ["frappe", "erpnext"]
 
+# Include workspace CSS/JS on all authenticated Desk pages
+app_include_css = [
+    "/assets/pluviago/css/pluviago_workspace.css",
+]
+app_include_js = [
+    "/assets/pluviago/js/pluviago_workspace.js",
+    "/assets/pluviago/js/load_formula.js",
+]
+
 after_install = "pluviago.install.after_install"
 
 # Module inclusion
@@ -17,6 +26,11 @@ fixtures = [
         "Store Keeper", "Pluviago Admin"
     ]]]},
 ]
+
+# DocType JS — inject custom client scripts into standard ERPNext forms
+doctype_js = {
+    "Purchase Receipt": "pluviago_biotech/overrides/purchase_receipt.js",
+}
 
 # Document Events
 doc_events = {

@@ -20,6 +20,10 @@
   "section_break_medium",
   "final_medium_batch",
   "medium_volume_used",
+  "section_break_culture",
+  "culture_volume_available",
+  "inoculum_volume_in",
+  "inoculum_volume_out",
   "section_break_qc",
   "qc_readings",
   "section_break_decision",
@@ -125,6 +129,30 @@
    "fieldname": "medium_volume_used",
    "fieldtype": "Float",
    "label": "Medium Volume Used (L)"
+  },
+  {
+   "fieldname": "section_break_culture",
+   "fieldtype": "Section Break",
+   "label": "Culture Volume Tracking"
+  },
+  {
+   "fieldname": "culture_volume_available",
+   "fieldtype": "Float",
+   "label": "Culture Volume Available (L)",
+   "description": "Measured culture volume in reactor before scale-up or return event. Operator enters this value."
+  },
+  {
+   "fieldname": "inoculum_volume_in",
+   "fieldtype": "Float",
+   "label": "Inoculum Received from Parent (L)",
+   "description": "Volume of culture transferred from parent batch to seed this reactor."
+  },
+  {
+   "fieldname": "inoculum_volume_out",
+   "fieldtype": "Float",
+   "label": "Inoculum Transferred Out (L)",
+   "read_only": 1,
+   "description": "Total culture volume withdrawn from this batch to seed child batches. Auto-calculated."
   },
   {
    "fieldname": "section_break_qc",

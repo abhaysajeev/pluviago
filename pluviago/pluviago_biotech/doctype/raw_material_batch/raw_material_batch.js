@@ -1,4 +1,21 @@
 frappe.ui.form.on("Raw Material Batch", {
+	qc_status(frm) {
+		if (frm.doc.qc_status === "Approved") {
+			if (!frm.doc.qc_checked_by) {
+				frm.set_value("qc_checked_by", frappe.session.user);
+			}
+			if (!frm.doc.qc_date) {
+				frm.set_value("qc_date", frappe.datetime.get_today());
+			}
+		}
+	},
+
+	coa_verified(frm) {
+		if (frm.doc.coa_verified && !frm.doc.coa_verified_by) {
+			frm.set_value("coa_verified_by", frappe.session.user);
+		}
+	},
+
 	refresh(frm) {
 		// Expiry alerts
 		if (frm.doc.expiry_date) {

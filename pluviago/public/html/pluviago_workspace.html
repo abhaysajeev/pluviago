@@ -1,0 +1,257 @@
+<!-- ═══════════════════════════════════════════════════════════
+     Pluviago Biotech — Full Production Pipeline Workspace
+     Paste this entire block into a Frappe Workspace HTML Block.
+     JS: pluviago_workspace.js  |  CSS: pluviago_workspace.css
+═══════════════════════════════════════════════════════════ -->
+
+<div id="pluviago-workspace">
+
+  <!-- ─── HEADER ─── -->
+  <div class="pv-header">
+    <div class="pv-header-left">
+      <div class="pv-logo-icon">🧬</div>
+      <div>
+        <h1>Pluviago Biotech</h1>
+        <p class="pv-subtitle">Astaxanthin Production — End-to-End Pipeline Dashboard</p>
+      </div>
+    </div>
+    <div class="pv-header-right">
+      <span class="pv-badge">Module Active</span>
+      <span class="pv-date" id="pv-date"></span>
+    </div>
+  </div>
+
+  <!-- ─── QUICK ACTIONS ─── -->
+  <div class="pv-actions-bar">
+    <a class="pv-action-btn primary" href="/app/approved-vendor/new">✅ New Vendor</a>
+    <a class="pv-action-btn" href="/app/purchase-order/new">📋 Purchase Order</a>
+    <a class="pv-action-btn" href="/app/raw-material-batch/new">🧪 New RMB</a>
+    <a class="pv-action-btn" href="/app/chemical-coa/new">🔬 Chemical COA</a>
+    <a class="pv-action-btn" href="/app/work-order/new">🏭 Work Order</a>
+    <a class="pv-action-btn" href="/app/stock-consumption-log">📜 Consumption Log (<span id="pv-scl-count">0</span>)</a>
+  </div>
+
+  <!-- ─── FULL PRODUCTION PIPELINE ─── -->
+  <div class="pv-pipeline">
+    <div class="pv-pipeline-title">📊 End-to-End Production Flow <span>— From Vendor Qualification to Final Dispatch</span></div>
+
+    <!-- Row 1: Procurement & Media Prep (Stages 0–0C) -->
+    <div class="pv-pipeline-label">Stage 0 — Procurement &amp; Media Preparation</div>
+    <div class="pv-flow-track">
+      <div class="pv-flow-step active" onclick="frappe.set_route('List','Approved Vendor')">
+        <div class="pv-flow-dot">✅</div>
+        <div class="pv-flow-label">Vendor Qualification</div>
+        <div class="pv-flow-count" id="flow-avl">–</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step active" onclick="frappe.set_route('List','Purchase Order',{company:'Pluviago Biotech Pvt. Ltd.'})">
+        <div class="pv-flow-dot">📋</div>
+        <div class="pv-flow-label">Purchase Order</div>
+        <div class="pv-flow-count" id="flow-po">–</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step active" onclick="frappe.set_route('List','Purchase Receipt',{company:'Pluviago Biotech Pvt. Ltd.'})">
+        <div class="pv-flow-dot">📦</div>
+        <div class="pv-flow-label">Purchase Receipt</div>
+        <div class="pv-flow-count" id="flow-pr">–</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step active" onclick="frappe.set_route('List','Chemical COA')">
+        <div class="pv-flow-dot">🔬</div>
+        <div class="pv-flow-label">Chemical COA</div>
+        <div class="pv-flow-count" id="flow-coa">–</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step active" onclick="frappe.set_route('List','Raw Material Batch')">
+        <div class="pv-flow-dot">🧪</div>
+        <div class="pv-flow-label">Raw Material Batch</div>
+        <div class="pv-flow-count" id="flow-rmb">–</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Biological Cultivation (Stages 1–5) -->
+    <div class="pv-pipeline-label" style="margin-top:20px">Stages 1–5 — Biological Cultivation Scale-Up</div>
+    <div class="pv-flow-track">
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%Flask%']})">
+        <div class="pv-flow-dot">🧫</div>
+        <div class="pv-flow-label">Flask Culture</div>
+        <div class="pv-flow-count">Gen 1 · Seed</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%25L%']})">
+        <div class="pv-flow-dot">🔵</div>
+        <div class="pv-flow-label">25 L PBR</div>
+        <div class="pv-flow-count">Gen 2</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%275L%']})">
+        <div class="pv-flow-dot">🟢</div>
+        <div class="pv-flow-label">275 L PBR</div>
+        <div class="pv-flow-count">Gen 3</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%925L%']})">
+        <div class="pv-flow-dot">🟡</div>
+        <div class="pv-flow-label">925 L PBR</div>
+        <div class="pv-flow-count">Gen 4</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%6600L%']})">
+        <div class="pv-flow-dot">🔴</div>
+        <div class="pv-flow-label">6600 L Reactor</div>
+        <div class="pv-flow-count">Gen 5 · Production</div>
+      </div>
+    </div>
+
+    <!-- Row 3: Downstream (Stages 6–10) -->
+    <div class="pv-pipeline-label" style="margin-top:20px">Stages 6–10 — Downstream Processing &amp; Dispatch</div>
+    <div class="pv-flow-track">
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%Harvest%']})">
+        <div class="pv-flow-dot">🌾</div>
+        <div class="pv-flow-label">Harvest</div>
+        <div class="pv-flow-count">Biomass separation</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%Dry%']})">
+        <div class="pv-flow-dot">☀️</div>
+        <div class="pv-flow-label">Drying</div>
+        <div class="pv-flow-count">Assay QC</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Work Order',{production_item:['like','%Pack%']})">
+        <div class="pv-flow-dot">📦</div>
+        <div class="pv-flow-label">Packing</div>
+        <div class="pv-flow-count">Label &amp; seal</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step">
+        <div class="pv-flow-dot">🏭</div>
+        <div class="pv-flow-label">Extraction</div>
+        <div class="pv-flow-count">Outsourced</div>
+      </div>
+      <div class="pv-flow-connector"></div>
+      <div class="pv-flow-step" onclick="frappe.set_route('List','Delivery Note',{company:'Pluviago Biotech Pvt. Ltd.'})">
+        <div class="pv-flow-dot">🚚</div>
+        <div class="pv-flow-label">Final Dispatch</div>
+        <div class="pv-flow-count">Delivery</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── KPI CARDS ─── -->
+  <div class="pv-kpi-grid" id="pv-kpis">
+    <div class="pv-kpi blue"><div class="pv-kpi-icon">⏳</div><div class="pv-kpi-value">–</div><div class="pv-kpi-label">Loading…</div></div>
+    <div class="pv-kpi green"><div class="pv-kpi-icon">⏳</div><div class="pv-kpi-value">–</div><div class="pv-kpi-label">Loading…</div></div>
+    <div class="pv-kpi purple"><div class="pv-kpi-icon">⏳</div><div class="pv-kpi-value">–</div><div class="pv-kpi-label">Loading…</div></div>
+    <div class="pv-kpi orange"><div class="pv-kpi-icon">⏳</div><div class="pv-kpi-value">–</div><div class="pv-kpi-label">Loading…</div></div>
+    <div class="pv-kpi blue"><div class="pv-kpi-icon">⏳</div><div class="pv-kpi-value">–</div><div class="pv-kpi-label">Loading…</div></div>
+  </div>
+
+  <!-- ─── CHARTS ROW 1 ─── -->
+  <div class="pv-charts-grid">
+    <div class="pv-chart-card">
+      <div class="pv-chart-header">
+        <div>
+          <div class="pv-chart-title">🧪 RMB Quality Status</div>
+          <div class="pv-chart-subtitle">Raw Material Batch QC breakdown</div>
+        </div>
+      </div>
+      <div class="pv-chart-container">
+        <canvas id="chart-qc-status"></canvas>
+      </div>
+    </div>
+    <div class="pv-chart-card">
+      <div class="pv-chart-header">
+        <div>
+          <div class="pv-chart-title">✅ Vendor Approval Status</div>
+          <div class="pv-chart-subtitle">Approved Vendor List breakdown</div>
+        </div>
+      </div>
+      <div class="pv-chart-container">
+        <canvas id="chart-avl-status"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CHARTS ROW 2 ─── -->
+  <div class="pv-charts-grid">
+    <div class="pv-chart-card">
+      <div class="pv-chart-header">
+        <div>
+          <div class="pv-chart-title">🔬 COA Verification Results</div>
+          <div class="pv-chart-subtitle">Certificate of Analysis pass vs fail</div>
+        </div>
+      </div>
+      <div class="pv-chart-container">
+        <canvas id="chart-coa-results"></canvas>
+      </div>
+    </div>
+    <div class="pv-chart-card">
+      <div class="pv-chart-header">
+        <div>
+          <div class="pv-chart-title">📦 Inventory Overview</div>
+          <div class="pv-chart-subtitle">Top batches — received vs remaining</div>
+        </div>
+      </div>
+      <div class="pv-chart-container">
+        <canvas id="chart-inventory"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TWO-COLUMN: TABLE + ALERTS ─── -->
+  <div class="pv-two-col">
+    <div>
+      <div class="pv-section-title">🔬 Recent Chemical COAs</div>
+      <div class="pv-table-card">
+        <table class="pv-table">
+          <thead>
+            <tr>
+              <th>COA ID</th>
+              <th>Supplier</th>
+              <th>Item</th>
+              <th>Result</th>
+              <th>Verified On</th>
+            </tr>
+          </thead>
+          <tbody id="pv-coa-tbody">
+            <tr><td colspan="5" style="text-align:center;color:var(--pv-muted);padding:24px">Loading…</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="pv-section-title">🔔 Alerts &amp; Notifications</div>
+      <div class="pv-alert-list" id="pv-alerts">
+        <div class="pv-alert info"><div class="pv-alert-icon">⏳</div><div><div class="pv-alert-title">Loading alerts…</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── RECENT RAW MATERIAL BATCHES ─── -->
+  <div class="pv-section-title">🧪 Recent Raw Material Batches</div>
+  <div class="pv-table-card">
+    <table class="pv-table">
+      <thead>
+        <tr>
+          <th>Batch ID</th>
+          <th>Material</th>
+          <th>Supplier</th>
+          <th>Received</th>
+          <th>Remaining</th>
+          <th>QC Status</th>
+          <th>Expiry</th>
+        </tr>
+      </thead>
+      <tbody id="pv-rmb-tbody">
+        <tr><td colspan="7" style="text-align:center;color:var(--pv-muted);padding:24px">Loading…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<script>
+  // Set current date
+  document.getElementById('pv-date').textContent = frappe.datetime.str_to_user(frappe.datetime.nowdate());
+</script>

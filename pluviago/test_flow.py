@@ -37,10 +37,11 @@ def cleanup():
 def make_approved_rmb():
 	"""Helper — returns a submitted, approved RMB."""
 	av = frappe.get_doc({
-		"doctype": "Approved Vendor", "supplier": SUPPLIER, "item_code": ITEM,
-		"material_name": ITEM_NAME, "approval_status": "Approved",
+		"doctype": "Approved Vendor", "supplier": SUPPLIER,
+		"approval_status": "Approved",
 		"approval_date": today(), "valid_upto": add_days(today(), 365),
 		"approved_by": "Administrator",
+		"approved_items": [{"item_code": ITEM, "material_name": ITEM_NAME}]
 	})
 	av.naming_series = "AVL-.YYYY.-.####"
 	av.insert(ignore_permissions=True)
