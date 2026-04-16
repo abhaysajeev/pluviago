@@ -232,14 +232,6 @@ def create_gmb(rmb, ssbs):
         qc_checkpoint_2_date=today(),
         qc_checkpoint_2_by="Administrator",
         overall_qc_status="Passed",
-        qc_entries=[
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 1,
-             "checkpoint_name": "CP1 Clarity", "result": "Pass",
-             "tested_by": "Administrator", "test_date": today()},
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 2,
-             "checkpoint_name": "CP2 pH", "result": "Pass",
-             "tested_by": "Administrator", "test_date": today()},
-        ],
     )
 
     gmb_doc = reload(gmb)
@@ -322,14 +314,6 @@ def create_rmb(rmb, ssbs):
         qc_checkpoint_4_date=today(),
         qc_checkpoint_4_by="Administrator",
         overall_qc_status="Passed",
-        qc_entries=[
-            {"doctype": "Red Medium QC Entry", "checkpoint_no": 3,
-             "checkpoint_name": "CP3 Clarity", "result": "Pass",
-             "tested_by": "Administrator", "test_date": today()},
-            {"doctype": "Red Medium QC Entry", "checkpoint_no": 4,
-             "checkpoint_name": "CP4 pH", "result": "Pass",
-             "tested_by": "Administrator", "test_date": today()},
-        ],
     )
 
     rmb_doc = reload(rmbatch)
@@ -393,8 +377,6 @@ def create_fmb(gmb_name, red_name):
         storage_condition="2-8°C",
         green_medium_batch=gmb_name,
         red_medium_batch=red_name,
-        mixing_done=1,
-        mixing_date=today(),
         aseptic_mixing_done=1,
         qc_status="Passed",
         qc_checkpoint_5_clarity="Pass",
@@ -514,12 +496,6 @@ def test_validation_guards(rmb, ssbs, gmb_name, red_name, fmb_name):
         qc_checkpoint_1_clarity="Pass",
         qc_checkpoint_2_clarity="Pass",
         overall_qc_status="Passed",
-        qc_entries=[
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 1, "result": "Pass",
-             "checkpoint_name": "CP1", "tested_by": "Administrator", "test_date": today()},
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 2, "result": "Pass",
-             "checkpoint_name": "CP2", "tested_by": "Administrator", "test_date": today()},
-        ],
     )
     overuse_gmb.mark_preparation_complete()
 
@@ -559,12 +535,6 @@ def test_cancel_reversal(ssbs):
         qc_checkpoint_1_clarity="Pass",
         qc_checkpoint_2_clarity="Pass",
         overall_qc_status="Passed",
-        qc_entries=[
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 1, "result": "Pass",
-             "checkpoint_name": "CP1", "tested_by": "Administrator", "test_date": today()},
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 2, "result": "Pass",
-             "checkpoint_name": "CP2", "tested_by": "Administrator", "test_date": today()},
-        ],
     )
 
     cancel_gmb.mark_preparation_complete()
@@ -632,12 +602,6 @@ def test_expiry_enforcement(rmb):
         qc_checkpoint_1_clarity="Pass",
         qc_checkpoint_2_clarity="Pass",
         overall_qc_status="Passed",
-        qc_entries=[
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 1, "result": "Pass",
-             "checkpoint_name": "CP1", "tested_by": "Administrator", "test_date": today()},
-            {"doctype": "Green Medium QC Entry", "checkpoint_no": 2, "result": "Pass",
-             "checkpoint_name": "CP2", "tested_by": "Administrator", "test_date": today()},
-        ],
     )
     expired_gmb.mark_preparation_complete()
 

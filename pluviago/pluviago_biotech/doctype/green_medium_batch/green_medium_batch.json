@@ -25,9 +25,7 @@
   "ssb_used",
   "sterilization_method",
   "sterilization_done",
-  "sterilization_checkpoint",
   "sterilization_date",
-  "cooldown_time",
   "top_up_done",
   "qc_checkpoint_1_clarity",
   "qc_checkpoint_1_date",
@@ -157,19 +155,9 @@
    "label": "Sterilization Done"
   },
   {
-   "fieldname": "sterilization_checkpoint",
-   "fieldtype": "Check",
-   "label": "Sterilization Complete"
-  },
-  {
    "fieldname": "sterilization_date",
    "fieldtype": "Date",
    "label": "Sterilization Date"
-  },
-  {
-   "fieldname": "cooldown_time",
-   "fieldtype": "Float",
-   "label": "Cooldown Time (minutes)"
   },
   {
    "fieldname": "top_up_done",

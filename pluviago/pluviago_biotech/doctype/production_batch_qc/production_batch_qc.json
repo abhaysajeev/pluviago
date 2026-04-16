@@ -5,7 +5,6 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "phase",
   "qc_type",
   "qc_date",
   "qc_by",
@@ -24,13 +23,6 @@
   "remarks"
  ],
  "fields": [
-  {
-   "fieldname": "phase",
-   "fieldtype": "Select",
-   "label": "Cultivation Phase",
-   "options": "\nGreen Phase\nRed Phase",
-   "description": "Applicable for 6600L batches only — tag which phase this reading belongs to."
-  },
   {
    "fieldname": "qc_type",
    "fieldtype": "Select",

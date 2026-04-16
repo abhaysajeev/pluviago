@@ -22,8 +22,6 @@
   "remaining_volume",
   "volume_consumed",
   "column_break_1",
-  "mixing_date",
-  "mixing_done",
   "aseptic_mixing_done",
   "aseptic_mixing_date",
   "sop_reference",
@@ -33,7 +31,6 @@
   "qc_checkpoint_5_sterility",
   "ph_value",
   "turbidity",
-  "assay_result",
   "qc_remarks",
   "qc_checked_by",
   "qc_date",
@@ -153,16 +150,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "mixing_date",
-   "fieldtype": "Date",
-   "label": "Mixing Date"
-  },
-  {
-   "fieldname": "mixing_done",
-   "fieldtype": "Check",
-   "label": "Mixing Done"
-  },
-  {
    "fieldname": "aseptic_mixing_done",
    "fieldtype": "Check",
    "label": "Aseptic Mixing Confirmed"
@@ -214,11 +201,6 @@
    "fieldname": "turbidity",
    "fieldtype": "Float",
    "label": "Turbidity"
-  },
-  {
-   "fieldname": "assay_result",
-   "fieldtype": "Float",
-   "label": "Assay Result (%)"
   },
   {
    "fieldname": "qc_remarks",

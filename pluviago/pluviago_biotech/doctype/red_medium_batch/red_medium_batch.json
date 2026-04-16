@@ -25,7 +25,6 @@
   "ssb_used",
   "sterilization_method",
   "sterilization_done",
-  "sterilization_checkpoint",
   "sterilization_date",
   "qc_checkpoint_3_clarity",
   "qc_checkpoint_3_date",
@@ -153,11 +152,6 @@
    "fieldname": "sterilization_done",
    "fieldtype": "Check",
    "label": "Sterilization Done"
-  },
-  {
-   "fieldname": "sterilization_checkpoint",
-   "fieldtype": "Check",
-   "label": "Sterilization Complete"
   },
   {
    "fieldname": "sterilization_date",

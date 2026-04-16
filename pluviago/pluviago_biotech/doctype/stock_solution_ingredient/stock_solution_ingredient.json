@@ -7,7 +7,6 @@
  "field_order": [
   "item_code",
   "item_name",
-  "batch_no",
   "raw_material_batch",
   "qty",
   "uom",
@@ -29,13 +28,6 @@
    "in_list_view": 1,
    "label": "Item Name",
    "read_only": 1
-  },
-  {
-   "fieldname": "batch_no",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Batch No",
-   "options": "Batch"
   },
   {
    "fieldname": "raw_material_batch",

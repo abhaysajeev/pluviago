@@ -1,0 +1,468 @@
+<!-- ═══════════════════════════════════════════════════════════════════
+     PLUVIAGO BIOTECH — VENDOR TO INVENTORY WORKSPACE  v2.0
+     Paste this entire block into: Workspace > Custom HTML Block
+═══════════════════════════════════════════════════════════════════ -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+
+<style>
+/* ═══════════ DESIGN TOKENS ═══════════ */
+:root {
+  --pw-font:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --pw-bg:#f8fafc;
+  --pw-card:#ffffff;
+  --pw-border:#e8ecf1;
+  --pw-text:#0f172a;
+  --pw-text2:#334155;
+  --pw-muted:#94a3b8;
+  --pw-accent:#6366f1;
+  --pw-accent2:#818cf8;
+  --pw-green:#059669;
+  --pw-green-l:#d1fae5;
+  --pw-amber:#d97706;
+  --pw-amber-l:#fef3c7;
+  --pw-rose:#e11d48;
+  --pw-rose-l:#ffe4e6;
+  --pw-sky:#0284c7;
+  --pw-sky-l:#e0f2fe;
+  --pw-violet:#7c3aed;
+  --pw-violet-l:#ede9fe;
+  --pw-teal:#0d9488;
+  --pw-teal-l:#ccfbf1;
+  --pw-r:16px;
+  --pw-r2:12px;
+  --pw-r3:8px;
+  --pw-s1:0 1px 2px rgba(0,0,0,.04),0 1px 3px rgba(0,0,0,.06);
+  --pw-s2:0 4px 12px rgba(0,0,0,.06),0 1px 3px rgba(0,0,0,.04);
+  --pw-s3:0 8px 30px rgba(0,0,0,.08),0 2px 6px rgba(0,0,0,.04);
+  --pw-t:.25s cubic-bezier(.4,0,.2,1);
+}
+
+/* ═══════════ LAYOUT ═══════════ */
+#pw{font-family:var(--pw-font);color:var(--pw-text);background:var(--pw-bg);padding:0;margin:-15px;min-height:100vh}
+.pw-inner{max-width:1400px;margin:0 auto;padding:0 36px 60px}
+
+/* ═══════════ HERO BANNER ═══════════ */
+.pw-hero{
+  background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 40%,#a855f7 100%);
+  padding:44px 48px 40px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.pw-hero::before{
+  content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;
+  background:rgba(255,255,255,.08);border-radius:50%;
+}
+.pw-hero::after{
+  content:'';position:absolute;bottom:-80px;left:30%;width:320px;height:320px;
+  background:rgba(255,255,255,.05);border-radius:50%;
+}
+.pw-hero-content{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.pw-hero h1{font-size:30px;font-weight:800;letter-spacing:-.5px;margin:0 0 6px}
+.pw-hero p{font-size:15px;opacity:.85;margin:0;font-weight:400;max-width:500px;line-height:1.6}
+.pw-hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.18);backdrop-filter:blur(8px);padding:8px 18px;border-radius:24px;font-size:12px;font-weight:600;border:1px solid rgba(255,255,255,.2)}
+.pw-hero-badge::before{content:'';width:8px;height:8px;background:#4ade80;border-radius:50%;animation:pw-pulse 2s ease-in-out infinite}
+@keyframes pw-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.pw-hero-date{font-size:12px;opacity:.7;margin-top:8px}
+
+/* ═══════════ QUICK ACTIONS ═══════════ */
+.pw-actions{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0 32px;padding:0}
+.pw-act{
+  display:inline-flex;align-items:center;gap:10px;
+  padding:12px 24px;border-radius:var(--pw-r2);
+  font-size:13.5px;font-weight:600;
+  border:1.5px solid var(--pw-border);
+  background:var(--pw-card);color:var(--pw-text);
+  cursor:pointer;transition:all var(--pw-t);
+  text-decoration:none;box-shadow:var(--pw-s1);
+  position:relative;overflow:hidden;
+}
+.pw-act::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(99,102,241,.06),transparent);opacity:0;transition:opacity var(--pw-t)}
+.pw-act:hover::before{opacity:1}
+.pw-act:hover{border-color:var(--pw-accent);color:var(--pw-accent);box-shadow:var(--pw-s2);transform:translateY(-2px)}
+.pw-act .pw-act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.pw-act.a1 .pw-act-dot{background:var(--pw-green)}
+.pw-act.a2 .pw-act-dot{background:var(--pw-sky)}
+.pw-act.a3 .pw-act-dot{background:var(--pw-amber)}
+.pw-act.a4 .pw-act-dot{background:var(--pw-violet)}
+.pw-act.a5 .pw-act-dot{background:var(--pw-muted)}
+
+/* ═══════════ PIPELINE FLOW ═══════════ */
+.pw-pipe{
+  background:var(--pw-card);border:1.5px solid var(--pw-border);border-radius:var(--pw-r);
+  padding:28px 36px 32px;margin-bottom:28px;box-shadow:var(--pw-s1);
+  position:relative;overflow:hidden;
+}
+.pw-pipe::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#4f46e5,#7c3aed,#a855f7,#059669)}
+.pw-pipe-hdr{font-size:16px;font-weight:700;margin-bottom:6px;color:var(--pw-text)}
+.pw-pipe-sub{font-size:12.5px;color:var(--pw-muted);margin-bottom:28px}
+.pw-flow{display:flex;align-items:flex-start;justify-content:space-between;position:relative}
+.pw-flow::before{content:'';position:absolute;top:28px;left:48px;right:48px;height:2px;background:linear-gradient(90deg,var(--pw-green),var(--pw-sky),var(--pw-violet),var(--pw-amber),var(--pw-teal),var(--pw-muted));border-radius:1px;z-index:0}
+.pw-node{display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;cursor:pointer;transition:transform var(--pw-t);flex:1;max-width:140px}
+.pw-node:hover{transform:translateY(-4px)}
+.pw-nd{
+  width:56px;height:56px;border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;margin-bottom:12px;
+  background:var(--pw-card);
+  border:2px solid var(--pw-border);
+  box-shadow:var(--pw-s1);
+  transition:all var(--pw-t);
+}
+.pw-node:hover .pw-nd{box-shadow:var(--pw-s3);border-color:var(--pw-accent)}
+.pw-node.on .pw-nd{border-color:var(--pw-green);background:var(--pw-green-l)}
+.pw-node .pw-nlbl{font-size:11.5px;font-weight:600;text-align:center;color:var(--pw-text2);line-height:1.4;max-width:100px}
+.pw-node .pw-ncnt{font-size:10px;color:var(--pw-muted);margin-top:3px;font-weight:500;background:var(--pw-bg);padding:2px 8px;border-radius:10px}
+
+/* ═══════════ KPI CARDS ═══════════ */
+.pw-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:28px}
+.pw-kpi{
+  background:var(--pw-card);border:1.5px solid var(--pw-border);border-radius:var(--pw-r);
+  padding:24px 24px 20px;box-shadow:var(--pw-s1);
+  transition:all var(--pw-t);cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.pw-kpi:hover{box-shadow:var(--pw-s3);transform:translateY(-3px);border-color:transparent}
+.pw-kpi .pw-kpi-bar{position:absolute;top:0;left:0;right:0;height:3px;border-radius:0 0 2px 2px}
+.pw-kpi .pw-kpi-ic{
+  width:44px;height:44px;border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;margin-bottom:16px;
+}
+.pw-kpi .pw-kpi-v{font-size:32px;font-weight:900;line-height:1;margin-bottom:6px;letter-spacing:-.5px}
+.pw-kpi .pw-kpi-l{font-size:12.5px;color:var(--pw-muted);font-weight:500}
+/* color variants */
+.pw-kpi.c1 .pw-kpi-bar{background:var(--pw-green)}.pw-kpi.c1 .pw-kpi-ic{background:var(--pw-green-l);color:var(--pw-green)}
+.pw-kpi.c2 .pw-kpi-bar{background:var(--pw-sky)}.pw-kpi.c2 .pw-kpi-ic{background:var(--pw-sky-l);color:var(--pw-sky)}
+.pw-kpi.c3 .pw-kpi-bar{background:var(--pw-violet)}.pw-kpi.c3 .pw-kpi-ic{background:var(--pw-violet-l);color:var(--pw-violet)}
+.pw-kpi.c4 .pw-kpi-bar{background:var(--pw-amber)}.pw-kpi.c4 .pw-kpi-ic{background:var(--pw-amber-l);color:var(--pw-amber)}
+.pw-kpi.c5 .pw-kpi-bar{background:var(--pw-teal)}.pw-kpi.c5 .pw-kpi-ic{background:var(--pw-teal-l);color:var(--pw-teal)}
+
+/* ═══════════ CHART CARDS ═══════════ */
+.pw-grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.pw-ccard{
+  background:var(--pw-card);border:1.5px solid var(--pw-border);border-radius:var(--pw-r);
+  padding:24px 28px;box-shadow:var(--pw-s1);
+  transition:box-shadow var(--pw-t);
+}
+.pw-ccard:hover{box-shadow:var(--pw-s2)}
+.pw-ccard-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px}
+.pw-ccard-t{font-size:15px;font-weight:700;color:var(--pw-text)}
+.pw-ccard-st{font-size:11.5px;color:var(--pw-muted);margin-top:3px;font-weight:400}
+.pw-ccard-tag{font-size:10px;font-weight:600;padding:4px 10px;border-radius:16px;background:var(--pw-bg);color:var(--pw-muted)}
+.pw-cbox{position:relative;height:260px}
+
+/* ═══════════ TABLES ═══════════ */
+.pw-sec{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--pw-text);display:flex;align-items:center;gap:10px}
+.pw-sec span{font-size:12px;font-weight:500;color:var(--pw-muted)}
+.pw-tw{
+  background:var(--pw-card);border:1.5px solid var(--pw-border);border-radius:var(--pw-r);
+  overflow:hidden;box-shadow:var(--pw-s1);margin-bottom:28px;
+}
+.pw-tb{width:100%;border-collapse:collapse;font-size:13px}
+.pw-tb thead th{
+  text-align:left;padding:14px 18px;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.6px;color:var(--pw-muted);
+  border-bottom:1.5px solid var(--pw-border);background:#fafbfd;
+}
+.pw-tb tbody td{padding:14px 18px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.pw-tb tbody tr:last-child td{border-bottom:none}
+.pw-tb tbody tr{transition:background var(--pw-t)}
+.pw-tb tbody tr:hover{background:#f8fafc}
+.pw-tb a{color:var(--pw-accent);text-decoration:none;font-weight:600;transition:color var(--pw-t)}
+.pw-tb a:hover{color:#4338ca;text-decoration:underline}
+.pw-pill{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 12px;border-radius:20px;
+  font-size:11px;font-weight:600;
+}
+.pw-pill.approved,.pw-pill.pass,.pw-pill.completed{background:var(--pw-green-l);color:var(--pw-green)}
+.pw-pill.pending{background:var(--pw-amber-l);color:var(--pw-amber)}
+.pw-pill.rejected,.pw-pill.fail,.pw-pill.expired{background:var(--pw-rose-l);color:var(--pw-rose)}
+.pw-pill.submitted,.pw-pill.active{background:var(--pw-sky-l);color:var(--pw-sky)}
+.pw-pill.exhausted{background:#f1f5f9;color:var(--pw-muted)}
+
+/* ═══════════ ALERTS ═══════════ */
+.pw-alerts{display:flex;flex-direction:column;gap:12px}
+.pw-al{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:16px 18px;border-radius:var(--pw-r2);
+  font-size:13px;line-height:1.5;
+  border:1.5px solid var(--pw-border);background:var(--pw-card);
+  transition:all var(--pw-t);
+}
+.pw-al:hover{box-shadow:var(--pw-s2);transform:translateX(3px)}
+.pw-al-ic{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.pw-al.warn .pw-al-ic{background:var(--pw-amber-l);color:var(--pw-amber)}
+.pw-al.danger .pw-al-ic{background:var(--pw-rose-l);color:var(--pw-rose)}
+.pw-al.info .pw-al-ic{background:var(--pw-sky-l);color:var(--pw-sky)}
+.pw-al.ok .pw-al-ic{background:var(--pw-green-l);color:var(--pw-green)}
+.pw-al-t{font-weight:700;margin-bottom:2px;color:var(--pw-text)}
+.pw-al-d{font-size:11.5px;color:var(--pw-muted)}
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media(max-width:1100px){
+  .pw-kpi-row{grid-template-columns:repeat(3,1fr)}
+  .pw-grid2{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .pw-inner{padding:0 16px 40px}
+  .pw-hero{padding:28px 24px}
+  .pw-hero h1{font-size:22px}
+  .pw-kpi-row{grid-template-columns:1fr 1fr}
+  .pw-flow{flex-wrap:wrap;gap:16px;justify-content:center}
+  .pw-flow::before{display:none}
+  .pw-actions{gap:8px}
+  .pw-act{padding:10px 16px;font-size:12.5px}
+}
+</style>
+
+<!-- ═══════════ HTML MARKUP ═══════════ -->
+<div id="pw">
+
+  <!-- HERO BANNER -->
+  <div class="pw-hero">
+    <div class="pw-hero-content">
+      <div>
+        <h1>Vendor to Inventory</h1>
+        <p>Procurement & Raw Material Management — complete traceability from vendor qualification through stock verification.</p>
+        <div class="pw-hero-date" id="pw-date"></div>
+      </div>
+      <div class="pw-hero-badge">System Online</div>
+    </div>
+  </div>
+
+  <div class="pw-inner">
+
+    <!-- QUICK ACTIONS -->
+    <div class="pw-actions">
+      <a class="pw-act a1" href="/app/approved-vendor/new"><span class="pw-act-dot"></span>New Approved Vendor</a>
+      <a class="pw-act a2" href="/app/purchase-order/new"><span class="pw-act-dot"></span>New Purchase Order</a>
+      <a class="pw-act a3" href="/app/chemical-coa/new"><span class="pw-act-dot"></span>New Chemical COA</a>
+      <a class="pw-act a4" href="/app/raw-material-batch/new"><span class="pw-act-dot"></span>New Raw Material Batch</a>
+      <a class="pw-act a5" href="/app/stock-consumption-log"><span class="pw-act-dot"></span>Consumption Log&ensp;<strong id="pw-scl">0</strong></a>
+    </div>
+
+    <!-- PIPELINE FLOW -->
+    <div class="pw-pipe">
+      <div class="pw-pipe-hdr">End-to-End Business Flow</div>
+      <div class="pw-pipe-sub">Vendor Qualification → Purchase Order → Purchase Receipt → Chemical COA → Raw Material Batch → Stock Verification</div>
+      <div class="pw-flow">
+        <div class="pw-node on" onclick="frappe.set_route('List','Approved Vendor')">
+          <div class="pw-nd">✅</div>
+          <div class="pw-nlbl">Vendor Qualification</div>
+          <div class="pw-ncnt" id="fc0">–</div>
+        </div>
+        <div class="pw-node on" onclick="frappe.set_route('List','Purchase Order',{company:'Pluviago Biotech Pvt. Ltd.'})">
+          <div class="pw-nd">📋</div>
+          <div class="pw-nlbl">Purchase Order</div>
+          <div class="pw-ncnt" id="fc1">–</div>
+        </div>
+        <div class="pw-node on" onclick="frappe.set_route('List','Purchase Receipt',{company:'Pluviago Biotech Pvt. Ltd.'})">
+          <div class="pw-nd">📦</div>
+          <div class="pw-nlbl">Purchase Receipt</div>
+          <div class="pw-ncnt" id="fc2">–</div>
+        </div>
+        <div class="pw-node on" onclick="frappe.set_route('List','Chemical COA')">
+          <div class="pw-nd">🔬</div>
+          <div class="pw-nlbl">Chemical COA</div>
+          <div class="pw-ncnt" id="fc3">–</div>
+        </div>
+        <div class="pw-node on" onclick="frappe.set_route('List','Raw Material Batch')">
+          <div class="pw-nd">🧪</div>
+          <div class="pw-nlbl">Raw Material Batch</div>
+          <div class="pw-ncnt" id="fc4">–</div>
+        </div>
+        <div class="pw-node" onclick="frappe.set_route('List','Stock Consumption Log')">
+          <div class="pw-nd">📜</div>
+          <div class="pw-nlbl">Stock Ledger Verification</div>
+          <div class="pw-ncnt">Audit Trail</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="pw-kpi-row" id="pw-kpis">
+      <div class="pw-kpi c1"><div class="pw-kpi-bar"></div><div class="pw-kpi-ic">–</div><div class="pw-kpi-v">–</div><div class="pw-kpi-l">Loading…</div></div>
+      <div class="pw-kpi c2"><div class="pw-kpi-bar"></div><div class="pw-kpi-ic">–</div><div class="pw-kpi-v">–</div><div class="pw-kpi-l">Loading…</div></div>
+      <div class="pw-kpi c3"><div class="pw-kpi-bar"></div><div class="pw-kpi-ic">–</div><div class="pw-kpi-v">–</div><div class="pw-kpi-l">Loading…</div></div>
+      <div class="pw-kpi c4"><div class="pw-kpi-bar"></div><div class="pw-kpi-ic">–</div><div class="pw-kpi-v">–</div><div class="pw-kpi-l">Loading…</div></div>
+      <div class="pw-kpi c5"><div class="pw-kpi-bar"></div><div class="pw-kpi-ic">–</div><div class="pw-kpi-v">–</div><div class="pw-kpi-l">Loading…</div></div>
+    </div>
+
+    <!-- CHARTS ROW 1 -->
+    <div class="pw-grid2">
+      <div class="pw-ccard">
+        <div class="pw-ccard-hdr">
+          <div><div class="pw-ccard-t">RMB Quality Status</div><div class="pw-ccard-st">Raw Material Batch QC breakdown</div></div>
+          <div class="pw-ccard-tag">Doughnut</div>
+        </div>
+        <div class="pw-cbox"><canvas id="ch1"></canvas></div>
+      </div>
+      <div class="pw-ccard">
+        <div class="pw-ccard-hdr">
+          <div><div class="pw-ccard-t">Vendor Approval Status</div><div class="pw-ccard-st">Approved Vendor List breakdown</div></div>
+          <div class="pw-ccard-tag">Doughnut</div>
+        </div>
+        <div class="pw-cbox"><canvas id="ch2"></canvas></div>
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2 -->
+    <div class="pw-grid2">
+      <div class="pw-ccard">
+        <div class="pw-ccard-hdr">
+          <div><div class="pw-ccard-t">COA Verification Results</div><div class="pw-ccard-st">Certificate of Analysis pass vs fail</div></div>
+          <div class="pw-ccard-tag">Bar</div>
+        </div>
+        <div class="pw-cbox"><canvas id="ch3"></canvas></div>
+      </div>
+      <div class="pw-ccard">
+        <div class="pw-ccard-hdr">
+          <div><div class="pw-ccard-t">Inventory Overview</div><div class="pw-ccard-st">Top batches — received vs remaining qty</div></div>
+          <div class="pw-ccard-tag">Horizontal</div>
+        </div>
+        <div class="pw-cbox"><canvas id="ch4"></canvas></div>
+      </div>
+    </div>
+
+    <!-- COA TABLE + ALERTS -->
+    <div class="pw-grid2">
+      <div>
+        <div class="pw-sec">Recent Chemical COAs <span>Submitted</span></div>
+        <div class="pw-tw">
+          <table class="pw-tb">
+            <thead><tr><th>COA ID</th><th>Supplier</th><th>Item</th><th>Result</th><th>Verified</th></tr></thead>
+            <tbody id="tb1"><tr><td colspan="5" style="text-align:center;color:var(--pw-muted);padding:28px">Loading…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <div class="pw-sec">Alerts & Notifications <span>Auto-detected</span></div>
+        <div class="pw-alerts" id="pw-al">
+          <div class="pw-al info"><div class="pw-al-ic">⏳</div><div><div class="pw-al-t">Scanning…</div><div class="pw-al-d">Checking for expiry and stock alerts</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAW MATERIAL BATCH TABLE -->
+    <div class="pw-sec">Recent Raw Material Batches <span>Last 8 submitted</span></div>
+    <div class="pw-tw">
+      <table class="pw-tb">
+        <thead><tr><th>Batch ID</th><th>Material</th><th>Supplier</th><th>Received</th><th>Remaining</th><th>QC Status</th><th>Expiry</th></tr></thead>
+        <tbody id="tb2"><tr><td colspan="7" style="text-align:center;color:var(--pw-muted);padding:28px">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+  </div><!-- /.pw-inner -->
+</div><!-- /#pw -->
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+(function(){
+  'use strict';
+  var C={green:'#059669',amber:'#d97706',rose:'#e11d48',sky:'#0284c7',violet:'#7c3aed',teal:'#0d9488',muted:'#cbd5e1',skyBg:'rgba(2,132,199,.1)'};
+  var fmt=function(n){return(n||0).toLocaleString()};
+  var today=frappe.datetime.nowdate();
+  document.getElementById('pw-date').textContent=frappe.datetime.str_to_user(today);
+
+  function go(){
+    return Promise.all([
+      frappe.xcall('frappe.client.get_count',{doctype:'Approved Vendor',filters:{docstatus:1}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Purchase Order',filters:{docstatus:1,company:'Pluviago Biotech Pvt. Ltd.'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Purchase Receipt',filters:{docstatus:1,company:'Pluviago Biotech Pvt. Ltd.'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Chemical COA',filters:{docstatus:1}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Raw Material Batch',filters:{docstatus:1}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Raw Material Batch',filters:{docstatus:1,qc_status:'Approved'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Raw Material Batch',filters:{docstatus:1,qc_status:'Pending'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Raw Material Batch',filters:{docstatus:1,qc_status:'Rejected'}}),
+      frappe.xcall('frappe.client.get_list',{doctype:'Raw Material Batch',fields:['name','material_name','supplier','received_qty','received_qty_uom','remaining_qty','qc_status','expiry_date','status'],filters:{docstatus:1},order_by:'creation desc',limit_page_length:8}),
+      frappe.xcall('frappe.client.get_list',{doctype:'Chemical COA',fields:['name','supplier','item_code','overall_result','verification_date'],filters:{docstatus:1},order_by:'creation desc',limit_page_length:5}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Approved Vendor',filters:{docstatus:1,approval_status:'Approved'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Approved Vendor',filters:{docstatus:1,approval_status:'Pending'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Approved Vendor',filters:{docstatus:1,approval_status:'Suspended'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Chemical COA',filters:{docstatus:1,overall_result:'Pass'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Chemical COA',filters:{docstatus:1,overall_result:'Fail'}}),
+      frappe.xcall('frappe.client.get_count',{doctype:'Stock Consumption Log',filters:{}}),
+    ]).catch(function(){return Array(16).fill(0)});
+  }
+
+  function kpis(D){
+    var items=[
+      {l:'Approved Vendors',v:fmt(D[0]),i:'✓',c:'c1',r:'Approved Vendor'},
+      {l:'Purchase Orders',v:fmt(D[1]),i:'⇄',c:'c2',r:'Purchase Order'},
+      {l:'Purchase Receipts',v:fmt(D[2]),i:'⬇',c:'c3',r:'Purchase Receipt'},
+      {l:'Chemical COAs',v:fmt(D[3]),i:'◎',c:'c4',r:'Chemical COA'},
+      {l:'Material Batches',v:fmt(D[4]),i:'◆',c:'c5',r:'Raw Material Batch'},
+    ];
+    document.getElementById('pw-kpis').innerHTML=items.map(function(k){
+      return '<div class="pw-kpi '+k.c+'" onclick="frappe.set_route(\'List\',\''+k.r+'\')"><div class="pw-kpi-bar"></div><div class="pw-kpi-ic">'+k.i+'</div><div class="pw-kpi-v">'+k.v+'</div><div class="pw-kpi-l">'+k.l+'</div></div>';
+    }).join('');
+  }
+
+  function flowCounts(D){
+    for(var i=0;i<5;i++){var e=document.getElementById('fc'+i);if(e)e.textContent=fmt(D[i])+' records'}
+  }
+
+  function donut(id,labels,data,colors){
+    var x=document.getElementById(id);if(!x)return;
+    new Chart(x,{type:'doughnut',data:{labels:labels,datasets:[{data:data,backgroundColor:colors,borderWidth:2,borderColor:'#fff',hoverOffset:8,hoverBorderWidth:0}]},options:{cutout:'72%',responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{padding:16,usePointStyle:true,pointStyleWidth:8,font:{size:11.5,weight:'600',family:'Inter'}}}}}});
+  }
+
+  function barChart(id,labels,datasets,horiz){
+    var x=document.getElementById(id);if(!x)return;
+    var ds=datasets.map(function(d){return{label:d.label||'',data:d.data,backgroundColor:d.bg,borderRadius:8,barPercentage:.55,borderSkipped:false}});
+    new Chart(x,{type:'bar',data:{labels:labels,datasets:ds},options:{indexAxis:horiz?'y':'x',responsive:true,maintainAspectRatio:false,scales:{x:{beginAtZero:true,grid:{color:'#f1f5f9',drawBorder:false},ticks:{font:{size:11,family:'Inter'}}},y:{grid:{display:horiz?false:true,color:'#f1f5f9',drawBorder:false},ticks:{font:{size:11,weight:'600',family:'Inter'}}}},plugins:{legend:{display:ds.length>1,position:'top',align:'end',labels:{usePointStyle:true,pointStyleWidth:8,font:{size:11,family:'Inter'}}}}}});
+  }
+
+  function tblRMB(list){
+    var t=document.getElementById('tb2');if(!t)return;
+    if(!list||!list.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--pw-muted);padding:32px">No batches found — create your first Raw Material Batch</td></tr>';return;}
+    t.innerHTML=list.map(function(r){
+      var sc=(r.qc_status||'').toLowerCase().replace(/\s/g,'');
+      var exp=r.expiry_date&&r.expiry_date<today;
+      return '<tr><td><a href="/app/raw-material-batch/'+r.name+'">'+r.name+'</a></td><td>'+(r.material_name||'–')+'</td><td>'+(r.supplier||'–')+'</td><td>'+fmt(r.received_qty)+' '+(r.received_qty_uom||'')+'</td><td>'+fmt(r.remaining_qty)+' '+(r.received_qty_uom||'')+'</td><td><span class="pw-pill '+sc+'">'+(r.qc_status||'–')+'</span></td><td>'+(exp?'<span class="pw-pill expired">Expired</span>':(r.expiry_date||'–'))+'</td></tr>';
+    }).join('');
+  }
+
+  function tblCOA(list){
+    var t=document.getElementById('tb1');if(!t)return;
+    if(!list||!list.length){t.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--pw-muted);padding:32px">No COAs yet</td></tr>';return;}
+    t.innerHTML=list.map(function(r){
+      var rc=(r.overall_result||'').toLowerCase();
+      return '<tr><td><a href="/app/chemical-coa/'+r.name+'">'+r.name+'</a></td><td>'+(r.supplier||'–')+'</td><td>'+(r.item_code||'–')+'</td><td><span class="pw-pill '+rc+'">'+(r.overall_result||'–')+'</span></td><td>'+(r.verification_date||'–')+'</td></tr>';
+    }).join('');
+  }
+
+  function alerts(rmbList){
+    var el=document.getElementById('pw-al');if(!el)return;
+    var a=[];
+    (rmbList||[]).forEach(function(r){
+      if(r.expiry_date&&r.expiry_date<today)a.push({t:'danger',i:'✕',h:r.name+' Expired',d:(r.material_name||'')+' expired on '+r.expiry_date});
+      else if(r.expiry_date){var df=frappe.datetime.get_diff(r.expiry_date,today);if(df<=30&&df>0)a.push({t:'warn',i:'!',h:r.name+' Expiring Soon',d:(r.material_name||'')+' expires in '+df+' days'})}
+      if(r.remaining_qty!==undefined&&r.remaining_qty<=0&&r.qc_status==='Approved')a.push({t:'info',i:'○',h:r.name+' Exhausted',d:(r.material_name||'')+' stock fully consumed'});
+    });
+    if(!a.length){el.innerHTML='<div class="pw-al ok"><div class="pw-al-ic">✓</div><div><div class="pw-al-t">All Clear</div><div class="pw-al-d">No expiry or stock alerts at this time.</div></div></div>';return;}
+    el.innerHTML=a.slice(0,6).map(function(x){return '<div class="pw-al '+x.t+'"><div class="pw-al-ic">'+x.i+'</div><div><div class="pw-al-t">'+x.h+'</div><div class="pw-al-d">'+x.d+'</div></div></div>'}).join('');
+  }
+
+  function init(){
+    go().then(function(D){
+      kpis(D);flowCounts(D);
+      donut('ch1',['Approved','Pending','Rejected'],[D[5]||0,D[6]||0,D[7]||0],[C.green,C.amber,C.rose]);
+      donut('ch2',['Approved','Pending','Suspended'],[D[10]||0,D[11]||0,D[12]||0],[C.green,C.amber,C.muted]);
+      barChart('ch3',['Pass','Fail'],[{data:[D[13]||0,D[14]||0],bg:[C.green,C.rose]}],false);
+      var top6=(D[8]||[]).slice(0,6);
+      barChart('ch4',top6.map(function(r){return(r.material_name||r.name).substring(0,20)}),[{label:'Remaining',data:top6.map(function(r){return r.remaining_qty||0}),bg:C.sky},{label:'Received',data:top6.map(function(r){return r.received_qty||0}),bg:C.skyBg}],true);
+      tblRMB(D[8]);tblCOA(D[9]);alerts(D[8]);
+      var sc=document.getElementById('pw-scl');if(sc)sc.textContent=fmt(D[15]);
+    });
+  }
+  setTimeout(init,400);
+})();
+</script>

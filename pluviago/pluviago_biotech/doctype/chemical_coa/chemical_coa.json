@@ -16,12 +16,8 @@
   "item_code",
   "col_break_2",
   "supplier_batch_no",
-  "chemical_formula",
   "col_break_3",
   "grade",
-  "molecular_weight",
-  "col_break_4",
-  "lot_number",
   "section_dates",
   "analysis_date",
   "col_break_5",
@@ -108,11 +104,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "chemical_formula",
-   "fieldtype": "Data",
-   "label": "Molecular Formula"
-  },
-  {
    "fieldname": "col_break_3",
    "fieldtype": "Column Break"
   },
@@ -120,20 +111,6 @@
    "fieldname": "grade",
    "fieldtype": "Data",
    "label": "Grade / Purity"
-  },
-  {
-   "fieldname": "molecular_weight",
-   "fieldtype": "Float",
-   "label": "Molecular Weight"
-  },
-  {
-   "fieldname": "col_break_4",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "lot_number",
-   "fieldtype": "Data",
-   "label": "COA Lot Number"
   },
   {
    "fieldname": "section_dates",

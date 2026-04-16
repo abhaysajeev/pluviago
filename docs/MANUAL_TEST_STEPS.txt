@@ -1,0 +1,997 @@
+================================================================================
+  PLUVIAGO BIOTECH — MANUAL UI TEST STEPS (Vendor → Cultivation)
+  Realistic example data for ERPNext UI testing
+  Created: 2026-04-06
+================================================================================
+
+PURPOSE:
+  This document provides step-by-step instructions with realistic sample data
+  to manually test the full Pluviago business flow in ERPNext UI — from vendor
+  qualification all the way through cultivation, batch lineage, and
+  return-to-cultivation. Each step includes the exact field values to enter.
+
+PREREQUISITES:
+  - Site: replica1.local running ERPNext v15 + pluviago custom app
+  - Company: "Pluviago Biotech Pvt. Ltd." (abbreviation: PB)
+  - Login as Administrator or a user with Pluviago Admin role
+  - The following ERPNext Suppliers must exist (create if not):
+      • SRL Chemicals
+      • Qualigens Fine Chemicals
+      • HIMEDIA Laboratories
+      • Molychem
+  - The following Item records must exist (item_group = "Raw Materials"):
+      • CHEM-001  Calcium Chloride Dihydrate
+      • CHEM-002  Magnesium Sulphate Heptahydrate
+      • CHEM-003  Sodium Chloride
+      • CHEM-004  Manganese II Chloride Tetrahydrate
+      • CHEM-005  Zinc Chloride
+      • CHEM-006  Cobalt Chloride Hexahydrate
+      • CHEM-007  Sodium Molybdate Dihydrate
+      • CHEM-011  Ferric Citrate
+      • CHEM-012  Sodium Nitrate
+      • CHEM-013  Potassium Dihydrogen Phosphate
+      • CHEM-014  Potassium Phosphate Dibasic
+  - Warehouse: "Chemical Store RT - PB" (leaf warehouse under Pluviago)
+  - UOM: "g", "mg", "mL", "L" must exist in UOM master
+
+NOTE: Record every auto-generated ID (e.g., AVL-2026-0001) as you go.
+      Later steps reference earlier records by these IDs.
+
+
+================================================================================
+PART 1 — VENDOR QUALIFICATION  (Approved Vendor List)
+================================================================================
+
+STEP 1.1: Create Approved Vendor for SRL → Calcium Chloride
+--------------------------------------------------------------
+  Go to: /app/approved-vendor/new
+
+  Vendor & Material section:
+    Supplier:           SRL Chemicals
+    Item Code:          CHEM-001
+    Material Name:      Calcium Chloride Dihydrate   (auto-fetches)
+
+  Qualification & Approval section:
+    Approval Status:    Approved
+    Approval Date:      2026-04-01
+    Valid Upto:         2027-03-31
+    Approved By:        Administrator
+    Qualification Ref:  VQ/SRL/CaCl2/2026-001
+    Last Audit Date:    2026-03-15
+
+  Vendor Contact Details:
+    Contact Person:     Mr. Rahul Menon
+    Email:              rahul.menon@srlchem.com
+    Phone:              +91-9876543210
+    Address:            SRL Chemicals, MIDC Phase-II, Andheri East, Mumbai
+
+  Remarks:              Annual qualification. GMP-grade supplier.
+
+  → SAVE
+  → Note down ID: AVL-2026-0001
+
+  VERIFY:
+    ✓ Record saved without error
+    ✓ Approval Status shows "Approved"
+    ✓ Supplier Name auto-populated
+
+
+STEP 1.2: Create Approved Vendor for Molychem → MnCl2
+--------------------------------------------------------------
+  Go to: /app/approved-vendor/new
+
+    Supplier:           Molychem
+    Item Code:          CHEM-004
+    Material Name:      Manganese II Chloride Tetrahydrate
+    Approval Status:    Approved
+    Approval Date:      2026-04-01
+    Valid Upto:         2027-03-31
+    Approved By:        Administrator
+    Qualification Ref:  VQ/MOLY/MnCl2/2026-001
+
+  → SAVE
+  → Note ID: AVL-2026-0002
+
+
+STEP 1.3: Create Approved Vendor for Qualigens → Zinc Chloride
+--------------------------------------------------------------
+  Go to: /app/approved-vendor/new
+
+    Supplier:           Qualigens Fine Chemicals
+    Item Code:          CHEM-005
+    Material Name:      Zinc Chloride
+    Approval Status:    Approved
+    Approval Date:      2026-04-01
+    Valid Upto:         2027-03-31
+    Approved By:        Administrator
+
+  → SAVE
+  → Note ID: AVL-2026-0003
+
+
+STEP 1.4: Repeat for remaining chemicals as needed
+--------------------------------------------------------------
+  Create AVL records for each supplier-chemical pair you will test:
+    • SRL → CHEM-003 (NaCl)
+    • Qualigens → CHEM-002 (MgSO4)
+    • HIMEDIA → CHEM-006 (CoCl2)
+    • HIMEDIA → CHEM-007 (Na2MoO4)
+    • HIMEDIA → CHEM-011 (Ferric Citrate)
+    • Qualigens → CHEM-012 (NaNO3)
+    • Qualigens → CHEM-013 (KH2PO4)
+    • HIMEDIA → CHEM-014 (K2HPO4)
+
+
+================================================================================
+PART 2 — PURCHASE ORDER & RECEIPT  (ERPNext Standard)
+================================================================================
+
+STEP 2.1: Create Purchase Order for Calcium Chloride
+--------------------------------------------------------------
+  Go to: /app/purchase-order/new
+
+    Company:            Pluviago Biotech Pvt. Ltd.
+    Supplier:           SRL Chemicals
+    Required By:        2026-04-10
+
+  Items table — Add Row:
+    Item Code:          CHEM-001
+    Qty:                500
+    UOM:                g
+    Rate:               2.50  (or any test rate)
+    Warehouse:          Chemical Store RT - PB
+
+  → SAVE → SUBMIT
+  → Note PO number (e.g., PO-PB-2026-00001)
+
+  VERIFY:
+    ✓ If SRL is in AVL for CHEM-001: no vendor warning
+    ✓ PO submitted successfully
+
+
+STEP 2.2: Create Purchase Receipt (GRN)
+--------------------------------------------------------------
+  From the PO, click: Create → Purchase Receipt
+  (Or go to /app/purchase-receipt/new and link the PO)
+
+    Supplier Delivery Note:  SRL/DN/2026-0412
+    Posting Date:            2026-04-05
+
+  Items should auto-populate from PO:
+    Item Code:          CHEM-001
+    Accepted Qty:       500
+    UOM:                g
+    Warehouse:          Chemical Store RT - PB
+
+  → SAVE → SUBMIT
+  → Note PR number (e.g., PR-PB-2026-00001)
+
+  VERIFY:
+    ✓ Purchase Receipt submitted
+    ✓ Stock Ledger Entry created in Chemical Store RT - PB
+
+
+================================================================================
+PART 3 — RAW MATERIAL BATCH REGISTRATION
+================================================================================
+
+STEP 3.1: Create Raw Material Batch for Calcium Chloride
+--------------------------------------------------------------
+  Go to: /app/raw-material-batch/new
+
+    Material Name:       Calcium Chloride Dihydrate
+    Item Code:           CHEM-001
+    Supplier:            SRL Chemicals
+    Supplier Batch No:   SRL-CaCl2-B2026-0088
+    Mfg Date:            2025-11-15
+    Expiry Date:         2030-11-14
+    Received Date:       2026-04-05
+    Received Qty:        500
+    Received Qty UOM:    g
+    Storage Condition:   Room Temperature
+    Warehouse:           Chemical Store RT - PB
+    QC Status:           Pending          ← leave as Pending for now
+    COA Verified:        [ ] unchecked
+    Purchase Receipt:    PR-PB-2026-00001  (link the PR from Step 2.2)
+
+  → SAVE  (Draft state — do NOT submit yet)
+  → Note ID: RMB-CHEM-2026-0001
+
+  VERIFY:
+    ✓ batch_number auto-set to RMB-CHEM-2026-0001
+    ✓ Status = "Received" (draft)
+    ✓ Cannot submit yet (QC Status ≠ Approved, COA not verified)
+
+
+STEP 3.2: Create RMB for Manganese II Chloride
+--------------------------------------------------------------
+  Go to: /app/raw-material-batch/new
+
+    Material Name:       Manganese II Chloride Tetrahydrate
+    Item Code:           CHEM-004
+    Supplier:            Molychem
+    Supplier Batch No:   MOLY-MnCl2-2026-012
+    Mfg Date:            2026-01-10
+    Expiry Date:         2031-01-09
+    Received Date:       2026-04-05
+    Received Qty:        100
+    Received Qty UOM:    g (will weigh out mg amounts from this)
+    Storage Condition:   2-8C
+    Warehouse:           Chemical Store RT - PB
+    QC Status:           Pending
+    COA Verified:        [ ] unchecked
+
+  → SAVE
+  → Note ID: RMB-CHEM-2026-0002
+
+
+STEP 3.3: Create RMBs for remaining A1 chemicals
+--------------------------------------------------------------
+  Repeat for:
+    • CHEM-005 Zinc Chloride       (Qualigens, Batch: QFC-ZnCl2-2026-005, 50g)
+    • CHEM-006 Cobalt Chloride      (HIMEDIA, Batch: HM-CoCl2-2026-003, 25g)
+    • CHEM-007 Sodium Molybdate     (HIMEDIA, Batch: HM-NaMoO4-2026-007, 50g)
+
+  Note all RMB IDs: RMB-CHEM-2026-0003, 0004, 0005
+
+  Also create RMBs for Green Medium base salts:
+    • CHEM-001 (already done above — will reuse)
+    • CHEM-002 MgSO4 (Qualigens, 500g)       → RMB-CHEM-2026-0006
+    • CHEM-003 NaCl   (SRL, 500g)              → RMB-CHEM-2026-0007
+
+
+================================================================================
+PART 4 — COA VERIFICATION  (Chemical COA)
+================================================================================
+
+STEP 4.1: Create QC Parameter Specs (if not already set up)
+--------------------------------------------------------------
+  Go to: /app/qc-parameter-spec/new
+
+  Create specs for CHEM-001 (Calcium Chloride):
+    Record 1:
+      Parameter Name:      Assay
+      Applicable Doctype:  Raw Material Batch
+      Item Code:           CHEM-001
+      Parameter Type:      Assay
+      Min Value:           99.0
+      Max Value:           100.5
+      Unit:                %
+      Is Critical:         ✓
+
+    Record 2:
+      Parameter Name:      Appearance
+      Applicable Doctype:  Raw Material Batch
+      Item Code:           CHEM-001
+      Expected Text:       White crystalline granules
+      Is Critical:         [ ]
+
+    Record 3:
+      Parameter Name:      pH (1% solution)
+      Applicable Doctype:  Raw Material Batch
+      Item Code:           CHEM-001
+      Min Value:           4.5
+      Max Value:           8.0
+      Unit:                pH
+      Is Critical:         [ ]
+
+  → SAVE each
+
+
+STEP 4.2: Create Chemical COA for RMB-CHEM-2026-0001
+--------------------------------------------------------------
+  Go to: /app/chemical-coa/new
+
+    Supplier:            SRL Chemicals
+    Raw Material Batch:  RMB-CHEM-2026-0001
+      → item_code, material_name, supplier_batch_no should auto-fetch
+
+    COA Date:            2025-11-20
+    Expiry Date:         2030-11-14  (should auto-fetch from RMB)
+
+  Click Menu → Actions → "Load Spec Template"
+    → Test parameters table should auto-populate with:
+       Row 1: Assay | 99.0 – 100.5 % | (empty) | (empty)
+       Row 2: Appearance | White crystalline granules | (empty) | (empty)
+       Row 3: pH (1% solution) | 4.5 – 8.0 pH | (empty) | (empty)
+
+  Fill in observed values:
+    Row 1: Result Value = 99.7    | Result = Pass
+    Row 2: Result Value = White crystalline granules | Result = Pass
+    Row 3: Result Value = 6.2     | Result = Pass
+
+    Overall Result:      Pass
+    Verified By:         Administrator
+    Verification Date:   2026-04-05
+
+  → SAVE → SUBMIT
+
+  VERIFY:
+    ✓ Status changes to "Verified"
+    ✓ Go back to RMB-CHEM-2026-0001 → COA Verified checkbox is now TICKED
+    ✓ COA Verified By = Administrator
+
+
+STEP 4.3: Approve and Submit the RMB
+--------------------------------------------------------------
+  Go to: /app/raw-material-batch/RMB-CHEM-2026-0001
+
+    Change QC Status:    Approved
+    QC Checked By:       Administrator
+    QC Date:             2026-04-05
+
+  → SAVE → SUBMIT
+
+  VERIFY:
+    ✓ Status changes to "Approved"
+    ✓ remaining_qty = 500
+    ✓ consumed_qty = 0
+
+
+STEP 4.4: Repeat COA + Submit for all other RMBs
+--------------------------------------------------------------
+  For each RMB (0002 through 0007):
+    1. Create Chemical COA → fill test params → Overall Result = Pass → Submit
+    2. Go to RMB → set QC Status = Approved → Save → Submit
+
+  All RMBs must be Submitted + Approved + COA Verified before proceeding.
+
+
+================================================================================
+PART 5 — STOCK SOLUTION PREPARATION  (Stage 0A)
+================================================================================
+
+STEP 5.1: Prepare Stock Solution A1 (Green Trace Element Stock)
+--------------------------------------------------------------
+  Go to: /app/stock-solution-batch/new
+
+    Solution Type:       A1
+    Preparation Date:    2026-04-06
+    Prepared By:         Administrator
+    Target Volume:       1    (in L)
+    UOM:                 L
+    Shelf Life (days):   365
+    SOP Reference:       SOP/SSP/A1/v2.0
+
+  Ingredients table — Add rows:
+    Row 1:
+      Item Code:           CHEM-004
+      Material Name:       Manganese II Chloride Tetrahydrate  (auto)
+      Raw Material Batch:  RMB-CHEM-2026-0002
+      Qty Used:            0.041
+      UOM:                 g
+
+    Row 2:
+      Item Code:           CHEM-005
+      Material Name:       Zinc Chloride
+      Raw Material Batch:  RMB-CHEM-2026-0003
+      Qty Used:            0.005
+      UOM:                 g
+
+    Row 3:
+      Item Code:           CHEM-006
+      Material Name:       Cobalt Chloride Hexahydrate
+      Raw Material Batch:  RMB-CHEM-2026-0004
+      Qty Used:            0.002
+      UOM:                 g
+
+    Row 4:
+      Item Code:           CHEM-007
+      Material Name:       Sodium Molybdate Dihydrate
+      Raw Material Batch:  RMB-CHEM-2026-0005
+      Qty Used:            0.004
+      UOM:                 g
+
+  Sterilization section:
+    Sterilization Method:    Autoclaving
+    Sterilization Temp:      121
+    Sterilization Duration:  20
+    Sterilization Done:      ✓
+    Sterilization Date:      2026-04-06
+
+  → SAVE
+
+  VERIFY:
+    ✓ Expiry Date auto-calculated = 2026-04-06 + 365 = 2027-04-06
+    ✓ Preparation Status = "Draft"
+    ✓ All ingredient RMBs validated (submitted, approved, COA verified)
+
+
+STEP 5.2: Mark Preparation Complete
+--------------------------------------------------------------
+  On the SSB form, click Menu → "Mark Preparation Complete"
+
+  VERIFY:
+    ✓ Preparation Status changes to "QC Pending"
+    ✓ Stock Consumption Logs created for each ingredient
+    ✓ Each RMB's remaining_qty decreased:
+        RMB-0002: remaining_qty = 100 - 0.041 = 99.959
+        RMB-0003: remaining_qty = 50 - 0.005 = 49.995
+        ... etc.
+
+
+STEP 5.3: Perform QC and Submit
+--------------------------------------------------------------
+  On the same SSB form:
+    QC Status:         Passed
+    pH Value:          6.8
+    QC Remarks:        Clear solution, no precipitate. pH within range.
+    QC Checked By:     Administrator
+    QC Date:           2026-04-06
+
+  → SAVE → SUBMIT
+
+  VERIFY:
+    ✓ Status = "Approved"
+    ✓ Preparation Status = "Released"
+    ✓ Available Volume = 1 (L)
+    ✓ Released Date and Released By auto-set
+  → Note ID: SSB-2026-0001 (A1 stock)
+
+
+STEP 5.4: Repeat for A2 through A5 stocks
+--------------------------------------------------------------
+  Create SSBs for each stock solution needed for Green Medium:
+
+  A2 (Vitamin Stock, 500mL = 0.5 L):
+    Solution Type: A2 | Target Volume: 0.5 | UOM: L
+    Sterilization: Filter Sterilization (NOT autoclave!)
+    Ingredients: Vitamin B12 (0.025g), Biotin (0.1g), Thiamine HCl (0.5g)
+    → Note ID: SSB-2026-0002
+
+  A3 (Ferric Citrate Stock, 500mL):
+    Solution Type: A3 | Target Volume: 0.5 | UOM: L
+    Sterilization: Autoclaving
+    Ingredients: Ferric Citrate CHEM-011 (2.35g)
+    → Note ID: SSB-2026-0003
+
+  A4 (Sodium Nitrate Stock, 100mL):
+    Solution Type: A4 | Target Volume: 0.1 | UOM: L
+    Sterilization: Autoclaving
+    Ingredients: Sodium Nitrate CHEM-012 (24.67g)
+    → Note ID: SSB-2026-0004
+
+  A5 (Phosphate Buffer Stock, 100mL):
+    Solution Type: A5 | Target Volume: 0.1 | UOM: L
+    Sterilization: Autoclaving
+    Ingredients: K2HPO4 CHEM-014 (4.535g), KH2PO4 CHEM-013 (3.58g)
+    → Note ID: SSB-2026-0005
+
+  For each: Save → Mark Preparation Complete → Set QC = Passed → Submit
+
+
+================================================================================
+PART 6 — GREEN MEDIUM PREPARATION  (Stage 0B)
+================================================================================
+
+STEP 6.1: Create Green Medium Batch
+--------------------------------------------------------------
+  Go to: /app/green-medium-batch/new
+
+    Preparation Date:        2026-04-06
+    Prepared By:             Administrator
+    Final Required Volume:   1  (L)
+      → green_volume_calculated should auto-calc = 0.75 L
+    Shelf Life (days):       14
+
+  Direct Chemicals table (base salts):
+    Row 1:
+      Item Code:          CHEM-001
+      Raw Material Batch: RMB-CHEM-2026-0001
+      Qty Used:           0.075     (75 mg = 0.075 g)
+      UOM:                g
+
+    Row 2:
+      Item Code:          CHEM-002
+      Raw Material Batch: RMB-CHEM-2026-0006
+      Qty Used:           0.225     (225 mg)
+      UOM:                g
+
+    Row 3:
+      Item Code:          CHEM-003
+      Raw Material Batch: RMB-CHEM-2026-0007
+      Qty Used:           0.075     (75 mg)
+      UOM:                g
+
+  Stock Solution links:
+    A1 Batch:   SSB-2026-0001    A1 Volume:  18 mL  (0.018 L)
+    A2 Batch:   SSB-2026-0002    A2 Volume:  2 mL   (0.002 L)
+    A3 Batch:   SSB-2026-0003    A3 Volume:  0.94 mL (0.00094 L)
+    A4 Batch:   SSB-2026-0004    A4 Volume:  9.48 mL (0.00948 L)
+    A5 Batch:   SSB-2026-0005    A5 Volume:  4.4 mL  (0.0044 L)
+
+  Sterilization:
+    Method: Autoclave | Date: 2026-04-06
+
+  → SAVE
+
+  VERIFY:
+    ✓ green_volume_calculated = 0.75
+    ✓ Expiry auto-calculated
+
+
+STEP 6.2: QC Checkpoints for Green Medium
+--------------------------------------------------------------
+  QC Checkpoint 1 (Pre-sterilization clarity):
+    qc_checkpoint_1_clarity:  Pass
+
+  QC Checkpoint 2 (Final):
+    qc_checkpoint_2_clarity:  Pass
+    qc_checkpoint_2_ph:       7.2  (example value)
+    qc_checkpoint_2_sterility: By Process
+
+  QC Entries table: add 2 rows both with Result = Pass
+  Overall QC Status:          Passed
+
+  → Click "Mark Preparation Complete"
+  → Set Overall QC Status = Passed
+  → SAVE → SUBMIT
+
+  VERIFY:
+    ✓ Status = "Approved"
+    ✓ Preparation Status = "Released"
+    ✓ remaining_volume set
+    ✓ Stock solutions' available_volume decremented
+  → Note ID: GMB-2026-0001
+
+
+================================================================================
+PART 7 — RED MEDIUM PREPARATION  (Stage 0B)
+================================================================================
+
+STEP 7.1: Prepare Red Medium stocks (A6, A7-I through A7-VI)
+--------------------------------------------------------------
+  Create 7 SSBs for Red Medium stocks. For each:
+    → Create appropriate RMBs first if not done
+    → Create SSB → Mark Prep Complete → QC Pass → Submit
+
+  A6/A5M (Red Trace Element, 1L):
+    Solution Type: A6 | Ingredients: Boric Acid, MnCl2, ZnSO4, CuSO4, MoO3
+    → SSB-2026-0006
+
+  A7-I through A7-VI (each 100mL = 0.1L):
+    A7-I:  Calcium Nitrate (1g)     → SSB-2026-0007
+    A7-II: FAC (0.6g)               → SSB-2026-0008
+    A7-III: EDTA (1g)               → SSB-2026-0009
+    A7-IV: Sodium Carbonate (1g)    → SSB-2026-0010
+    A7-V:  Citric Acid (0.6g)       → SSB-2026-0011
+    A7-VI: Thiamine HCl (0.1g)      → SSB-2026-0012
+      NOTE: A7-VI must use Filter Sterilization, NOT autoclave!
+
+
+STEP 7.2: Create Red Medium Batch
+--------------------------------------------------------------
+  Go to: /app/red-medium-batch/new
+
+    Preparation Date:        2026-04-06
+    Prepared By:             Administrator
+    Final Required Volume:   1  (L)
+      → red_volume_calculated auto-calc = 0.25 L
+
+  Direct Chemicals (base salts):
+    Row 1: CHEM-001 CaCl2   | 0.100 g  (100 mg)
+    Row 2: CHEM-002 MgSO4   | 0.200 g  (200 mg)
+
+  Stock Solution links:
+    A6 Batch:    SSB-2026-0006   Volume: 1 mL
+    A7-I Batch:  SSB-2026-0007   Volume: 1 mL
+    A7-II Batch: SSB-2026-0008   Volume: 1 mL
+    A7-III Batch:SSB-2026-0009   Volume: 1 mL
+    A7-IV Batch: SSB-2026-0010   Volume: 1 mL
+    A7-V Batch:  SSB-2026-0011   Volume: 1 mL
+    A7-VI Batch: SSB-2026-0012   Volume: 1 mL
+    (Remember: A7-I calcium must be added LAST in physical procedure)
+
+  QC Checkpoints:
+    qc_checkpoint_3_clarity:    Pass
+    qc_checkpoint_4_clarity:    Pass
+    qc_checkpoint_4_ph:         7.4
+  Overall QC Status: Passed
+
+  → Mark Preparation Complete → SAVE → SUBMIT
+  → Note ID: RMD-2026-0001
+
+
+================================================================================
+PART 8 — FINAL MEDIUM FORMULATION  (Stage 0C)
+================================================================================
+
+STEP 8.1: Create Final Medium Batch
+--------------------------------------------------------------
+  Go to: /app/final-medium-batch/new
+
+    Preparation Date:        2026-04-06
+    Final Required Volume:   1  (L)
+      → System auto-calcs:
+         Green Medium Volume = 0.75 L
+         Red Medium Volume   = 0.25 L
+    Shelf Life (days):       7
+
+    Green Medium Batch:      GMB-2026-0001
+    Red Medium Batch:        RMD-2026-0001
+
+  QC Checkpoint 5:
+    QC Status:    Passed
+    pH:           7.1
+    Clarity:      Pass
+    Sterility:    By Process
+
+  → SAVE → SUBMIT
+
+  VERIFY:
+    ✓ Status = "Approved"
+    ✓ remaining_volume = 1 (or actual_final_volume)
+    ✓ Green Medium Batch remaining_volume decreased by 0.75
+    ✓ Red Medium Batch remaining_volume decreased by 0.25
+    ✓ Validation: Only "Approved" or "Partially Used" medium batches accepted
+  → Note ID: FMB-2026-0001
+
+
+================================================================================
+PART 9 — STRAIN REGISTRATION
+================================================================================
+
+STEP 9.1: Create Pluviago Strain
+--------------------------------------------------------------
+  Go to: /app/pluviago-strain/new
+
+    Strain Name:           HP-Alpha-01
+    Organism Type:         Haematococcus pluvialis
+    Source Origin:         NCIM Culture Collection, Pune. Accession #NCIM-2345.
+                          Received 2024-06-15, verified by PCR.
+    Storage Condition:     2-8C
+    Storage Location:      Cryo Lab, Rack B, Shelf 3
+    Last Verification:     2026-03-01
+    Is Active:             ✓
+
+  → SAVE
+  → Note strain name for production batch
+
+
+================================================================================
+PART 10 — CULTIVATION  (Production Batch — Flask, Gen 1)
+================================================================================
+
+STEP 10.1: Create Flask Production Batch (Generation 1)
+--------------------------------------------------------------
+  Go to: /app/production-batch/new
+
+    Strain:               HP-Alpha-01
+    Generation Number:    1
+    Parent Batch:         (leave empty — this is the root)
+    Phase:                N/A
+    SOP Reference:        SOP/CULT/FLASK/v3.0
+
+  Current Stage section:
+    Current Stage:        Flask
+    Reactor Volume:       (auto-set to 1 L)
+    Inoculation Date:     2026-04-07
+
+  Medium Used:
+    Final Medium Batch:   FMB-2026-0001
+    Medium Volume Used:   0.25  (L — 250mL for Flask)
+
+  Culture Volume:
+    Inoculum Received from Parent: (leave empty, this is root)
+
+  QC Readings table — Add rows:
+    Row 1 (Process QC):
+      Parameter:          PAR
+      Value:              120
+      Unit:               µmol/m²/s
+      QC Type:            Process QC
+      Overall Result:     Pass
+
+    Row 2 (Process QC):
+      Parameter:          pH
+      Value:              7.1
+      Unit:               pH
+      QC Type:            Process QC
+      Overall Result:     Pass
+
+    Row 3 (Biological QC):
+      Parameter:          Cell Count
+      Value:              2500000
+      Unit:               cells/mL
+      QC Type:            Biological QC
+      Overall Result:     Pass
+
+    Row 4 (Biological QC):
+      Parameter:          OD (680nm)
+      Value:              0.45
+      Unit:               AU
+      QC Type:            Biological QC
+      Overall Result:     Pass
+
+    Row 5 (Biological QC):
+      Parameter:          Cell Size
+      Value:              22
+      Unit:               µm
+      QC Type:            Biological QC
+      Overall Result:     Pass
+
+    Row 6 (Biological QC):
+      Parameter:          Microscopy
+      Value:              Normal morphology
+      QC Type:            Biological QC
+      Contamination Detected: [ ] unchecked
+      Overall Result:     Pass
+
+  Stage Decision:
+    Stage Decision:       Scale Up
+    Decision Date:        2026-04-14
+    Decision By:          Administrator
+    Decision Remarks:     All QC parameters within spec. Culture healthy.
+                          Approved for scale-up to 25L PBR.
+
+  Contamination Status:  Clean
+  Lineage Status:        Active
+
+  → SAVE → SUBMIT
+
+  VERIFY:
+    ✓ Status = "Scaled Up"
+    ✓ Lineage Status = "Active"
+    ✓ FMB-2026-0001 remaining_volume decreased by 0.25
+    ✓ Strain generation_count incremented
+  → Note ID: PB-2026-0001
+
+
+================================================================================
+PART 11 — SCALE-UP: 25L PBR  (Generation 2)
+================================================================================
+
+STEP 11.1: Create 25L PBR Production Batch
+--------------------------------------------------------------
+  Go to: /app/production-batch/new
+
+    Strain:               HP-Alpha-01
+    Generation Number:    2
+    Parent Batch:         PB-2026-0001   (the Flask batch)
+    Current Stage:        25L PBR
+    Inoculation Date:     2026-04-14
+    Final Medium Batch:   FMB-2026-0001  (or a new FMB if needed)
+    Medium Volume Used:   24  (L)
+
+  Culture Volume:
+    Inoculum Received from Parent: 0.25  (L, from Flask)
+    Culture Volume Available:      24.25 (L, after growth — operator enters)
+
+  QC Readings: Add similar rows as Flask (PAR, pH, Cell Count, OD, Dry Weight)
+    All results = Pass
+
+  Stage Decision:         Scale Up
+  Decision Date:          2026-04-21
+  Contamination Status:   Clean
+  Lineage Status:         Active
+
+  → SAVE → SUBMIT
+  → Note ID: PB-2026-0002
+
+  VERIFY:
+    ✓ Status = "Scaled Up"
+    ✓ Parent batch PB-2026-0001 inoculum_volume_out = 0.25
+    ✓ Generation = 2, Parent = PB-2026-0001
+
+
+================================================================================
+PART 12 — SCALE-UP: 275L PBR  (Generation 3)
+================================================================================
+
+STEP 12.1: Create 275L PBR Production Batch
+--------------------------------------------------------------
+    Strain:               HP-Alpha-01
+    Generation Number:    3
+    Parent Batch:         PB-2026-0002
+    Current Stage:        275L PBR
+    Inoculation Date:     2026-04-21
+    Medium Volume Used:   250  (L)
+
+    Inoculum Received:    24  (L from 25L PBR)
+    Culture Volume Available: 270  (L after growth)
+
+  QC: All Pass, Contamination = Clean
+  Stage Decision: Scale Up
+  → SAVE → SUBMIT
+  → Note ID: PB-2026-0003
+
+
+================================================================================
+PART 13 — BATCH LINEAGE VERIFICATION
+================================================================================
+
+STEP 13.1: Verify Full Lineage Chain
+--------------------------------------------------------------
+  Go to: /app/production-batch/PB-2026-0003
+
+  Check:
+    ✓ Parent Batch = PB-2026-0002  (25L)
+    ✓ PB-2026-0002's Parent = PB-2026-0001 (Flask)
+    ✓ PB-2026-0001 has no Parent (root batch)
+    ✓ Generation numbers: 1 → 2 → 3
+
+  Full lineage chain:
+    HP-Alpha-01 (Strain)
+      └── PB-2026-0001 (Flask, Gen 1)      ← Lineage: Active/Scaled Up
+          └── PB-2026-0002 (25L PBR, Gen 2) ← Lineage: Active/Scaled Up
+              └── PB-2026-0003 (275L PBR, Gen 3) ← Lineage: Active
+
+
+STEP 13.2: Verify Traceability Chain (Chemical → Cultivation)
+--------------------------------------------------------------
+  Pick any Production Batch (e.g., PB-2026-0001) and trace backwards:
+
+    PB-2026-0001
+      → uses FMB-2026-0001 (Final Medium)
+        → uses GMB-2026-0001 (Green Medium, 75%)
+          → uses SSB-2026-0001 (A1 Stock Solution)
+            → used RMB-CHEM-2026-0002 (MnCl2, Molychem, Batch MOLY-MnCl2-2026-012)
+              → COA verified: COA-2026-0002, Pass
+              → Supplier: Molychem, AVL: AVL-2026-0002
+          → uses SSB-2026-0002 (A2), SSB-0003 (A3), etc.
+          → Direct chemicals: RMB-0001 (CaCl2), RMB-0006 (MgSO4), RMB-0007 (NaCl)
+        → uses RMD-2026-0001 (Red Medium, 25%)
+          → uses SSB-2026-0006..0012 (A6, A7 stocks)
+
+  VERIFY:
+    ✓ Complete chain from vendor batch → stock solution → medium → reactor
+    ✓ Every link traceable in the UI
+    ✓ No broken references
+
+
+================================================================================
+PART 14 — RETURN-TO-CULTIVATION (Back-Propagation)
+================================================================================
+
+STEP 14.1: Trigger Return-to-Cultivation from 275L batch
+--------------------------------------------------------------
+  Go to: /app/production-batch/PB-2026-0003  (the 275L batch)
+
+  Ensure:
+    • docstatus = 1 (Submitted)
+    • current_stage = "275L PBR" (eligible for return)
+    • status ≠ Harvested/Disposed
+    • culture_volume_available is filled (e.g., 270 L)
+
+  Click Menu → "Create Return Batch" and fill the dialog:
+    Withdrawal Volume:        0.5  (L)
+    Dilution Medium Batch:    FMB-2026-0001  (or a new FMB)
+    Dilution Volume:          0.25 (L of fresh medium)
+    Return Date:              2026-04-25
+    Returned By:              Administrator
+    Reason:                   Culture continuity — maintaining seed stock
+                              from known-good 275L production culture
+
+  → Confirm
+
+  VERIFY:
+    ✓ New Flask batch created (e.g., PB-2026-0004)
+    ✓ PB-2026-0004 fields:
+        - Current Stage = Flask
+        - Generation Number = 4  (parent's gen 3 + 1)
+        - Parent Batch = PB-2026-0003
+        - Inoculum Received = 0.5
+        - Lineage Status = Active
+        - Remarks mention "Return-to-Cultivation"
+    ✓ PB-2026-0003 lineage_status changed to "Returned"
+    ✓ Cultivation Return Event created:
+        - source_batch = PB-2026-0003
+        - child_batch = PB-2026-0004
+        - withdrawal_volume = 0.5
+        - reason filled
+        - status = "Completed"
+
+  KEY CHECK — This is a Material Transfer, NOT Manufacturing:
+    ✓ No BOM or Work Order created
+    ✓ Source batch PB-2026-0003 is still operational (status ≠ Closed)
+    ✓ Only inoculum_volume_out incremented on source
+
+
+================================================================================
+PART 15 — NEGATIVE TESTS (Validation Gates)
+================================================================================
+
+These tests verify that the system correctly BLOCKS invalid operations.
+
+TEST 15.1: Submit RMB without COA → Should FAIL
+  Create a new RMB, set QC Status = Approved but leave COA Verified unchecked.
+  Try to Submit → Expected: Error "COA has not been verified"
+
+TEST 15.2: Submit RMB with QC = Pending → Should FAIL
+  Create RMB, tick COA Verified, but leave QC Status = Pending.
+  Try to Submit → Expected: Error "QC Status must be Approved"
+
+TEST 15.3: Use unapproved RMB in Stock Solution → Should FAIL
+  Create SSB with ingredient linking to a Draft (not submitted) RMB.
+  Try to Save → Expected: Error "not submitted. Only submitted batches..."
+
+TEST 15.4: Submit SSB without Mark Preparation Complete → Should FAIL
+  Create SSB, fill QC = Passed, try to Submit.
+  → Expected: Error "Click 'Mark Preparation Complete' before submitting"
+
+TEST 15.5: Scale Up contaminated Production Batch → Should FAIL
+  Create Production Batch, set Contamination Status = Contaminated,
+  set Stage Decision = Scale Up. Try to Save.
+  → Expected: Error "Cannot scale up a Contaminated batch"
+
+TEST 15.6: Skip stage (Flask → 275L directly) → Should FAIL
+  From a Flask batch, try create_split_batches with next_stage = "275L PBR"
+  → Expected: Error "Stage sequence violation...only valid next stage is 25L PBR"
+
+TEST 15.7: Return-to-Cultivation from 25L (ineligible) → Should FAIL
+  From a 25L PBR batch, try create_return_batch.
+  → Expected: Error "only allowed from 275L PBR or 6600L PBR"
+
+TEST 15.8: Use expired RMB → Should show WARNING
+  Create RMB with expiry_date in the past: 2025-01-01
+  Save → Expected: Orange warning "material batch has already expired"
+
+TEST 15.9: Expiry before Mfg Date on RMB → Should FAIL
+  Create RMB: mfg_date = 2026-04-01, expiry_date = 2025-01-01
+  Save → Expected: Error "Expiry Date must be after Manufacturing Date"
+
+TEST 15.10: Submit Green Medium with QC ≠ Passed → Should FAIL
+  Create Green Medium Batch, set Overall QC Status = Pending.
+  Try to Submit → Expected: Error "Overall QC Status must be Passed"
+
+
+================================================================================
+PART 16 — STOCK VERIFICATION CHECKS
+================================================================================
+
+STEP 16.1: Verify Stock Consumption Logs
+--------------------------------------------------------------
+  Go to: /app/stock-consumption-log
+  Filter by raw_material_batch = RMB-CHEM-2026-0001
+
+  VERIFY:
+    ✓ SCL entries exist for Green Medium base salt usage
+    ✓ Each SCL shows: action=Consumed, qty_change, source_doctype, source_document
+    ✓ consumed_by and consumption_date filled
+
+STEP 16.2: Verify RMB remaining stock
+--------------------------------------------------------------
+  Go to: /app/raw-material-batch/RMB-CHEM-2026-0001
+
+  VERIFY:
+    ✓ remaining_qty = received_qty - total consumed
+    ✓ consumed_qty matches sum of SCL entries
+
+  Click Menu → "Recalculate Stock" button
+  VERIFY:
+    ✓ Values match (no drift)
+
+STEP 16.3: Verify SSB available volume
+--------------------------------------------------------------
+  Go to each SSB and verify:
+    ✓ Available Volume = target_volume - volume consumed by media batches
+    ✓ Volume Used reflects media preparation draws
+
+
+================================================================================
+SUMMARY CHECKLIST
+================================================================================
+
+[ ] Part  1: Vendor Qualification — AVL records created for all chemicals
+[ ] Part  2: Purchase Order & Receipt — PO + PR created and submitted
+[ ] Part  3: Raw Material Batch — RMBs created for all chemicals
+[ ] Part  4: COA Verification — Chemical COAs created, specs loaded, COA Pass
+[ ] Part  4: RMB Submission — All RMBs Approved + COA Verified + Submitted
+[ ] Part  5: Stock Solutions — A1–A5 (Green) prepared, QC passed, submitted
+[ ] Part  6: Green Medium — Base salts + stocks, QC1+QC2 Pass, submitted
+[ ] Part  7: Red Medium stocks — A6, A7-I to VI prepared and submitted
+[ ] Part  7: Red Medium — Base salts + stocks, QC3+QC4 Pass, submitted
+[ ] Part  8: Final Medium — 75:25 combination, QC5 Pass, submitted
+[ ] Part  9: Strain — HP-Alpha-01 registered
+[ ] Part 10: Flask (Gen 1) — Inoculated, QC readings, Scale Up, submitted
+[ ] Part 11: 25L PBR (Gen 2) — Scale Up, submitted
+[ ] Part 12: 275L PBR (Gen 3) — Scale Up, submitted
+[ ] Part 13: Lineage verified — Gen 1→2→3 chain confirmed
+[ ] Part 13: Full traceability — Chemical→Stock→Medium→Reactor traceable
+[ ] Part 14: Return-to-Cultivation — New Flask from 275L, event logged
+[ ] Part 15: Negative tests — All validation gates blocking correctly
+[ ] Part 16: Stock verification — SCL entries, RMB remaining, SSB volumes
+
+================================================================================
+END OF TEST DOCUMENT
+================================================================================

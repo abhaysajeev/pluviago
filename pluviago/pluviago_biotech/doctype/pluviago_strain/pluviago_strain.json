@@ -16,9 +16,7 @@
   "parent_strain",
   "culture_conditions",
   "notes",
-  "status",
-  "section_break_created",
-  "created_by_user"
+  "status"
  ],
  "fields": [
   {
@@ -90,17 +88,6 @@
    "in_list_view": 1,
    "label": "Status",
    "options": "Active\nRetired\nQuarantined"
-  },
-  {
-   "fieldname": "section_break_created",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fetch_from": "owner",
-   "fieldname": "created_by_user",
-   "fieldtype": "Data",
-   "label": "Created By",
-   "read_only": 1
   }
  ],
  "links": [],
