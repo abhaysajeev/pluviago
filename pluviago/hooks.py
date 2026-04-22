@@ -25,17 +25,32 @@ fixtures = [
         "Production Supervisor", "Production Operator",
         "Store Keeper", "Pluviago Admin"
     ]]]},
+    {"dt": "Workflow", "filters": [["name", "in", [
+        "Pluviago PO Approval",
+        "Pluviago PR COA Approval",
+    ]]]},
 ]
+
+# Override standard ERPNext doctype classes
+override_doctype_class = {
+    "Purchase Receipt": "pluviago.pluviago_biotech.overrides.purchase_receipt.CustomPurchaseReceipt",
+}
 
 # DocType JS — inject custom client scripts into standard ERPNext forms
 doctype_js = {
     "Purchase Receipt": "pluviago_biotech/overrides/purchase_receipt.js",
+    "Purchase Order": "pluviago_biotech/overrides/purchase_order.js",
+    "Raw Material Batch": "pluviago_biotech/doctype/raw_material_batch/raw_material_batch.js",
 }
 
 # Document Events
 doc_events = {
     "Purchase Order": {
         "validate": "pluviago.pluviago_biotech.overrides.purchase_order.validate",
+        "before_submit": "pluviago.pluviago_biotech.overrides.purchase_order.before_submit",
+    },
+    "Purchase Receipt": {
+        "on_workflow_action": "pluviago.pluviago_biotech.overrides.purchase_receipt.on_workflow_action",
     },
 }
 

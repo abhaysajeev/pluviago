@@ -1,0 +1,183 @@
+[
+ {
+  "doctype": "Workflow",
+  "name": "Pluviago PO Approval",
+  "document_type": "Purchase Order",
+  "is_active": 0,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "state": "Draft",
+    "doc_status": "0",
+    "allow_edit": "Purchase User"
+   },
+   {
+    "state": "Pending Approval",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager"
+   },
+   {
+    "state": "Approved",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager"
+   },
+   {
+    "state": "Rejected",
+    "doc_status": "0",
+    "allow_edit": "Purchase User"
+   },
+   {
+    "state": "COA Pending",
+    "doc_status": "0",
+    "allow_edit": "QA Head"
+   },
+   {
+    "state": "COA Approved",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager"
+   },
+   {
+    "state": "COA Rejected",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager"
+   },
+   {
+    "state": "Ordered",
+    "doc_status": "1",
+    "allow_edit": "Purchase Manager"
+   }
+  ],
+  "transitions": [
+   {
+    "state": "Draft",
+    "action": "Submit for Approval",
+    "next_state": "Pending Approval",
+    "allowed": "Purchase User"
+   },
+   {
+    "state": "Draft",
+    "action": "Submit for Approval",
+    "next_state": "Pending Approval",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "Pending Approval",
+    "action": "Approve",
+    "next_state": "Approved",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "Pending Approval",
+    "action": "Reject",
+    "next_state": "Rejected",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "Rejected",
+    "action": "Revise",
+    "next_state": "Draft",
+    "allowed": "Purchase User"
+   },
+   {
+    "state": "Rejected",
+    "action": "Revise",
+    "next_state": "Draft",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "Approved",
+    "action": "Send for COA Review",
+    "next_state": "COA Pending",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "COA Pending",
+    "action": "Approve COA",
+    "next_state": "COA Approved",
+    "allowed": "QA Head"
+   },
+   {
+    "state": "COA Pending",
+    "action": "Approve COA",
+    "next_state": "COA Approved",
+    "allowed": "QC Manager"
+   },
+   {
+    "state": "COA Pending",
+    "action": "Reject COA",
+    "next_state": "COA Rejected",
+    "allowed": "QA Head"
+   },
+   {
+    "state": "COA Pending",
+    "action": "Reject COA",
+    "next_state": "COA Rejected",
+    "allowed": "QC Manager"
+   },
+   {
+    "state": "COA Rejected",
+    "action": "Re-submit COA",
+    "next_state": "COA Pending",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "COA Approved",
+    "action": "Confirm Order",
+    "next_state": "Ordered",
+    "allowed": "Purchase Manager"
+   }
+  ],
+  "workflow_name": "Pluviago PO Approval"
+ },
+ {
+  "doctype": "Workflow",
+  "name": "Pluviago PR COA Approval",
+  "document_type": "Purchase Receipt",
+  "is_active": 1,
+  "workflow_state_field": "workflow_state",
+  "states": [
+   {
+    "state": "Draft",
+    "doc_status": "0",
+    "allow_edit": "Store Keeper"
+   },
+   {
+    "state": "COA Approved",
+    "doc_status": "0",
+    "allow_edit": "Purchase Manager"
+   },
+   {
+    "state": "Submitted",
+    "doc_status": "1",
+    "allow_edit": "Purchase Manager"
+   }
+  ],
+  "transitions": [
+   {
+    "state": "Draft",
+    "action": "Approve COA",
+    "next_state": "COA Approved",
+    "allowed": "QA Head"
+   },
+   {
+    "state": "Draft",
+    "action": "Approve COA",
+    "next_state": "COA Approved",
+    "allowed": "QC Manager"
+   },
+   {
+    "state": "COA Approved",
+    "action": "Submit",
+    "next_state": "Submitted",
+    "allowed": "Purchase Manager"
+   },
+   {
+    "state": "COA Approved",
+    "action": "Submit",
+    "next_state": "Submitted",
+    "allowed": "Store Keeper"
+   }
+  ],
+  "workflow_name": "Pluviago PR COA Approval"
+ }
+]

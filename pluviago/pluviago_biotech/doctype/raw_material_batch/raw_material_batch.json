@@ -108,7 +108,9 @@
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
-   "options": "Supplier"
+   "options": "Supplier",
+   "fetch_from": "purchase_receipt.supplier",
+   "fetch_if_empty": 1
   },
   {
    "fieldname": "col_break_supplier",
@@ -147,7 +149,9 @@
    "default": "Today",
    "fieldname": "received_date",
    "fieldtype": "Date",
-   "label": "Received Date"
+   "label": "Received Date",
+   "fetch_from": "purchase_receipt.posting_date",
+   "fetch_if_empty": 1
   },
   {
    "fieldname": "col_break_stock",
@@ -187,7 +191,7 @@
    "fieldname": "storage_condition",
    "fieldtype": "Select",
    "label": "Storage Condition",
-   "options": "Room Temperature\n2-8\u00b0C\n-20\u00b0C\n-80\u00b0C\nDry Place"
+   "options": "Room Temperature\n2-8°C\n-20°C\n-80°C\nDry Place"
   },
   {
    "fieldname": "warehouse",
@@ -235,7 +239,9 @@
   {
    "fieldname": "coa_attachment",
    "fieldtype": "Attach",
-   "label": "COA Document"
+   "label": "COA Document",
+   "fetch_from": "purchase_receipt.custom_coa_attach",
+   "fetch_if_empty": 1
   },
   {
    "fieldname": "col_break_coa",

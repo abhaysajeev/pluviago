@@ -8,20 +8,12 @@
  "field_order": [
   "naming_series",
   "section_vendor_material",
-  "supplier",
   "supplier_name",
+  "supplier_type",
+  "supplier",
+  "approval_status",
   "section_approved_items",
   "approved_items",
-  "section_qualification",
-  "approval_status",
-  "col_break_3",
-  "approval_date",
-  "approved_by",
-  "col_break_4",
-  "valid_upto",
-  "qualification_ref",
-  "col_break_5",
-  "last_audit_date",
   "section_additional",
   "remarks"
  ],
@@ -41,20 +33,27 @@
    "label": "Vendor"
   },
   {
-   "fieldname": "supplier",
-   "fieldtype": "Link",
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Supplier",
-   "options": "Supplier",
+   "label": "Supplier Name",
    "reqd": 1
   },
   {
-   "fieldname": "supplier_name",
-   "fieldtype": "Data",
-   "fetch_from": "supplier.supplier_name",
-   "label": "Supplier Name",
-   "read_only": 1,
-   "in_list_view": 1
+   "default": "Company",
+   "fieldname": "supplier_type",
+   "fieldtype": "Select",
+   "label": "Supplier Type",
+   "options": "Company\nIndividual\nPartnership",
+   "reqd": 1
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "read_only": 1
   },
   {
    "fieldname": "section_approved_items",
@@ -69,58 +68,14 @@
    "reqd": 0
   },
   {
-   "fieldname": "section_qualification",
-   "fieldtype": "Section Break",
-   "label": "Qualification & Approval"
-  },
-  {
-   "default": "Pending",
+   "default": "Approved",
    "fieldname": "approval_status",
    "fieldtype": "Select",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Approval Status",
-   "options": "Pending\nApproved\nRejected\nExpired\nUnder Review",
-   "reqd": 1
-  },
-  {
-   "fieldname": "col_break_3",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "approval_date",
-   "fieldtype": "Date",
-   "label": "Approval Date",
-   "reqd": 1
-  },
-  {
-   "fieldname": "approved_by",
-   "fieldtype": "Link",
-   "label": "Approved By",
-   "options": "User"
-  },
-  {
-   "fieldname": "col_break_4",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "valid_upto",
-   "fieldtype": "Date",
-   "label": "Valid Upto",
-   "reqd": 1
-  },
-  {
-   "fieldname": "qualification_ref",
-   "fieldtype": "Data",
-   "label": "Qualification Certificate Ref"
-  },
-  {
-   "fieldname": "col_break_5",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "last_audit_date",
-   "fieldtype": "Date",
-   "label": "Last Audit Date"
+   "options": "Approved",
+   "read_only": 1
   },
   {
    "fieldname": "section_additional",
@@ -134,7 +89,7 @@
   }
  ],
  "links": [],
- "modified": "2026-04-07 00:00:00.000000",
+ "modified": "2026-04-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Approved Vendor",
@@ -196,7 +151,13 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "title": "Approved",
+   "color": "green"
+  }
+ ],
  "title_field": "supplier_name",
+ "show_title_field_in_link": 1,
  "track_changes": 1
 }

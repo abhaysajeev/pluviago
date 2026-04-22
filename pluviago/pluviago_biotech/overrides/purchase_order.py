@@ -1,17 +1,29 @@
 import frappe
-from frappe.utils import nowdate
 from pluviago.pluviago_biotech.utils.item_utils import (
     PURCHASED_RAW_MATERIAL_GROUPS,
     get_item_groups,
 )
 
 
+def clear_unused_fields(doc):
+    """Clear taxes and other unused sections so ERPNext validators don't error."""
+    doc.taxes = []
+    doc.taxes_and_charges = None
+    doc.tc_name = None
+    doc.terms = None
+    doc.payment_schedule = []
+    doc.pricing_rules = []
+    doc.additional_discount_percentage = 0
+    doc.discount_amount = 0
+
+
 def validate(doc, method=None):
     """
     On Purchase Order validate: hard-block if supplier is not in the Approved
-    Vendor List for any purchased raw material item, or if qualification expired.
-    Detection is item-group based — not dependent on item code naming.
+    Vendor List for any purchased raw material item.
     """
+    clear_unused_fields(doc)
+
     if not doc.items:
         return
 
@@ -37,9 +49,8 @@ def validate(doc, method=None):
         WHERE av.supplier = %s
           AND avi.item_code IN ({placeholders})
           AND av.approval_status = 'Approved'
-          AND av.valid_upto >= %s
         """,
-        [doc.supplier] + trackable + [nowdate()],
+        [doc.supplier] + trackable,
     )
     approved_set = {row[0] for row in approved_rows}
 
@@ -59,3 +70,9 @@ def validate(doc, method=None):
             """,
             title="Vendor Not Approved",
         )
+
+
+def before_submit(doc, method=None):
+    """Clear unused accounting fields before submit to prevent mandatory errors."""
+    clear_unused_fields(doc)
+    doc.flags.ignore_validate_update_after_submit = True

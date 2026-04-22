@@ -12,7 +12,7 @@ import frappe
 def execute():
     print("\n" + "=" * 80)
     print("  PLUVIAGO BIOTECH - COMPLETE SYSTEM SETUP")
-    print("  Running All Phases (1-7)")
+    print("  Running All Phases (1-8)")
     print("=" * 80 + "\n")
 
     phases = [
@@ -23,6 +23,7 @@ def execute():
         ("Phase 5: Asset Management", "pluviago.setup.phase5.execute"),
         ("Phase 6: RBAC Permissions", "pluviago.setup.phase6.execute"),
         ("Phase 7: HR Basics", "pluviago.setup.phase7.execute"),
+        ("Phase 8: Preparation Formulas", "pluviago.setup.phase8.execute"),
     ]
 
     completed = []

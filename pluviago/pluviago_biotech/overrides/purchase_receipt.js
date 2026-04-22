@@ -1,21 +1,16 @@
 /**
  * Purchase Receipt customization for Pluviago Biotech.
  *
- * 1. Hides irrelevant accounting/serial/asset fields from the items child table
+ * 1. Hides irrelevant sections and accounting/serial/asset fields
  * 2. Adds "Create Raw Material Batches" button on submitted PRs
  * 3. Adds "View Raw Material Batches" button to navigate to linked RMBs
  */
 frappe.ui.form.on("Purchase Receipt", {
     refresh(frm) {
+        _hide_irrelevant_sections(frm);
         _hide_irrelevant_fields(frm);
 
         if (frm.doc.docstatus !== 1) return;
-
-        frm.add_custom_button(
-            __("Create Raw Material Batches"),
-            () => _create_rmbs(frm),
-            __("Actions")
-        );
 
         frm.add_custom_button(
             __("View Raw Material Batches"),
@@ -26,6 +21,28 @@ frappe.ui.form.on("Purchase Receipt", {
         );
     },
 });
+
+
+function _hide_irrelevant_sections(frm) {
+    const sections_to_hide = [
+        "currency_and_price_list",      // Currency & Price List
+        "pricing_rule_details",         // Pricing Rules
+        "raw_material_details",         // Raw Materials Consumed (subcontracting)
+        "taxes_charges_section",        // Taxes and Charges (header section)
+        "taxes_section",                // Taxes table section
+        "totals",                       // Tax totals section
+        "sec_tax_breakup",              // Tax Breakup
+        "section_break_42",             // Additional Discount
+        "section_break_46",             // Grand Totals
+        "accounting_dimensions_section",// Accounting Dimensions
+        "subscription_detail",          // Auto Repeat
+        "printing_settings",            // Printing Settings
+        "transporter_info",             // Transporter
+        "section_break_98",             // Shipping Address
+        "billing_address_section",      // Company Billing Address
+    ];
+    sections_to_hide.forEach(fn => frm.set_df_property(fn, "hidden", 1));
+}
 
 
 function _hide_irrelevant_fields(frm) {
@@ -67,7 +84,7 @@ function _hide_irrelevant_fields(frm) {
         "return_qty_from_rejected_warehouse",
         "from_warehouse", "manufacturer", "manufacturer_part_no",
 
-        // Section breaks
+        // Section breaks (item-level)
         "accounting_details_section", "accounting_dimensions_section",
         "item_weight_details", "manufacture_details",
         "subcontract_bom_section", "section_break_45",
@@ -82,51 +99,3 @@ function _hide_irrelevant_fields(frm) {
 }
 
 
-function _create_rmbs(frm) {
-    frappe.confirm(
-        __("This will create Draft Raw Material Batches for all raw material items in this receipt. Continue?"),
-        () => {
-            frappe.call({
-                method: "pluviago.pluviago_biotech.overrides.purchase_receipt.create_raw_material_batches",
-                args: { purchase_receipt_name: frm.doc.name },
-                freeze: true,
-                freeze_message: __("Creating Raw Material Batches..."),
-                callback(r) {
-                    if (!r.message) return;
-
-                    const { created, skipped, errors } = r.message;
-                    let msg = "";
-
-                    if (created.length) {
-                        msg += "<b>Created (Draft):</b><br>";
-                        created.forEach(c => {
-                            msg += `✓ ${c.item_code} — ${c.material_name} → <a href="/app/raw-material-batch/${c.rmb_name}">${c.rmb_name}</a><br>`;
-                        });
-                    }
-
-                    if (skipped.length) {
-                        msg += "<br><b>Skipped:</b><br>";
-                        skipped.forEach(s => {
-                            msg += `⏭ ${s.item_code}: ${s.reason}<br>`;
-                        });
-                    }
-
-                    if (errors.length) {
-                        msg += "<br><b>Errors:</b><br>";
-                        errors.forEach(e => {
-                            msg += `✗ ${e.item_code}: ${e.reason}<br>`;
-                        });
-                    }
-
-                    if (!msg) msg = "No changes made.";
-
-                    frappe.msgprint({
-                        title: __("Raw Material Batches"),
-                        message: msg,
-                        indicator: created.length ? "green" : (errors.length ? "red" : "blue"),
-                    });
-                },
-            });
-        }
-    );
-}

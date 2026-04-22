@@ -45,6 +45,9 @@ class RawMaterialBatch(Document):
     def before_save(self):
         if not self.batch_number:
             self.batch_number = self.name
+        # Keep remaining_qty in sync while in draft
+        if self.docstatus == 0:
+            self.remaining_qty = max((self.received_qty or 0) - (self.consumed_qty or 0), 0)
 
     def validate(self):
         if self.expiry_date and self.mfg_date:

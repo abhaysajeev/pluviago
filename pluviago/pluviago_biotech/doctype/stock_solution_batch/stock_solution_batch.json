@@ -27,14 +27,10 @@
   "section_break_qc",
   "qc_status",
   "ph_value",
-  "concentration",
-  "concentration_unit",
   "qc_remarks",
   "qc_checked_by",
   "qc_date",
   "section_break_links",
-  "chemical_vendor",
-  "vendor_batch_ref",
   "warehouse",
   "status",
   "preparation_status",
@@ -175,16 +171,6 @@
    "label": "pH Value"
   },
   {
-   "fieldname": "concentration",
-   "fieldtype": "Float",
-   "label": "Concentration"
-  },
-  {
-   "fieldname": "concentration_unit",
-   "fieldtype": "Data",
-   "label": "Concentration Unit"
-  },
-  {
    "fieldname": "qc_remarks",
    "fieldtype": "Text",
    "label": "QC Remarks"
@@ -203,18 +189,7 @@
   {
    "fieldname": "section_break_links",
    "fieldtype": "Section Break",
-   "label": "Traceability"
-  },
-  {
-   "fieldname": "chemical_vendor",
-   "fieldtype": "Link",
-   "label": "Chemical Vendor",
-   "options": "Supplier"
-  },
-  {
-   "fieldname": "vendor_batch_ref",
-   "fieldtype": "Data",
-   "label": "Vendor Batch Reference"
+   "label": "Status & Storage"
   },
   {
    "fieldname": "warehouse",

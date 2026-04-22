@@ -40,6 +40,7 @@ def execute():
                 "fieldtype": "Date",
                 "label": "Expiry Date",
                 "insert_after": "custom_pharma_col_break",
+                "in_list_view": 1,
             },
             {
                 "fieldname": "custom_storage_condition",
