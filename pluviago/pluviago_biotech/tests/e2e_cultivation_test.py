@@ -281,6 +281,10 @@ def _test_linear_scaleup(strain, fmb_main):
 def _test_harvest_extraction(strain, fmb_main, pb6600_name):
     _step("STEP 3 — Harvest & Extraction on 6600L Batch")
 
+    # Advance stage_decision to Harvest on the 6600L batch (supervisor action)
+    frappe.db.set_value("Production Batch", pb6600_name, "stage_decision", "Harvest")
+    frappe.db.commit()
+
     # ── Create and submit Harvest Batch ───────────────────────────────────────
     hb = _make_hb(pb6600_name, qc_pass=True, dry_weight=12.0)
     ok("HB created and submitted (docstatus=1)", hb.docstatus == 1)

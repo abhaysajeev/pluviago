@@ -103,25 +103,18 @@ def get_data(filters):
         data.extend(rows)
 
         rows = frappe.db.sql(f"""
-            SELECT name AS batch, 'Green Medium Batch' AS doctype_name, 'Green Medium' AS stage,
+            SELECT name AS batch,
+                   CONCAT(medium_type, ' Medium Batch') AS doctype_name,
+                   CONCAT(medium_type, ' Medium') AS stage,
                    'Process QC' AS qc_type, NULL AS phase,
                    overall_qc_status AS qc_status, preparation_date AS qc_date,
                    prepared_by AS checked_by,
-                   qc_checkpoint_2_ph AS ph_value, NULL AS par_value, NULL AS dry_weight,
+                   CASE WHEN medium_type = 'Green' THEN qc_checkpoint_2_ph
+                        ELSE qc_checkpoint_4_ph END AS ph_value,
+                   NULL AS par_value, NULL AS dry_weight,
                    NULL AS assay_value, 0 AS contamination_detected, NULL AS remarks
-            FROM `tabGreen Medium Batch` WHERE 1=1 {green_date_cond}
+            FROM `tabMedium Batch` WHERE 1=1 {green_date_cond}
         """, green_vals, as_dict=True)
-        data.extend(rows)
-
-        rows = frappe.db.sql(f"""
-            SELECT name AS batch, 'Red Medium Batch' AS doctype_name, 'Red Medium (BG-11)' AS stage,
-                   'Process QC' AS qc_type, NULL AS phase,
-                   overall_qc_status AS qc_status, preparation_date AS qc_date,
-                   prepared_by AS checked_by,
-                   qc_checkpoint_4_ph AS ph_value, NULL AS par_value, NULL AS dry_weight,
-                   NULL AS assay_value, 0 AS contamination_detected, NULL AS remarks
-            FROM `tabRed Medium Batch` WHERE 1=1 {red_date_cond}
-        """, red_vals, as_dict=True)
         data.extend(rows)
 
         rows = frappe.db.sql(f"""

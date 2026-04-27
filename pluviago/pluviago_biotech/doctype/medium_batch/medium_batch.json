@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "medium_type",
   "naming_series",
   "batch_number",
   "preparation_date",
@@ -16,7 +17,7 @@
   "di_water_rmb",
   "di_water_volume",
   "final_required_volume",
-  "red_volume_calculated",
+  "medium_volume_calculated",
   "remaining_volume",
   "volume_consumed",
   "section_break_direct_chem",
@@ -26,14 +27,28 @@
   "sterilization_method",
   "sterilization_done",
   "sterilization_date",
+  "top_up_done",
+  "section_break_qc_green",
+  "qc_checkpoint_1_clarity",
+  "qc_checkpoint_1_date",
+  "qc_checkpoint_1_by",
+  "section_break_qc2",
+  "qc_checkpoint_2_clarity",
+  "qc_checkpoint_2_ph",
+  "qc_checkpoint_2_sterility",
+  "qc_checkpoint_2_date",
+  "qc_checkpoint_2_by",
+  "section_break_qc_red",
   "qc_checkpoint_3_clarity",
   "qc_checkpoint_3_date",
   "qc_checkpoint_3_by",
-  "section_break_qc",
+  "section_break_qc4",
   "qc_checkpoint_4_clarity",
   "qc_checkpoint_4_ph",
+  "qc_checkpoint_4_sterility",
   "qc_checkpoint_4_date",
   "qc_checkpoint_4_by",
+  "section_break_qc_overall",
   "overall_qc_status",
   "section_break_links",
   "warehouse",
@@ -46,13 +61,22 @@
  ],
  "fields": [
   {
+   "fieldname": "medium_type",
+   "fieldtype": "Select",
+   "label": "Medium Type",
+   "options": "\nGreen\nRed",
+   "reqd": 1,
+   "in_list_view": 1,
+   "bold": 1,
+   "description": "Select before saving. Determines naming, formula, and QC checkpoints."
+  },
+  {
    "fieldname": "naming_series",
    "fieldtype": "Select",
    "label": "Series",
    "no_copy": 1,
-   "options": "RMB-.YYYY.-.####",
-   "set_only_once": 1,
-   "default": "RMB-.YYYY.-.####"
+   "options": "MED-GRN-.YYYY.-.MM.-.####\nMED-RED-.YYYY.-.MM.-.####",
+   "hidden": 1
   },
   {
    "fieldname": "batch_number",
@@ -97,6 +121,13 @@
    "default": "2-8°C"
   },
   {
+   "fieldname": "di_water_rmb",
+   "fieldtype": "Link",
+   "label": "DI Water Batch",
+   "options": "Raw Material Batch",
+   "description": "In-house Raw Material Batch used for DI water. Stock will be deducted on Mark Preparation Complete."
+  },
+  {
    "fieldname": "di_water_volume",
    "fieldtype": "Float",
    "label": "DI Water Volume (mL)"
@@ -108,10 +139,11 @@
    "reqd": 1
   },
   {
-   "fieldname": "red_volume_calculated",
+   "fieldname": "medium_volume_calculated",
    "fieldtype": "Float",
-   "label": "Red Volume Needed (L) [25%]",
-   "read_only": 1
+   "label": "Medium Volume for Final Mix (L)",
+   "read_only": 1,
+   "description": "Green: 75% of Final Required Volume. Red: 25% of Final Required Volume."
   },
   {
    "fieldname": "remaining_volume",
@@ -129,18 +161,24 @@
   {
    "fieldname": "section_break_direct_chem",
    "fieldtype": "Section Break",
-   "label": "Direct Chemical Ingredients"
+   "label": "Direct Chemical Ingredients (Base Salts)"
   },
   {
    "fieldname": "direct_chemicals",
    "fieldtype": "Table",
-   "label": "Direct Chemicals (CaCl₂, MgSO₄, etc.)",
+   "label": "Direct Chemicals",
    "options": "Medium Direct Ingredient"
   },
   {
    "fieldname": "section_break_stocks",
    "fieldtype": "Section Break",
    "label": "Stock Solutions Used"
+  },
+  {
+   "fieldname": "ssb_used",
+   "fieldtype": "Table",
+   "label": "Stock Solutions Used",
+   "options": "Medium SSB Usage"
   },
   {
    "fieldname": "sterilization_method",
@@ -159,10 +197,79 @@
    "label": "Sterilization Date"
   },
   {
+   "fieldname": "top_up_done",
+   "fieldtype": "Check",
+   "label": "Volume Top-Up Done",
+   "description": "Green Medium only: confirm DI water has been added to final volume."
+  },
+  {
+   "fieldname": "section_break_qc_green",
+   "fieldtype": "Section Break",
+   "label": "QC — Green Medium (Checkpoints 1 & 2)"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_1_clarity",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 1: Clarity (Pre-Sterilization)",
+   "options": "Pass\nFail\nPending"
+  },
+  {
+   "fieldname": "qc_checkpoint_1_date",
+   "fieldtype": "Date",
+   "label": "Checkpoint 1 Date"
+  },
+  {
+   "fieldname": "qc_checkpoint_1_by",
+   "fieldtype": "Link",
+   "label": "Checkpoint 1 By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_qc2",
+   "fieldtype": "Section Break",
+   "label": "Checkpoint 2 — Final Green Medium"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_2_clarity",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 2: Clarity (Final)",
+   "options": "Pass\nFail\nPending"
+  },
+  {
+   "fieldname": "qc_checkpoint_2_ph",
+   "fieldtype": "Float",
+   "label": "QC Checkpoint 2: pH Value"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_2_sterility",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 2: Sterility",
+   "options": "Pass\nFail\nBy Process\nPending"
+  },
+  {
+   "fieldname": "qc_checkpoint_2_date",
+   "fieldtype": "Date",
+   "label": "Checkpoint 2 Date"
+  },
+  {
+   "fieldname": "qc_checkpoint_2_by",
+   "fieldtype": "Link",
+   "label": "Checkpoint 2 By",
+   "options": "User"
+  },
+  {
+   "fieldname": "section_break_qc_red",
+   "fieldtype": "Section Break",
+   "label": "QC — Red Medium (Checkpoints 3 & 4)"
+  },
+  {
    "default": "Pending",
    "fieldname": "qc_checkpoint_3_clarity",
    "fieldtype": "Select",
-   "label": "QC Checkpoint 3: Clarity Check",
+   "label": "QC Checkpoint 3: Clarity (Pre-Sterilization)",
    "options": "Pass\nFail\nPending"
   },
   {
@@ -177,21 +284,28 @@
    "options": "User"
   },
   {
-   "fieldname": "section_break_qc",
+   "fieldname": "section_break_qc4",
    "fieldtype": "Section Break",
-   "label": "QC Checkpoints (4 required)"
+   "label": "Checkpoint 4 — Final Red Medium"
   },
   {
    "default": "Pending",
    "fieldname": "qc_checkpoint_4_clarity",
    "fieldtype": "Select",
-   "label": "QC Checkpoint 4: Clarity Check",
+   "label": "QC Checkpoint 4: Clarity (Final)",
    "options": "Pass\nFail\nPending"
   },
   {
    "fieldname": "qc_checkpoint_4_ph",
    "fieldtype": "Float",
    "label": "QC Checkpoint 4: pH Value"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_checkpoint_4_sterility",
+   "fieldtype": "Select",
+   "label": "QC Checkpoint 4: Sterility",
+   "options": "Pass\nFail\nBy Process\nPending"
   },
   {
    "fieldname": "qc_checkpoint_4_date",
@@ -203,6 +317,11 @@
    "fieldtype": "Link",
    "label": "Checkpoint 4 By",
    "options": "User"
+  },
+  {
+   "fieldname": "section_break_qc_overall",
+   "fieldtype": "Section Break",
+   "label": "Overall QC Decision"
   },
   {
    "default": "Pending",
@@ -264,19 +383,6 @@
    "default": "Normal",
    "in_list_view": 1,
    "description": "Normal = clean pass. Conditional Release = passed after corrective action. Rejected = batch unrecoverable."
-  },
-  {
-   "fieldname": "di_water_rmb",
-   "fieldtype": "Link",
-   "label": "DI Water Batch",
-   "options": "Raw Material Batch",
-   "description": "In-house Raw Material Batch used for DI water. Stock will be deducted on Mark Preparation Complete."
-  },
-  {
-   "fieldname": "ssb_used",
-   "fieldtype": "Table",
-   "label": "Stock Solutions Used",
-   "options": "Medium SSB Usage"
   }
  ],
  "is_submittable": 1,
@@ -284,7 +390,7 @@
  "modified": "2024-01-01 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
- "name": "Red Medium Batch",
+ "name": "Medium Batch",
  "naming_rule": "By Naming Series",
  "owner": "Administrator",
  "permissions": [

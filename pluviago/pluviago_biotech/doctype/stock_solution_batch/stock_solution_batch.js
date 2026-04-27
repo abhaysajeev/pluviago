@@ -1,3 +1,20 @@
+// Default SSB properties per solution type
+const _SSB_DEFAULTS = {
+    'A1':    { shelf_life_days: 365,  sterilization_method: 'Autoclaving',         storage_condition: '2-8°C' },
+    'A2':    { shelf_life_days: 365,  sterilization_method: 'Filter Sterilization', storage_condition: '2-8°C' },
+    'A3':    { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A4':    { shelf_life_days: 1095, sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A5':    { shelf_life_days: 1095, sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A5M':   { shelf_life_days: 365,  sterilization_method: 'Autoclaving',         storage_condition: '2-8°C' },
+    'A6':    { shelf_life_days: 365,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A7-I':  { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A7-II': { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A7-III':{ shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A7-IV': { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A7-V':  { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A7-VI': { shelf_life_days: 365,  sterilization_method: 'Filter Sterilization', storage_condition: 'Room Temperature' },
+};
+
 function calc_ssb_expiry(frm) {
     if (frm.doc.shelf_life_days && frm.doc.preparation_date) {
         frm.set_value('expiry_date',
@@ -6,10 +23,42 @@ function calc_ssb_expiry(frm) {
 }
 
 frappe.ui.form.on('Stock Solution Batch', {
+    onload(frm) {
+        if (frm.is_new() && !frm.doc.prepared_by) {
+            frm.set_value('prepared_by', frappe.session.user);
+        }
+        if (frm.is_new() && !frm.doc.preparation_date) {
+            frm.set_value('preparation_date', frappe.datetime.get_today());
+        }
+    },
+
+    solution_type(frm) {
+        const defaults = _SSB_DEFAULTS[frm.doc.solution_type];
+        if (!defaults) return;
+        frm.set_value('shelf_life_days', defaults.shelf_life_days);
+        frm.set_value('sterilization_method', defaults.sterilization_method);
+        calc_ssb_expiry(frm);
+    },
+
     shelf_life_days(frm) { calc_ssb_expiry(frm); },
     preparation_date(frm) { calc_ssb_expiry(frm); },
 
+    qc_status(frm) {
+        if (frm.doc.qc_status && frm.doc.qc_status !== 'Pending') {
+            if (!frm.doc.qc_date)       frm.set_value('qc_date', frappe.datetime.get_today());
+            if (!frm.doc.qc_checked_by) frm.set_value('qc_checked_by', frappe.session.user);
+        }
+    },
+
     refresh(frm) {
+        // Filter raw_material_batch in ingredients child table by the row's item_code
+        frm.set_query('raw_material_batch', 'ingredients', function(doc, cdt, cdn) {
+            const row = locals[cdt][cdn];
+            const filters = { docstatus: 1, qc_status: 'Approved' };
+            if (row.item_code) filters.item_code = row.item_code;
+            return { filters };
+        });
+
         // Lineage: show which medium batches consumed this SSB
         if (frm.doc.docstatus === 1) {
             frm.add_custom_button(__('View Lineage'), () => {
@@ -25,8 +74,8 @@ frappe.ui.form.on('Stock Solution Batch', {
                         const html = `<table class="table table-bordered" style="font-size:13px">
                             <thead><tr><th>Medium Batch</th><th>Type</th><th>Volume Used (mL)</th></tr></thead>
                             <tbody>${rows.map(r =>
-                                `<tr><td><a href="/app/${r.medium_type.toLowerCase().replace(/ /g,'-')}/${r.medium_batch}">${r.medium_batch}</a></td>
-                                <td>${r.medium_type}</td><td>${r.volume_used_ml}</td></tr>`
+                                `<tr><td><a href="/app/medium-batch/${r.medium_batch}">${r.medium_batch}</a></td>
+                                <td>${r.medium_type || ''}</td><td>${r.volume_used_ml}</td></tr>`
                             ).join('')}</tbody></table>`;
                         frappe.msgprint({ title: __('Consumed By'), message: html, indicator: 'blue' });
                     }
@@ -52,9 +101,7 @@ frappe.ui.form.on('Stock Solution Batch', {
                         frappe.call({
                             method: 'mark_preparation_complete',
                             doc: frm.doc,
-                            callback: function (r) {
-                                frm.reload_doc();
-                            }
+                            callback: function () { frm.reload_doc(); }
                         });
                     }
                 );
@@ -71,9 +118,7 @@ frappe.ui.form.on('Stock Solution Batch', {
                             method: 'mark_wasted',
                             doc: frm.doc,
                             args: { reason: values.reason || '' },
-                            callback: function (r) {
-                                frm.reload_doc();
-                            }
+                            callback: function () { frm.reload_doc(); }
                         });
                     },
                     __('Mark Batch as Wasted (QC Failed)'),

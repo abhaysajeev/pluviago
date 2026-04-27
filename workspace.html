@@ -1,0 +1,255 @@
+<div id="plv-hub">
+  <div class="plv-inner">
+
+    <!-- ═══════ HEADER ═══════ -->
+    <header class="plv-head">
+      <div class="plv-head-l">
+        <div class="plv-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-3.5 4-5 7-5 10a5 5 0 0 0 10 0c0-3-1.5-6-5-10z"/></svg>
+        </div>
+        <div>
+          <h1>Pluviago Operating Hub</h1>
+          <p>Procurement · Lab preparation · Cultivation · Harvest</p>
+        </div>
+      </div>
+      <div class="plv-head-r">
+        <span class="plv-chip" id="plv-date"></span>
+        <span class="plv-chip plv-chip-user" id="plv-user"></span>
+      </div>
+    </header>
+
+    <!-- ═══════ KPI STRIP ═══════ -->
+    <section class="plv-kpis">
+      <div class="plv-kpi" data-route="Chemical COA" data-filter='{"docstatus":0}'>
+        <span class="plv-kpi-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+        </span>
+        <div><div class="plv-kpi-num" data-kpi="coa_pending">—</div><div class="plv-kpi-lbl">COA pending review</div></div>
+      </div>
+      <div class="plv-kpi" data-route="Raw Material Batch" data-filter='{"qc_status":"Pending","docstatus":0}'>
+        <span class="plv-kpi-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </span>
+        <div><div class="plv-kpi-num" data-kpi="rmb_pending">—</div><div class="plv-kpi-lbl">RMB awaiting QC</div></div>
+      </div>
+      <div class="plv-kpi" data-route="Production Batch" data-filter='{"status":"Active"}'>
+        <span class="plv-kpi-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v8L4 21h16l-6-10V3"/></svg>
+        </span>
+        <div><div class="plv-kpi-num" data-kpi="prod_active">—</div><div class="plv-kpi-lbl">Active production</div></div>
+      </div>
+      <div class="plv-kpi" data-route="Contamination Incident">
+        <span class="plv-kpi-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.86a2 2 0 0 1 3.4 0l8.4 14.13a2 2 0 0 1-1.7 3H3.6a2 2 0 0 1-1.7-3z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+        </span>
+        <div><div class="plv-kpi-num" data-kpi="contam_open">—</div><div class="plv-kpi-lbl">Open contaminations</div></div>
+      </div>
+      <div class="plv-kpi" data-route="Raw Material Batch">
+        <span class="plv-kpi-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        </span>
+        <div><div class="plv-kpi-num" data-kpi="expiring">—</div><div class="plv-kpi-lbl">Expiring ≤ 30 days</div></div>
+      </div>
+      <div class="plv-kpi" data-route="Stock Solution Batch">
+        <span class="plv-kpi-ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6L4 21h16L14 9V3"/></svg>
+        </span>
+        <div><div class="plv-kpi-num" data-kpi="ssb_available">—</div><div class="plv-kpi-lbl">Stock solutions available</div></div>
+      </div>
+    </section>
+
+    <!-- ═══════ PIPELINE ═══════ -->
+    <section class="plv-card plv-pipe">
+      <div class="plv-card-hdr">
+        <div>
+          <h2>Cultivation Pipeline</h2>
+          <p>Linear progression · Click any stage to view active batches</p>
+        </div>
+        <button class="plv-btn" data-action="new" data-doctype="Production Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span>New Batch</span>
+        </button>
+      </div>
+      <div class="plv-flow">
+        <div class="plv-stage" data-stage="Flask"><div class="plv-stage-cap">G1</div><div class="plv-stage-name">Flask</div><div class="plv-stage-vol">~250 mL</div><div class="plv-stage-cnt" data-stage-cnt="Flask">—</div></div>
+        <div class="plv-arrow"></div>
+        <div class="plv-stage" data-stage="25L PBR"><div class="plv-stage-cap">G2</div><div class="plv-stage-name">25 L PBR</div><div class="plv-stage-vol">25 L</div><div class="plv-stage-cnt" data-stage-cnt="25L PBR">—</div></div>
+        <div class="plv-arrow"></div>
+        <div class="plv-stage" data-stage="275L PBR"><div class="plv-stage-cap">G3</div><div class="plv-stage-name">275 L PBR</div><div class="plv-stage-vol">275 L</div><div class="plv-stage-cnt" data-stage-cnt="275L PBR">—</div></div>
+        <div class="plv-arrow"></div>
+        <div class="plv-stage" data-stage="925L PBR"><div class="plv-stage-cap">G4</div><div class="plv-stage-name">925 L PBR</div><div class="plv-stage-vol">925 L</div><div class="plv-stage-cnt" data-stage-cnt="925L PBR">—</div></div>
+        <div class="plv-arrow"></div>
+        <div class="plv-stage" data-stage="6600L PBR"><div class="plv-stage-cap">G5</div><div class="plv-stage-name">6600 L PBR</div><div class="plv-stage-vol">Green → Red</div><div class="plv-stage-cnt" data-stage-cnt="6600L PBR">—</div></div>
+        <div class="plv-arrow"></div>
+        <div class="plv-stage" data-stage="Harvested"><div class="plv-stage-cap">RX</div><div class="plv-stage-name">Harvest</div><div class="plv-stage-vol">Drying · QC</div><div class="plv-stage-cnt" data-stage-cnt="Harvested">—</div></div>
+      </div>
+    </section>
+
+    <!-- ═══════ QUICK ACTIONS ═══════ -->
+    <section class="plv-quick">
+      <div class="plv-section-hdr"><h3>Quick Create</h3></div>
+      <div class="plv-actions">
+        <button class="plv-act" data-action="new" data-doctype="Raw Material Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-9 5-9-5V8l9-5 9 5z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+          <span>Raw Material Batch</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Chemical COA">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg>
+          <span>Chemical COA</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Stock Solution Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6L4 18a3 3 0 0 0 3 4h10a3 3 0 0 0 3-4L15 8V2"/><path d="M8 2h8"/><path d="M7 14h10"/></svg>
+          <span>Stock Solution (A1–A7)</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Medium Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h14"/><path d="M6 3v6a6 6 0 0 0 12 0V3"/><path d="M6 21h12"/><path d="M9 21v-4M15 21v-4"/></svg>
+          <span>Medium Batch (Green/Red)</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Final Medium Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0z"/><path d="M3 12h18"/><path d="M12 3a14 14 0 0 1 0 18"/><path d="M12 3a14 14 0 0 0 0 18"/></svg>
+          <span>Final Medium (75:25)</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Production Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/></svg>
+          <span>Production Batch</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Harvest Batch">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M7 21V11a5 5 0 0 1 10 0v10"/><path d="M12 11V3"/></svg>
+          <span>Harvest</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Contamination Incident">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5"/><path d="M12 16h.01"/></svg>
+          <span>Log Contamination</span>
+        </button>
+        <button class="plv-act" data-action="new" data-doctype="Approved Vendor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="m17 11 2 2 4-4"/></svg>
+          <span>Approve Vendor</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══════ SEARCH ═══════ -->
+    <section class="plv-search">
+      <svg class="plv-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="plv-batch-search" type="text" placeholder="Find a batch — RMB-CHEM-… · COA-… · SSB-… · MED-GRN-… · FMB-… · PROD-…">
+      <button class="plv-search-go" id="plv-search-btn">Open</button>
+    </section>
+
+    <!-- ═══════ MAIN GRID ═══════ -->
+    <section class="plv-grid">
+      <div class="plv-modules">
+
+        <div class="plv-mod">
+          <div class="plv-mod-hdr">
+            <span class="plv-mod-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m21 16-9 5-9-5V8l9-5 9 5z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+            </span>
+            <div><h3>Procurement & Inventory</h3><p>Vendor → COA → RMB → consumption ledger</p></div>
+          </div>
+          <div class="plv-mod-body">
+            <a class="plv-link" data-route="Approved Vendor"><span>Approved Vendor List (AVL)</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Chemical COA"><span>Chemical COA</span><span class="plv-cnt" data-cnt-doctype="Chemical COA">—</span></a>
+            <a class="plv-link" data-route="Raw Material Batch"><span>Raw Material Batch (RMB)</span><span class="plv-cnt" data-cnt-doctype="Raw Material Batch">—</span></a>
+            <a class="plv-link" data-route="Stock Consumption Log"><span>Stock Consumption Log</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Purchase Order"><span>Purchase Orders</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Purchase Receipt"><span>Purchase Receipts (GRN)</span><span class="plv-arrow-r">›</span></a>
+          </div>
+        </div>
+
+        <div class="plv-mod">
+          <div class="plv-mod-hdr">
+            <span class="plv-mod-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2v6L4 18a3 3 0 0 0 3 4h10a3 3 0 0 0 3-4L15 8V2"/><path d="M8 2h8"/></svg>
+            </span>
+            <div><h3>Lab Preparation</h3><p>Stock solutions · Green / Red / Final media</p></div>
+          </div>
+          <div class="plv-mod-body">
+            <a class="plv-link" data-route="Stock Solution Batch"><span>Stock Solution (A1–A7)</span><span class="plv-cnt" data-cnt-doctype="Stock Solution Batch">—</span></a>
+            <a class="plv-link" data-route="Medium Batch" data-filter='{"medium_type":"Green"}'><span>Green Medium Batch</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Medium Batch" data-filter='{"medium_type":"Red"}'><span>Red Medium Batch (BG-11)</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Final Medium Batch"><span>Final Medium (75:25)</span><span class="plv-cnt" data-cnt-doctype="Final Medium Batch">—</span></a>
+            <a class="plv-link" data-route="Preparation Formula"><span>Preparation Formulas</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="QC Parameter Spec"><span>QC Parameter Specs</span><span class="plv-arrow-r">›</span></a>
+          </div>
+        </div>
+
+        <div class="plv-mod">
+          <div class="plv-mod-hdr">
+            <span class="plv-mod-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/></svg>
+            </span>
+            <div><h3>Cultivation</h3><p>Strain genealogy · stage progression · contamination</p></div>
+          </div>
+          <div class="plv-mod-body">
+            <a class="plv-link" data-route="Production Batch"><span>Production Batch (all stages)</span><span class="plv-cnt" data-cnt-doctype="Production Batch">—</span></a>
+            <a class="plv-link" data-route="Pluviago Strain"><span>Pluviago Strain Master</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Contamination Incident"><span>Contamination Incidents</span><span class="plv-cnt" data-cnt-doctype="Contamination Incident">—</span></a>
+            <a class="plv-link" data-route="Cultivation Return Event"><span>Cultivation Return Events</span><span class="plv-arrow-r">›</span></a>
+            <a class="plv-link" data-route="Production Batch" data-filter='{"contamination_status":"Contaminated"}'><span>Contaminated Batches</span><span class="plv-arrow-r">›</span></a>
+          </div>
+        </div>
+
+        <div class="plv-mod">
+          <div class="plv-mod-hdr">
+            <span class="plv-mod-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M7 21V11a5 5 0 0 1 10 0v10"/></svg>
+            </span>
+            <div><h3>Harvest & Extraction</h3><p>Wet biomass → drying → outsourced extraction</p></div>
+          </div>
+          <div class="plv-mod-body">
+            <a class="plv-link" data-route="Harvest Batch"><span>Harvest Batch</span><span class="plv-cnt" data-cnt-doctype="Harvest Batch">—</span></a>
+            <a class="plv-link" data-route="Extraction Batch"><span>Extraction Batch</span><span class="plv-cnt" data-cnt-doctype="Extraction Batch">—</span></a>
+            <a class="plv-link" data-route="Production Batch" data-filter='{"current_stage":"Harvested"}'><span>Ready to Harvest</span><span class="plv-arrow-r">›</span></a>
+          </div>
+        </div>
+
+        <div class="plv-mod">
+          <div class="plv-mod-hdr">
+            <span class="plv-mod-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg>
+            </span>
+            <div><h3>Reports</h3><p>Genealogy · yield · QC compliance · traceability</p></div>
+          </div>
+          <div class="plv-mod-body plv-two-col">
+            <a class="plv-link" data-report="Batch Genealogy">Batch Genealogy</a>
+            <a class="plv-link" data-report="Production Summary">Production Summary</a>
+            <a class="plv-link" data-report="Batch Yield Analytics">Yield Analytics</a>
+            <a class="plv-link" data-report="Raw Material Traceability">RM Traceability</a>
+            <a class="plv-link" data-report="QC Compliance Report">QC Compliance</a>
+            <a class="plv-link" data-report="COA Validation History">COA Validation</a>
+            <a class="plv-link" data-report="Medium Batch Lifecycle">Medium Lifecycle</a>
+            <a class="plv-link" data-report="SSB Consumption Report">SSB Consumption</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════ SIDEBAR ═══════ -->
+      <aside class="plv-sidebar">
+        <div class="plv-card plv-panel">
+          <div class="plv-panel-hdr">
+            <h3>Action Center</h3>
+            <button class="plv-icon-btn" id="plv-refresh" title="Refresh">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.3L3 16"/><path d="M3 21v-5h5"/></svg>
+            </button>
+          </div>
+          <div class="plv-list" id="plv-alerts">
+            <div class="plv-skel-row"><div class="plv-skel"></div></div>
+            <div class="plv-skel-row"><div class="plv-skel"></div></div>
+            <div class="plv-skel-row"><div class="plv-skel"></div></div>
+          </div>
+        </div>
+
+        <div class="plv-card plv-panel">
+          <div class="plv-panel-hdr"><h3>Recent Activity</h3></div>
+          <div class="plv-list" id="plv-recent">
+            <div class="plv-skel-row"><div class="plv-skel"></div></div>
+            <div class="plv-skel-row"><div class="plv-skel"></div></div>
+            <div class="plv-skel-row"><div class="plv-skel"></div></div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="plv-foot">Pluviago Biotech · GMP traceable · Batch-wise · Generation-locked</footer>
+  </div>
+</div>

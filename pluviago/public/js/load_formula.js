@@ -75,9 +75,8 @@ function _batch_selection_dialog(frm, formula_data, cfg) {
                 const exp = b.expiry_date
                     ? ` | Exp: ${frappe.datetime.str_to_user(b.expiry_date)}`
                     : '';
-                return `<option value="${b.name}">
-                            ${b.name} &nbsp;|&nbsp; ${b.remaining_qty} ${b.received_qty_uom}${exp}
-                        </option>`;
+                const label = b.material_name ? `${b.material_name} (${b.name})` : b.name;
+                return `<option value="${b.name}">${label} | ${b.remaining_qty} ${b.received_qty_uom}${exp}</option>`;
             }).join('');
             cell = `<select class="form-control form-control-sm rmb-select" data-idx="${idx}">
                         <option value="">— select batch —</option>

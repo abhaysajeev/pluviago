@@ -226,7 +226,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Draft\nApproved\nDispatched\nRejected"
+   "options": "Draft\nApproved\nPacked\nDispatched\nRejected"
   },
   {
    "fieldname": "remarks",

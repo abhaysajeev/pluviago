@@ -4,7 +4,7 @@ Medium Batch Lifecycle Report
 Shows the complete lifecycle of a Final Medium Batch:
 
   UPSTREAM (what built this FMB)
-    Raw Material Batch → Stock Solution Batch → Green/Red Medium Batch → Final Medium Batch
+    Raw Material Batch → Stock Solution Batch → Medium Batch (Green/Red) → Final Medium Batch
 
   DOWNSTREAM (where it was consumed)
     Final Medium Batch → Production Batch(es) → Harvest Batch → Extraction Batch
@@ -14,10 +14,6 @@ Filter: final_medium_batch (required)
 
 import frappe
 
-
-# ---------------------------------------------------------------------------
-# Entry point
-# ---------------------------------------------------------------------------
 
 def execute(filters=None):
     filters = filters or {}
@@ -45,10 +41,6 @@ def execute(filters=None):
     return get_columns(), rows
 
 
-# ---------------------------------------------------------------------------
-# Columns
-# ---------------------------------------------------------------------------
-
 def get_columns():
     return [
         {"label": "Layer", "fieldname": "layer", "fieldtype": "Data", "width": 240},
@@ -63,10 +55,6 @@ def get_columns():
         {"label": "Remarks", "fieldname": "remarks", "fieldtype": "Data", "width": 220},
     ]
 
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
 
 def _row(layer, batch_name, batch_type, event_date=None, volume=None,
          consumed=None, remaining=None, qc_status=None, expiry_date=None,
@@ -92,97 +80,56 @@ def _vol(val, unit="L"):
     return f"{val:.3f} {unit}"
 
 
-# ---------------------------------------------------------------------------
-# Upstream: Raw Material → SSB → GMB/RMB → FMB
-# ---------------------------------------------------------------------------
-
 def _add_upstream(rows, fmb):
-    rows.append(_row("━━ UPSTREAM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-                     "", "", bold=True))
+    rows.append(_row("━━ UPSTREAM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "", "", bold=True))
 
-    # Green Medium Batch
     if fmb.green_medium_batch:
-        _add_medium_branch(rows, "Green Medium Batch", fmb.green_medium_batch,
-                           fmb.green_medium_volume, "  └─ GMB →")
+        _add_medium_branch(rows, fmb.green_medium_batch, fmb.green_medium_volume, "  └─ GMB →")
 
-    # Red Medium Batch
     if fmb.red_medium_batch:
-        _add_medium_branch(rows, "Red Medium Batch", fmb.red_medium_batch,
-                           fmb.red_medium_volume, "  └─ RMB →")
+        _add_medium_branch(rows, fmb.red_medium_batch, fmb.red_medium_volume, "  └─ RMB →")
 
 
-def _add_medium_branch(rows, doctype, batch_name, vol_used_fmb, prefix):
+def _add_medium_branch(rows, batch_name, vol_used_fmb, prefix):
     mb = frappe.db.get_value(
-        doctype, batch_name,
+        "Medium Batch", batch_name,
         ["name", "batch_number", "preparation_date", "prepared_by",
+         "medium_type", "medium_volume_calculated",
          "remaining_volume", "volume_consumed",
-         "green_volume_calculated" if doctype == "Green Medium Batch" else "red_volume_calculated",
-         "overall_qc_status" if doctype in ("Green Medium Batch", "Red Medium Batch") else "qc_status",
-         "status", "expiry_date"],
+         "overall_qc_status", "status", "expiry_date"],
         as_dict=True,
     )
     if not mb:
         return
 
-    capacity = mb.get("green_volume_calculated") or mb.get("red_volume_calculated") or 0
-    qc = mb.get("overall_qc_status") or mb.get("qc_status") or ""
-    short = "GMB" if doctype == "Green Medium Batch" else "RMB"
-
+    short = "GMB" if mb.medium_type == "Green" else "RMB"
     rows.append(_row(
         layer=f"{prefix} {batch_name}",
         batch_name=batch_name,
         batch_type=short,
         event_date=mb.preparation_date,
-        volume=_vol(capacity),
+        volume=_vol(mb.medium_volume_calculated),
         consumed=_vol(mb.volume_consumed),
         remaining=_vol(mb.remaining_volume),
-        qc_status=f"{qc} / {mb.status}",
+        qc_status=f"{mb.overall_qc_status} / {mb.status}",
         expiry_date=mb.expiry_date,
         remarks=f"Used {_vol(vol_used_fmb)} in this FMB",
     ))
 
-    # SSBs used in this GMB/RMB
-    _add_ssb_rows(rows, doctype, batch_name)
+    _add_ssb_rows(rows, batch_name)
 
 
-def _add_ssb_rows(rows, doctype, batch_name):
-    ssb_fields = {
-        "Green Medium Batch": [
-            ("stock_solution_a1", "a1_volume_used", "A1"),
-            ("stock_solution_a2", "a2_volume_used", "A2"),
-            ("stock_solution_a3", "a3_volume_used", "A3"),
-        ],
-        "Red Medium Batch": [
-            ("stock_solution_a4",     "a4_volume_used",     "A4"),
-            ("stock_solution_a5",     "a5_volume_used",     "A5"),
-            ("stock_solution_a6",     "a6_volume_used",     "A6"),
-            ("a5m_trace_stock_batch", "a5m_volume_used",    "A5M"),
-            ("stock_solution_a7_i",   "a7_i_volume_used",   "A7-I"),
-            ("stock_solution_a7_ii",  "a7_ii_volume_used",  "A7-II"),
-            ("stock_solution_a7_iii", "a7_iii_volume_used", "A7-III"),
-            ("stock_solution_a7_iv",  "a7_iv_volume_used",  "A7-IV"),
-            ("stock_solution_a7_v",   "a7_v_volume_used",   "A7-V"),
-            ("stock_solution_a7_vi",  "a7_vi_volume_used",  "A7-VI"),
-        ],
-    }
-
-    mb_doc = frappe.db.get_value(
-        doctype, batch_name,
-        [f for f, _, _ in ssb_fields.get(doctype, [])] +
-        [v for _, v, _ in ssb_fields.get(doctype, [])],
-        as_dict=True,
+def _add_ssb_rows(rows, batch_name):
+    ssb_usages = frappe.get_all(
+        "Medium SSB Usage",
+        filters={"parent": batch_name, "parenttype": "Medium Batch"},
+        fields=["solution_type", "stock_solution_batch", "volume_used_ml"],
     )
-    if not mb_doc:
-        return
-
-    for link_field, vol_field, label in ssb_fields.get(doctype, []):
-        ssb_name = mb_doc.get(link_field)
-        vol_ml = mb_doc.get(vol_field) or 0
-        if not ssb_name:
+    for usage in ssb_usages:
+        if not usage.stock_solution_batch:
             continue
-
         ssb = frappe.db.get_value(
-            "Stock Solution Batch", ssb_name,
+            "Stock Solution Batch", usage.stock_solution_batch,
             ["name", "preparation_date", "available_volume", "volume_used",
              "preparation_status", "expiry_date"],
             as_dict=True,
@@ -192,20 +139,18 @@ def _add_ssb_rows(rows, doctype, batch_name):
 
         available_ml = (ssb.available_volume or 0) * 1000
         rows.append(_row(
-            layer=f"      └─ SSB ({label}) → {ssb_name}",
-            batch_name=ssb_name,
-            batch_type=f"SSB {label}",
+            layer=f"      └─ SSB ({usage.solution_type}) → {usage.stock_solution_batch}",
+            batch_name=usage.stock_solution_batch,
+            batch_type=f"SSB {usage.solution_type}",
             event_date=ssb.preparation_date,
             volume=_vol(available_ml, "mL"),
             consumed=_vol(ssb.volume_used, "mL"),
             remaining=_vol(available_ml - (ssb.volume_used or 0), "mL"),
             qc_status=ssb.preparation_status,
             expiry_date=ssb.expiry_date,
-            remarks=f"Used {_vol(vol_ml, 'mL')} in {doctype.replace(' Batch','').replace('Green Medium','GMB').replace('Red Medium','RMB')}",
+            remarks=f"Used {_vol(usage.volume_used_ml, 'mL')} in Medium Batch",
         ))
-
-        # Raw materials used in this SSB
-        _add_raw_material_rows(rows, ssb_name)
+        _add_raw_material_rows(rows, usage.stock_solution_batch)
 
 
 def _add_raw_material_rows(rows, ssb_name):
@@ -238,16 +183,9 @@ def _add_raw_material_rows(rows, ssb_name):
         ))
 
 
-# ---------------------------------------------------------------------------
-# FMB itself
-# ---------------------------------------------------------------------------
-
 def _add_fmb_row(rows, fmb):
-    rows.append(_row("", "", "", bold=False))  # spacer
-    rows.append(_row(
-        layer="━━ FINAL MEDIUM BATCH ━━━━━━━━━━━━━━━━━━━━━━━━━",
-        batch_name="", batch_type="", bold=True,
-    ))
+    rows.append(_row("", "", "", bold=False))
+    rows.append(_row("━━ FINAL MEDIUM BATCH ━━━━━━━━━━━━━━━━━━━━━━━━━", "", "", bold=True))
     rows.append(_row(
         layer=f"  {fmb.name}",
         batch_name=fmb.name,
@@ -263,14 +201,9 @@ def _add_fmb_row(rows, fmb):
     ))
 
 
-# ---------------------------------------------------------------------------
-# Downstream: FMB → Production Batch → Harvest Batch → Extraction Batch
-# ---------------------------------------------------------------------------
-
 def _add_downstream(rows, fmb_name):
-    rows.append(_row("", "", "", bold=False))  # spacer
-    rows.append(_row("━━ DOWNSTREAM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-                     "", "", bold=True))
+    rows.append(_row("", "", "", bold=False))
+    rows.append(_row("━━ DOWNSTREAM ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", "", "", bold=True))
 
     prod_batches = frappe.get_all(
         "Production Batch",
@@ -283,8 +216,7 @@ def _add_downstream(rows, fmb_name):
     )
 
     if not prod_batches:
-        rows.append(_row("  (No Production Batches consumed this FMB yet)",
-                         "", "", remarks=""))
+        rows.append(_row("  (No Production Batches consumed this FMB yet)", "", ""))
         return
 
     for pb in prod_batches:
@@ -303,11 +235,9 @@ def _add_downstream(rows, fmb_name):
             ),
         ))
 
-        # Harvest Batch
         if pb.harvest_batch:
             _add_harvest_row(rows, pb.harvest_batch)
 
-        # Child batches created from this PB (Scale Up or Return-to-Cultivation)
         children = frappe.get_all(
             "Production Batch",
             filters={"parent_batch": pb.name},
@@ -349,7 +279,6 @@ def _add_harvest_row(rows, hb_name):
         ),
     ))
 
-    # Extraction Batch linked to this Harvest Batch
     eb = frappe.db.get_value(
         "Extraction Batch",
         {"harvest_batch": hb_name, "docstatus": ("!=", 2)},

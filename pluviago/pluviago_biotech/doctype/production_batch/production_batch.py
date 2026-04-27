@@ -2,6 +2,7 @@ import frappe
 from frappe.model.document import Document
 
 STAGE_SEQUENCE = ["Flask", "25L PBR", "275L PBR", "925L PBR", "6600L PBR", "Harvested", "Disposed"]
+STAGE_TO_GEN = {"Flask": 1, "25L PBR": 2, "275L PBR": 3, "925L PBR": 4, "6600L PBR": 5}
 STAGE_VOLUMES = {
     "Flask": 1,
     "25L PBR": 25,
@@ -29,6 +30,28 @@ class ProductionBatch(Document):
         if self.parent_batch and self.parent_batch == self.name:
             frappe.throw("A batch cannot be its own parent")
 
+        # ── Stage sequence enforcement ─────────────────────────────────────────
+        # Return-to-Cultivation always produces a Flask child from any stage — exempt.
+        # All other child batches must advance exactly one step in the sequence.
+        if self.parent_batch:
+            parent_stage = frappe.db.get_value(
+                "Production Batch", self.parent_batch, "current_stage"
+            )
+            if (
+                parent_stage in STAGE_SEQUENCE
+                and self.current_stage in STAGE_SEQUENCE
+                and self.current_stage != "Flask"
+            ):
+                expected_idx = STAGE_SEQUENCE.index(parent_stage) + 1
+                actual_idx = STAGE_SEQUENCE.index(self.current_stage)
+                if expected_idx < len(STAGE_SEQUENCE) and actual_idx != expected_idx:
+                    expected_stage = STAGE_SEQUENCE[expected_idx]
+                    frappe.throw(
+                        f"Stage sequence violation: from <b>{parent_stage}</b> "
+                        f"the only valid next stage is <b>{expected_stage}</b>. "
+                        f"Cannot set stage to <b>{self.current_stage}</b>."
+                    )
+
         # ── Stage decision → status sync ──────────────────────────────────────
         if self.stage_decision == "Dispose":
             self.status = "Disposed"
@@ -37,6 +60,29 @@ class ProductionBatch(Document):
         elif self.stage_decision == "Scale Up":
             self.status = "Scaled Up"
 
+        # ── Generation number enforcement ──────────────────────────────────────
+        if not self.parent_batch:
+            expected_gen = STAGE_TO_GEN.get(self.current_stage)
+            if expected_gen and self.generation_number != expected_gen:
+                frappe.throw(
+                    f"Root batch at <b>{self.current_stage}</b> must have "
+                    f"Generation Number = <b>{expected_gen}</b>."
+                )
+        else:
+            parent_gen = frappe.db.get_value(
+                "Production Batch", self.parent_batch, "generation_number"
+            ) or 0
+            if self.generation_number != parent_gen + 1:
+                frappe.throw(
+                    f"Generation Number must be parent generation + 1 "
+                    f"(parent is Gen {parent_gen}, expected Gen {parent_gen + 1}, "
+                    f"got Gen {self.generation_number})."
+                )
+
+        # ── Auto-set actual_completion on terminal decisions ───────────────────
+        if self.stage_decision in ("Harvest", "Dispose") and not self.actual_completion:
+            self.actual_completion = frappe.utils.today()
+
         # ── GAP 1: Contamination gate — contaminated batch cannot be scaled up ─
         if self.contamination_status == "Contaminated" and self.stage_decision == "Scale Up":
             frappe.throw(
@@ -44,7 +90,26 @@ class ProductionBatch(Document):
                 "Change Stage Decision to <b>Harvest</b> or <b>Dispose</b>."
             )
 
-        # ── GAP 2: QC gate — any Fail or contamination reading blocks Scale Up ─
+        # ── Role gate: only Supervisor / Manager can approve Scale Up ──────────
+        if self.stage_decision == "Scale Up":
+            _SCALE_UP_ROLES = {
+                "Production Manager", "Production Supervisor",
+                "QA Head", "Pluviago Admin", "System Manager"
+            }
+            if not (set(frappe.get_roles(frappe.session.user)) & _SCALE_UP_ROLES):
+                frappe.throw(
+                    "Only a <b>Production Supervisor</b> or <b>Production Manager</b> "
+                    "can set Stage Decision to <b>Scale Up</b>."
+                )
+
+        # ── GAP 2: QC gate — must have at least one reading; any Fail or contamination blocks ─
+        if self.stage_decision == "Scale Up":
+            if not self.qc_readings:
+                frappe.throw(
+                    "Cannot scale up: no QC readings recorded for this stage. "
+                    "Add at least one QC reading with Overall Result = Pass before scaling up."
+                )
+
         if self.stage_decision == "Scale Up" and self.qc_readings:
             contaminated_readings = [
                 r for r in self.qc_readings if r.contamination_detected
@@ -114,6 +179,33 @@ class ProductionBatch(Document):
             lineage.append(current)
             current = frappe.db.get_value("Production Batch", current, "parent_batch")
         return lineage
+
+    @frappe.whitelist()
+    def record_phase_transition(self, new_phase, transition_date, transitioned_by, notes=""):
+        """Record the Green Phase → Red Phase transition for a submitted 6600L PBR batch."""
+        if self.current_stage != "6600L PBR":
+            frappe.throw("Phase transition is only valid for 6600L PBR batches.")
+        if self.docstatus != 1:
+            frappe.throw("Phase transition can only be recorded on a Submitted batch.")
+        if self.phase == new_phase:
+            frappe.throw(f"Batch is already in <b>{new_phase}</b>.")
+        if new_phase not in ("Green Phase", "Red Phase"):
+            frappe.throw("Phase must be Green Phase or Red Phase.")
+        if self.phase == "Red Phase" and new_phase == "Green Phase":
+            frappe.throw("Cannot revert from Red Phase to Green Phase.")
+
+        old_phase = self.phase or "N/A"
+        self.db_set("phase", new_phase)
+        audit_entry = (
+            f"\n[Phase Transition {transition_date}] "
+            f"{old_phase} → {new_phase} by {transitioned_by}."
+            + (f" Notes: {notes}" if notes else "")
+        )
+        self.db_set("remarks", (self.remarks or "") + audit_entry)
+        frappe.msgprint(
+            f"Phase transition recorded: <b>{old_phase}</b> → <b>{new_phase}</b>.",
+            indicator="green"
+        )
 
     @frappe.whitelist()
     def mark_returned(self):

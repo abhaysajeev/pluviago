@@ -34,6 +34,10 @@
   "final_customer",
   "final_dispatch_qty",
   "coa_issued",
+  "section_break_yield",
+  "theoretical_yield_kg",
+  "yield_variance_pct",
+  "yield_variance_flag",
   "status",
   "remarks"
  ],
@@ -194,6 +198,34 @@
    "fieldname": "coa_issued",
    "fieldtype": "Check",
    "label": "COA Issued"
+  },
+  {
+   "fieldname": "section_break_yield",
+   "fieldtype": "Section Break",
+   "label": "Yield Analysis"
+  },
+  {
+   "fieldname": "theoretical_yield_kg",
+   "fieldtype": "Float",
+   "label": "Theoretical Yield (kg)",
+   "read_only": 1,
+   "description": "Calculated from Harvest Batch dry weight × 2.5% expected astaxanthin fraction."
+  },
+  {
+   "fieldname": "yield_variance_pct",
+   "fieldtype": "Float",
+   "label": "Yield Variance (%)",
+   "read_only": 1,
+   "description": "Variance between actual extract quantity and theoretical yield."
+  },
+  {
+   "default": "Normal",
+   "fieldname": "yield_variance_flag",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Yield Variance Flag",
+   "options": "Normal\nWarning\nCritical",
+   "read_only": 1
   },
   {
    "default": "Draft",

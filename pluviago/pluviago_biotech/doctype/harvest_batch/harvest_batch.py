@@ -13,12 +13,19 @@ class HarvestBatch(Document):
         if self.production_batch:
             pb = frappe.db.get_value(
                 "Production Batch", self.production_batch,
-                ["status", "reactor_volume"], as_dict=True
+                ["status", "reactor_volume", "stage_decision", "current_stage"], as_dict=True
             )
             if not pb:
                 frappe.throw(f"Production Batch <b>{self.production_batch}</b> not found.")
-            if pb.status not in ["Harvested", "Active"]:
-                frappe.throw("Linked Production Batch is not in a harvestable state")
+            if pb.status not in ["Harvested", "Active", "Contaminated"]:
+                frappe.throw("Linked Production Batch is not in a harvestable state.")
+            # Active batch must have stage_decision = Harvest before HB can be created
+            if pb.status == "Active" and pb.stage_decision not in ("Harvest",):
+                frappe.throw(
+                    f"Production Batch <b>{self.production_batch}</b> has Stage Decision "
+                    f"<b>{pb.stage_decision or 'Pending'}</b>. "
+                    "Set Stage Decision to <b>Harvest</b> before creating a Harvest Batch."
+                )
             # GAP 8: Harvested volume cannot exceed reactor capacity
             if self.harvested_volume and pb.reactor_volume:
                 if self.harvested_volume > pb.reactor_volume:
@@ -47,14 +54,26 @@ class HarvestBatch(Document):
         if self.production_batch:
             frappe.db.set_value("Production Batch", self.production_batch, {
                 "status": "Harvested",
-                "harvest_batch": self.name
+                "harvest_batch": self.name,
+                "actual_completion": frappe.utils.today(),
             })
 
     def on_cancel(self):
         self.db_set("status", "Draft")
         if self.production_batch:
-            # Restore Production Batch to its pre-harvest state
             frappe.db.set_value("Production Batch", self.production_batch, {
                 "status": "Active",
-                "harvest_batch": None
+                "harvest_batch": None,
             })
+
+    @frappe.whitelist()
+    def confirm_packing(self):
+        """Advance status from Approved → Packed after packing and label verification."""
+        if self.status != "Approved":
+            frappe.throw("Batch must be Approved before confirming packing.")
+        if not self.packing_date or not self.packed_by:
+            frappe.throw("Packing Date and Packed By are required before confirming packing.")
+        if not self.label_batch_no:
+            frappe.throw("Label Batch Number must be entered for label verification.")
+        self.db_set("status", "Packed")
+        frappe.msgprint("Packing confirmed. Batch is ready for dispatch.", indicator="green")

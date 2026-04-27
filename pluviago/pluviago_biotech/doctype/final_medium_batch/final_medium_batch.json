@@ -104,7 +104,7 @@
    "fieldname": "green_medium_batch",
    "fieldtype": "Link",
    "label": "Green Medium Batch",
-   "options": "Green Medium Batch",
+   "options": "Medium Batch",
    "reqd": 1
   },
   {
@@ -117,7 +117,7 @@
    "fieldname": "red_medium_batch",
    "fieldtype": "Link",
    "label": "Red Medium Batch",
-   "options": "Red Medium Batch",
+   "options": "Medium Batch",
    "reqd": 1
   },
   {

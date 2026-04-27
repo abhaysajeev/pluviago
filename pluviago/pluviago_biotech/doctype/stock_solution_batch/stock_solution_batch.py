@@ -1,8 +1,15 @@
 import frappe
 from frappe.model.document import Document
+from frappe.model.naming import make_autoname
 
 
 class StockSolutionBatch(Document):
+    def autoname(self):
+        if not self.solution_type:
+            frappe.throw("Solution Type must be selected before saving.")
+        code = self.solution_type.replace("/", "-").replace(" ", "-")
+        self.name = make_autoname(f"SSB-{code}-.YYYY.-.MM.-.####")
+
     def before_save(self):
         if not self.batch_number:
             self.batch_number = self.name

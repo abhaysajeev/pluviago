@@ -13,6 +13,10 @@
   "parent_batch",
   "phase",
   "sop_reference",
+  "start_date",
+  "planned_volume",
+  "expected_completion",
+  "actual_completion",
   "section_break_stage",
   "current_stage",
   "reactor_volume",
@@ -89,6 +93,30 @@
    "fieldname": "sop_reference",
    "fieldtype": "Data",
    "label": "SOP Reference"
+  },
+  {
+   "default": "Today",
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "planned_volume",
+   "fieldtype": "Float",
+   "label": "Planned Volume (L)",
+   "description": "Expected culture volume at this stage."
+  },
+  {
+   "fieldname": "expected_completion",
+   "fieldtype": "Date",
+   "label": "Expected Completion"
+  },
+  {
+   "fieldname": "actual_completion",
+   "fieldtype": "Date",
+   "label": "Actual Completion",
+   "read_only": 1,
+   "description": "Auto-set when Stage Decision is Harvest or Dispose."
   },
   {
    "fieldname": "section_break_stage",
@@ -298,6 +326,7 @@
    "create": 1,
    "read": 1,
    "role": "Production Supervisor",
+   "submit": 1,
    "write": 1
   },
   {

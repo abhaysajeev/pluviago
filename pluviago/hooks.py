@@ -14,6 +14,7 @@ app_include_css = [
 app_include_js = [
     "/assets/pluviago/js/pluviago_workspace.js",
     "/assets/pluviago/js/load_formula.js",
+    "/assets/pluviago/js/load_medium_formula.js",
 ]
 
 after_install = "pluviago.install.after_install"

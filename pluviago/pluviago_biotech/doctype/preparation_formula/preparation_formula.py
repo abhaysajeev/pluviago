@@ -45,7 +45,7 @@ def _get_batches_by_item(item_codes):
         return {}
     placeholders = ", ".join(["%s"] * len(item_codes))
     rows = frappe.db.sql(f"""
-        SELECT item_code, name, remaining_qty, received_qty_uom, expiry_date
+        SELECT item_code, name, material_name, remaining_qty, received_qty_uom, expiry_date
         FROM `tabRaw Material Batch`
         WHERE item_code IN ({placeholders})
           AND docstatus = 1
@@ -58,6 +58,7 @@ def _get_batches_by_item(item_codes):
     for r in rows:
         result.setdefault(r.item_code, []).append({
             "name": r.name,
+            "material_name": r.material_name or "",
             "remaining_qty": r.remaining_qty,
             "received_qty_uom": r.received_qty_uom,
             "expiry_date": str(r.expiry_date) if r.expiry_date else "",

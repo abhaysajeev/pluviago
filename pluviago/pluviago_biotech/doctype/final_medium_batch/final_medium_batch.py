@@ -13,20 +13,37 @@ class FinalMediumBatch(Document):
             self.expiry_date = frappe.utils.add_days(self.preparation_date, int(self.shelf_life_days))
 
     def validate(self):
-        # Allow Approved or Partially Used — both have remaining volume available
         _usable = ("Approved", "Partially Used")
         if self.green_medium_batch:
-            status = frappe.db.get_value("Green Medium Batch", self.green_medium_batch, "status")
-            if status not in _usable:
+            row = frappe.db.get_value(
+                "Medium Batch", self.green_medium_batch, ["status", "medium_type"], as_dict=True
+            )
+            if not row:
+                frappe.throw(f"Medium Batch <b>{self.green_medium_batch}</b> not found.")
+            if row.medium_type != "Green":
                 frappe.throw(
-                    f"Green Medium Batch {self.green_medium_batch} has status <b>{status}</b>. "
+                    f"<b>{self.green_medium_batch}</b> is a {row.medium_type} Medium batch. "
+                    "The Green Medium field must link a Green type batch."
+                )
+            if row.status not in _usable:
+                frappe.throw(
+                    f"Green Medium Batch <b>{self.green_medium_batch}</b> has status <b>{row.status}</b>. "
                     "Only Approved or Partially Used batches can be used."
                 )
         if self.red_medium_batch:
-            status = frappe.db.get_value("Red Medium Batch", self.red_medium_batch, "status")
-            if status not in _usable:
+            row = frappe.db.get_value(
+                "Medium Batch", self.red_medium_batch, ["status", "medium_type"], as_dict=True
+            )
+            if not row:
+                frappe.throw(f"Medium Batch <b>{self.red_medium_batch}</b> not found.")
+            if row.medium_type != "Red":
                 frappe.throw(
-                    f"Red Medium Batch {self.red_medium_batch} has status <b>{status}</b>. "
+                    f"<b>{self.red_medium_batch}</b> is a {row.medium_type} Medium batch. "
+                    "The Red Medium field must link a Red type batch."
+                )
+            if row.status not in _usable:
+                frappe.throw(
+                    f"Red Medium Batch <b>{self.red_medium_batch}</b> has status <b>{row.status}</b>. "
                     "Only Approved or Partially Used batches can be used."
                 )
 
