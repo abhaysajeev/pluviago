@@ -110,7 +110,8 @@
    "label": "Supplier",
    "options": "Supplier",
    "fetch_from": "purchase_receipt.supplier",
-   "fetch_if_empty": 1
+   "fetch_if_empty": 1,
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "col_break_supplier",
@@ -124,7 +125,8 @@
   {
    "fieldname": "coa_number",
    "fieldtype": "Data",
-   "label": "COA Number"
+   "label": "COA Number",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "col_break_dates",
@@ -234,55 +236,65 @@
   {
    "fieldname": "section_break_coa",
    "fieldtype": "Section Break",
-   "label": "COA & Documentation"
+   "label": "COA & Documentation",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "coa_attachment",
    "fieldtype": "Attach",
    "label": "COA Document",
    "fetch_from": "purchase_receipt.custom_coa_attach",
-   "fetch_if_empty": 1
+   "fetch_if_empty": 1,
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "col_break_coa",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "coa_verified",
    "fieldtype": "Check",
-   "label": "COA Verified"
+   "label": "COA Verified",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "coa_verified_by",
    "fieldtype": "Link",
    "label": "COA Verified By",
-   "options": "User"
+   "options": "User",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "section_break_procurement",
    "fieldtype": "Section Break",
-   "label": "Procurement Reference"
+   "label": "Procurement Reference",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "purchase_order",
    "fieldtype": "Link",
    "label": "Purchase Order",
-   "options": "Purchase Order"
+   "options": "Purchase Order",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "col_break_procurement",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "purchase_receipt",
    "fieldtype": "Link",
    "label": "Purchase Receipt",
-   "options": "Purchase Receipt"
+   "options": "Purchase Receipt",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   },
   {
    "fieldname": "remarks",
    "fieldtype": "Text",
-   "label": "Remarks"
+   "label": "Remarks",
+   "depends_on": "eval:doc.batch_source != 'In-house'"
   }
  ],
  "is_submittable": 1,

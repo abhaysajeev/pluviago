@@ -46,6 +46,23 @@ frappe.ui.form.on("Raw Material Batch", {
 		});
 	},
 
+	item_code(frm) {
+		const label = frm.doc.item_code
+			? frm.fields_dict.item_code.$input.val()
+			: "";
+		frm.set_value("material_name", label || "");
+	},
+
+	batch_source(frm) {
+		if (frm.doc.batch_source === "In-house") {
+			const fields_to_clear = [
+				"supplier", "coa_number", "coa_attachment", "coa_verified", "coa_verified_by",
+				"purchase_order", "purchase_receipt", "remarks",
+			];
+			fields_to_clear.forEach(f => frm.set_value(f, null));
+		}
+	},
+
 	qc_status(frm) {
 		if (frm.doc.qc_status === "Approved") {
 			if (!frm.doc.qc_checked_by) {
