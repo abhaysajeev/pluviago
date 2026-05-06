@@ -52,7 +52,7 @@ function _pick_formula_dialog(frm, cfg) {
                 freeze_message: __('Fetching available stock batches...'),
                 callback(r) {
                     if (r.message) {
-                        _batch_selection_dialog(frm, r.message, cfg);
+                        _batch_selection_dialog(frm, r.message, cfg, values.target_volume);
                     }
                 },
             });
@@ -61,7 +61,7 @@ function _pick_formula_dialog(frm, cfg) {
     d.show();
 }
 
-function _batch_selection_dialog(frm, formula_data, cfg) {
+function _batch_selection_dialog(frm, formula_data, cfg, target_volume) {
     const items = formula_data.items;
 
     const rows_html = items.map((item, idx) => {
@@ -75,8 +75,8 @@ function _batch_selection_dialog(frm, formula_data, cfg) {
                 const exp = b.expiry_date
                     ? ` | Exp: ${frappe.datetime.str_to_user(b.expiry_date)}`
                     : '';
-                const label = b.material_name ? `${b.material_name} (${b.name})` : b.name;
-                return `<option value="${b.name}">${label} | ${b.remaining_qty} ${b.received_qty_uom}${exp}</option>`;
+                const batch_label = b.supplier_batch_no || b.name;
+                return `<option value="${b.name}">${batch_label} | ${b.remaining_qty} ${b.received_qty_uom}${exp}</option>`;
             }).join('');
             cell = `<select class="form-control form-control-sm rmb-select" data-idx="${idx}">
                         <option value="">— select batch —</option>
@@ -124,21 +124,22 @@ function _batch_selection_dialog(frm, formula_data, cfg) {
             if (existing_rows.length) {
                 frappe.confirm(
                     __('This will replace {0} existing ingredient row(s). Continue?', [existing_rows.length]),
-                    () => _apply_rows(frm, items, selections, cfg, d)
+                    () => _apply_rows(frm, items, selections, cfg, d, target_volume)
                 );
             } else {
-                _apply_rows(frm, items, selections, cfg, d);
+                _apply_rows(frm, items, selections, cfg, d, target_volume);
             }
         },
     });
     d.show();
 }
 
-function _apply_rows(frm, items, selections, cfg, dialog) {
+function _apply_rows(frm, items, selections, cfg, dialog, target_volume) {
     frm.clear_table(cfg.child_table);
     items.forEach((item, idx) => {
         const row = frm.add_child(cfg.child_table);
         row.item_code = item.item_code;
+        row.item_name = item.material_name;
         row[cfg.qty_fieldname] = item.quantity;
         row.uom = item.uom;
         row.raw_material_batch = selections[idx] || '';
@@ -146,6 +147,9 @@ function _apply_rows(frm, items, selections, cfg, dialog) {
             row.chemical_name = item.material_name;
         }
     });
+    if (target_volume && cfg.volume_field) {
+        frm.set_value(cfg.volume_field, target_volume);
+    }
     frm.refresh_field(cfg.child_table);
     dialog.hide();
     frappe.show_alert({

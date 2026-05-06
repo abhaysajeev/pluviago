@@ -6,36 +6,42 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "naming_series",
-  "batch_number",
   "solution_type",
+  "batch_number",
+  "naming_series",
+  "col_break_identity",
   "preparation_date",
   "prepared_by",
+  "sop_reference",
+  "col_break_volume",
   "target_volume",
   "target_volume_uom",
   "shelf_life_days",
   "expiry_date",
-  "sop_reference",
   "section_break_ingredients",
   "ingredients",
   "section_break_sterilization",
   "sterilization_method",
   "sterilization_temp",
   "sterilization_duration",
+  "col_break_sterilization",
   "sterilization_done",
   "sterilization_date",
   "section_break_qc",
   "qc_status",
   "ph_value",
-  "qc_remarks",
+  "col_break_qc",
   "qc_checked_by",
   "qc_date",
+  "col_break_qc_remarks",
+  "qc_remarks",
   "section_break_links",
-  "warehouse",
   "status",
   "preparation_status",
+  "col_break_released",
   "released_date",
   "released_by",
+  "col_break_stock",
   "available_volume",
   "volume_used",
   "remarks"
@@ -66,6 +72,10 @@
    "reqd": 1
   },
   {
+   "fieldname": "col_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
    "default": "Today",
    "fieldname": "preparation_date",
    "fieldtype": "Date",
@@ -81,13 +91,22 @@
    "reqd": 1
   },
   {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference"
+  },
+  {
+   "fieldname": "col_break_volume",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "target_volume",
    "fieldtype": "Float",
    "label": "Target Volume",
    "reqd": 1
   },
   {
-   "default": "L",
+   "default": "Litre",
    "fieldname": "target_volume_uom",
    "fieldtype": "Link",
    "label": "UOM",
@@ -104,11 +123,6 @@
    "label": "Expiry Date",
    "read_only": 1,
    "description": "Auto-calculated from Preparation Date + Shelf Life Days"
-  },
-  {
-   "fieldname": "sop_reference",
-   "fieldtype": "Data",
-   "label": "SOP Reference"
   },
   {
    "fieldname": "section_break_ingredients",
@@ -135,12 +149,16 @@
   {
    "fieldname": "sterilization_temp",
    "fieldtype": "Float",
-   "label": "Sterilization Temp (\u00b0C)"
+   "label": "Sterilization Temp (°C)"
   },
   {
    "fieldname": "sterilization_duration",
    "fieldtype": "Float",
    "label": "Sterilization Duration (min)"
+  },
+  {
+   "fieldname": "col_break_sterilization",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "sterilization_done",
@@ -171,9 +189,8 @@
    "label": "pH Value"
   },
   {
-   "fieldname": "qc_remarks",
-   "fieldtype": "Text",
-   "label": "QC Remarks"
+   "fieldname": "col_break_qc",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "qc_checked_by",
@@ -187,15 +204,18 @@
    "label": "QC Date"
   },
   {
+   "fieldname": "col_break_qc_remarks",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qc_remarks",
+   "fieldtype": "Text",
+   "label": "QC Remarks"
+  },
+  {
    "fieldname": "section_break_links",
    "fieldtype": "Section Break",
    "label": "Status & Storage"
-  },
-  {
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "label": "Warehouse",
-   "options": "Warehouse"
   },
   {
    "default": "Draft",
@@ -214,6 +234,10 @@
    "options": "Draft\nQC Pending\nReleased\nWasted"
   },
   {
+   "fieldname": "col_break_released",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "released_date",
    "fieldtype": "Date",
    "label": "Released Date",
@@ -225,6 +249,10 @@
    "label": "Released By",
    "options": "User",
    "read_only": 1
+  },
+  {
+   "fieldname": "col_break_stock",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "available_volume",

@@ -315,6 +315,61 @@ def create_formula(f):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# DI WATER PATCH
+# Quantities: reference_volume / 1000 for stock solutions (mL → L),
+#             0.8 L for medium formulas (dissolve base salts in ~800 mL).
+# ──────────────────────────────────────────────────────────────────────────────
+
+DI_WATER_QTY = {
+    "A1 — Green Trace Element Stock":        1.0,
+    "A2 — Vitamin Stock":                    0.5,
+    "A3 — Ferric Citrate Stock":             0.5,
+    "A4 — Sodium Nitrate Stock":             0.1,
+    "A5 — Phosphate Buffer Stock":           0.1,
+    "A6 — A5M Red Trace Element Stock":      1.0,
+    "A7-I — Calcium Nitrate Stock":          0.1,
+    "A7-II — Ferric Ammonium Citrate Stock": 0.1,
+    "A7-III — EDTA Stock":                   0.1,
+    "A7-IV — Sodium Carbonate Stock":        0.1,
+    "A7-V — Citric Acid Stock":              0.1,
+    "A7-VI — Vitamin B1 Stock":              0.1,
+    "Green Medium — Direct Base Salts":      0.8,
+    "Red Medium — Direct Base Salts":        0.8,
+}
+
+
+def add_di_water():
+    """Add DI Water row to every Preparation Formula that doesn't have it yet."""
+    print("\n── Adding DI Water to Preparation Formulas ──")
+    for formula_name, qty in DI_WATER_QTY.items():
+        if not frappe.db.exists("Preparation Formula", formula_name):
+            print(f"  ⚠  {formula_name} not found — skipped")
+            continue
+
+        already = frappe.db.exists("Formula Item", {
+            "parent": formula_name,
+            "item_code": "DI",
+        })
+        if already:
+            print(f"  ⏭  {formula_name} — DI Water already present")
+            continue
+
+        doc = frappe.get_doc("Preparation Formula", formula_name)
+        doc.append("items", {
+            "item_code": "DI",
+            "material_name": "DI WATER",
+            "quantity": qty,
+            "uom": "Litre",
+            "notes": "Make up to volume with DI Water",
+        })
+        doc.save(ignore_permissions=True)
+        print(f"  ✅  {formula_name} — added {qty} L DI Water")
+
+    frappe.db.commit()
+    print("\n  Done.")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # MAIN
 # ──────────────────────────────────────────────────────────────────────────────
 

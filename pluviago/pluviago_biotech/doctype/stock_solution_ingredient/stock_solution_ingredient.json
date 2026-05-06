@@ -26,8 +26,7 @@
    "fieldname": "item_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Item Name",
-   "read_only": 1
+   "label": "Item Name"
   },
   {
    "fieldname": "raw_material_batch",
