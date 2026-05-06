@@ -36,7 +36,7 @@ class StockSolutionBatch(Document):
             rm = frappe.db.get_value(
                 "Raw Material Batch",
                 row.raw_material_batch,
-                ["docstatus", "qc_status", "coa_verified"],
+                ["docstatus", "qc_status", "coa_verified", "batch_source"],
                 as_dict=True,
             )
 
@@ -54,6 +54,8 @@ class StockSolutionBatch(Document):
                     f"Row {row.idx}: Raw Material Batch <b>{row.raw_material_batch}</b> "
                     f"has QC Status = <b>{rm.qc_status}</b>. Only Approved batches may be used."
                 )
+            if rm.batch_source == "In-house":
+                continue
             if not rm.coa_verified:
                 frappe.throw(
                     f"Row {row.idx}: Raw Material Batch <b>{row.raw_material_batch}</b> — "
