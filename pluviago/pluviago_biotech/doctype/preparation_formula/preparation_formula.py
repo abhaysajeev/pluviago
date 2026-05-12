@@ -6,16 +6,35 @@ class PreparationFormula(Document):
     pass
 
 
+def _to_ml(volume, uom):
+    """Convert a volume to mL. Per the SOP, all stock solution volumes are in mL or L."""
+    if (uom or "").strip().lower() in ("litre", "liter", "l"):
+        return volume * 1000.0
+    return float(volume)  # already mL
+
+
 @frappe.whitelist()
-def get_formula_with_batches(formula_name, target_volume):
+def get_formula_with_batches(formula_name, target_volume, target_volume_uom=None):
     """
     Return scaled ingredient list for the given formula + target_volume,
     with available approved RMBs per ingredient for manual batch selection.
+
+    Both target_volume and reference_volume are normalized to mL before
+    computing the scale factor, preventing Litre vs mL mismatches.
     """
     formula = frappe.get_doc("Preparation Formula", formula_name)
     target_volume = float(target_volume or 0)
     ref_volume = float(formula.reference_volume or 1)
-    scale = (target_volume / ref_volume) if ref_volume else 1
+
+    ref_volume_ml = _to_ml(ref_volume, formula.reference_volume_uom)
+    target_volume_ml = _to_ml(target_volume, target_volume_uom or "mL")
+
+    if ref_volume_ml <= 0:
+        frappe.throw("Formula reference volume must be greater than zero.")
+    if target_volume_ml <= 0:
+        frappe.throw("Target volume must be greater than zero.")
+
+    scale = target_volume_ml / ref_volume_ml
 
     # Fetch all needed item codes in one query
     item_codes = [row.item_code for row in formula.items if row.item_code]

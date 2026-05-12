@@ -23,7 +23,7 @@ _GREEN_SSB_ADDITIONS = [
     {"solution_type": "A5",  "vol_per_L_ml": 4.4,   "add_last": False},
 ]
 _RED_SSB_ADDITIONS = [
-    {"solution_type": "A5M", "vol_per_L_ml": 1.0, "add_last": False},
+    {"solution_type": "A6",  "vol_per_L_ml": 1.0, "add_last": False},
     {"solution_type": "A7-II",  "vol_per_L_ml": 1.0, "add_last": False},
     {"solution_type": "A7-III", "vol_per_L_ml": 1.0, "add_last": False},
     {"solution_type": "A7-IV",  "vol_per_L_ml": 1.0, "add_last": False},

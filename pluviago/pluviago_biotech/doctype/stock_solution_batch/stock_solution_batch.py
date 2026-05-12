@@ -28,7 +28,11 @@ class StockSolutionBatch(Document):
           1. Submitted (docstatus = 1)
           2. QC Status = Approved
           3. COA Verified = True
+          4. UOM physically compatible with the ingredient row UOM (no weight/volume mix)
         """
+        _WEIGHT_UOMS = {"mg", "g", "kg"}
+        _VOLUME_UOMS = {"ml", "millilitre", "milliliter", "litre", "liter", "l"}
+
         for row in self.ingredients or []:
             if not row.raw_material_batch:
                 continue
@@ -36,7 +40,7 @@ class StockSolutionBatch(Document):
             rm = frappe.db.get_value(
                 "Raw Material Batch",
                 row.raw_material_batch,
-                ["docstatus", "qc_status", "coa_verified", "batch_source"],
+                ["docstatus", "qc_status", "coa_verified", "batch_source", "received_qty_uom"],
                 as_dict=True,
             )
 
@@ -54,13 +58,28 @@ class StockSolutionBatch(Document):
                     f"Row {row.idx}: Raw Material Batch <b>{row.raw_material_batch}</b> "
                     f"has QC Status = <b>{rm.qc_status}</b>. Only Approved batches may be used."
                 )
-            if rm.batch_source == "In-house":
-                continue
-            if not rm.coa_verified:
+            if rm.batch_source != "In-house" and not rm.coa_verified:
                 frappe.throw(
                     f"Row {row.idx}: Raw Material Batch <b>{row.raw_material_batch}</b> — "
                     "COA has not been verified."
                 )
+
+            # UOM physical compatibility check — per SOP, chemicals are weighed (mg/g),
+            # DI Water is measured by volume (mL/L). Mixing the two is a preparation error.
+            if row.uom and rm.received_qty_uom:
+                ing_uom = row.uom.strip().lower()
+                rmb_uom = rm.received_qty_uom.strip().lower()
+                ing_is_weight = ing_uom in _WEIGHT_UOMS
+                rmb_is_weight = rmb_uom in _WEIGHT_UOMS
+                ing_is_volume = ing_uom in _VOLUME_UOMS
+                rmb_is_volume = rmb_uom in _VOLUME_UOMS
+                if (ing_is_weight and rmb_is_volume) or (ing_is_volume and rmb_is_weight):
+                    frappe.throw(
+                        f"Row {row.idx} (<b>{row.item_code}</b>): UOM mismatch — "
+                        f"ingredient is in <b>{row.uom}</b> but Raw Material Batch "
+                        f"<b>{row.raw_material_batch}</b> is stocked in <b>{rm.received_qty_uom}</b>. "
+                        "Weight and volume units cannot be mixed."
+                    )
 
     @frappe.whitelist()
     def mark_preparation_complete(self):

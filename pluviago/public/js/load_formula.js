@@ -31,12 +31,30 @@ function _pick_formula_dialog(frm, cfg) {
                 description: __('Only formulas matching this document type are shown.'),
             },
             {
+                label: __('Formula Reference'),
+                fieldname: 'ref_hint',
+                fieldtype: 'Data',
+                read_only: 1,
+                description: __('UOM and target volume auto-set from the formula when selected.'),
+            },
+            {
+                fieldtype: 'Column Break',
+            },
+            {
                 label: __('Target Volume'),
                 fieldname: 'target_volume',
                 fieldtype: 'Float',
                 default: frm.doc[cfg.volume_field] || '',
                 reqd: 1,
-                description: __('Ingredient quantities will be scaled proportionally from the formula reference volume.'),
+                description: __('Quantities are scaled proportionally. You can use mL or L — the system converts automatically.'),
+            },
+            {
+                label: __('UOM'),
+                fieldname: 'target_volume_uom',
+                fieldtype: 'Link',
+                options: 'UOM',
+                default: (cfg.volume_uom_field && frm.doc[cfg.volume_uom_field]) || 'mL',
+                reqd: 1,
             },
         ],
         primary_action_label: __('Next: Select Batches'),
@@ -47,6 +65,7 @@ function _pick_formula_dialog(frm, cfg) {
                 args: {
                     formula_name: values.formula,
                     target_volume: values.target_volume,
+                    target_volume_uom: values.target_volume_uom,
                 },
                 freeze: true,
                 freeze_message: __('Fetching available stock batches...'),
@@ -59,6 +78,48 @@ function _pick_formula_dialog(frm, cfg) {
         },
     });
     d.show();
+
+    // Fetch reference_volume + UOM from a validated formula name and apply to dialog fields.
+    // Called directly (not via trigger) so it always runs after the Link field resolves.
+    function _apply_formula_meta(formula_name) {
+        if (!formula_name) return;
+        frappe.db.get_value(
+            'Preparation Formula',
+            formula_name,                                    // exact name — Link-field validated
+            ['reference_volume', 'reference_volume_uom'],
+            function (r) {
+                if (!r || !r.reference_volume) return;
+                const ref_vol = r.reference_volume;
+                const ref_uom = r.reference_volume_uom || 'mL';
+                d.set_value('ref_hint', `${ref_vol} ${ref_uom}`);
+                d.set_value('target_volume_uom', ref_uom);
+                if (!d.get_value('target_volume')) {
+                    d.set_value('target_volume', ref_vol);
+                }
+            }
+        );
+    }
+
+    // Auto-populate formula from solution_type already on the form,
+    // then call _apply_formula_meta directly — no trigger() needed.
+    const solution_type = cfg.solution_type_field && frm.doc[cfg.solution_type_field];
+    if (solution_type) {
+        frappe.db.get_list('Preparation Formula', {
+            filters: { solution_type: solution_type, applies_to: cfg.applies_to },
+            fields: ['name'],
+            limit: 1,
+        }).then(rows => {
+            if (rows && rows.length) {
+                d.set_value('formula', rows[0].name);
+                _apply_formula_meta(rows[0].name);
+            }
+        });
+    }
+
+    // When user manually picks a formula via the Link field dropdown
+    d.fields_dict.formula.$input.on('awesomplete-selectcomplete', function () {
+        _apply_formula_meta(d.get_value('formula'));
+    });
 }
 
 function _batch_selection_dialog(frm, formula_data, cfg, target_volume) {

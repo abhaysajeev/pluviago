@@ -5,8 +5,7 @@ const _SSB_DEFAULTS = {
     'A3':    { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
     'A4':    { shelf_life_days: 1095, sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
     'A5':    { shelf_life_days: 1095, sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
-    'A5M':   { shelf_life_days: 365,  sterilization_method: 'Autoclaving',         storage_condition: '2-8°C' },
-    'A6':    { shelf_life_days: 365,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
+    'A6':    { shelf_life_days: 365,  sterilization_method: 'Autoclaving',         storage_condition: '2-8°C' },
     'A7-I':  { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
     'A7-II': { shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
     'A7-III':{ shelf_life_days: 730,  sterilization_method: 'Autoclaving',         storage_condition: 'Room Temperature' },
@@ -87,6 +86,8 @@ frappe.ui.form.on('Stock Solution Batch', {
         pluviago.add_load_formula_button(frm, {
             applies_to: 'Stock Solution Batch',
             volume_field: 'target_volume',
+            volume_uom_field: 'target_volume_uom',
+            solution_type_field: 'solution_type',
             child_table: 'ingredients',
             qty_fieldname: 'qty',
         });

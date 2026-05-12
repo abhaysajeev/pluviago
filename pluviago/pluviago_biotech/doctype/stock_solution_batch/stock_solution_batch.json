@@ -68,7 +68,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Solution Type",
-   "options": "A1\nA2\nA3\nA4\nA5\nA5M\nA6\nA7-I\nA7-II\nA7-III\nA7-IV\nA7-V\nA7-VI",
+   "options": "A1\nA2\nA3\nA4\nA5\nA6\nA7-I\nA7-II\nA7-III\nA7-IV\nA7-V\nA7-VI",
    "reqd": 1
   },
   {
@@ -106,7 +106,7 @@
    "reqd": 1
   },
   {
-   "default": "Litre",
+   "default": "mL",
    "fieldname": "target_volume_uom",
    "fieldtype": "Link",
    "label": "UOM",
