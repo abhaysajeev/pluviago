@@ -133,7 +133,16 @@ class StockSolutionBatch(Document):
         self.db_set("preparation_status", "Released")
         self.db_set("released_date", released_date)
         self.db_set("released_by", frappe.session.user)
-        self.db_set("available_volume", self.target_volume or 0)
+        # available_volume is stored in litres (label says "L") so downstream
+        # consumers can multiply by 1000 to compare against mL volume_used.
+        # Normalise from target_volume + target_volume_uom.
+        target_vol = self.target_volume or 0
+        uom = (self.target_volume_uom or "").strip().lower()
+        if uom in ("ml", "millilitre", "milliliter"):
+            available_l = target_vol / 1000.0
+        else:
+            available_l = target_vol  # treat anything else (L, litre) as litres
+        self.db_set("available_volume", available_l)
         self.db_set("status", "Approved")
 
     def on_cancel(self):

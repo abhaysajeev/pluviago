@@ -121,7 +121,7 @@ function _step2_batch_dialog(frm, data) {
         : '';
 
     const table_html = `
-        <h6 style="margin-bottom:6px;color:#555">Section A — Base Salts (Direct Addition)</h6>
+        <h6 style="margin-bottom:6px;color:#555">Section A — Direct Ingredients (Base Salts &amp; DI Water)</h6>
         <div style="overflow-x:auto;margin-bottom:16px">
             <table class="table table-bordered" style="margin:0;font-size:13px">
                 <thead style="background:#f0f4f0">

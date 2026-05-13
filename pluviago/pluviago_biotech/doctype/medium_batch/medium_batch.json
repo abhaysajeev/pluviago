@@ -20,10 +20,6 @@
   "medium_volume_calculated",
   "remaining_volume",
   "volume_consumed",
-  "section_break_di_water",
-  "di_water_rmb",
-  "col_break_di_water",
-  "di_water_volume",
   "section_break_direct_chem",
   "direct_chemicals",
   "section_break_stocks",
@@ -139,22 +135,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "di_water_rmb",
-   "fieldtype": "Link",
-   "label": "DI Water Batch",
-   "options": "Raw Material Batch",
-   "description": "In-house Raw Material Batch used for DI water. Stock will be deducted on Mark Preparation Complete."
-  },
-  {
-   "fieldname": "col_break_di_water",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "di_water_volume",
-   "fieldtype": "Float",
-   "label": "DI Water Volume (mL)"
-  },
-  {
    "fieldname": "final_required_volume",
    "fieldtype": "Float",
    "label": "Final Required Volume (L)",
@@ -179,11 +159,6 @@
    "fieldtype": "Float",
    "label": "Volume Consumed (L)",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_di_water",
-   "fieldtype": "Section Break",
-   "label": "DI Water"
   },
   {
    "fieldname": "section_break_direct_chem",

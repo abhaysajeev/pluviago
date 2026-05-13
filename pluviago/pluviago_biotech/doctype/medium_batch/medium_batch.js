@@ -239,12 +239,9 @@ frappe.ui.form.on('Medium Batch', {
         apply_medium_type_layout(frm);
         apply_qc_progressive_lock(frm);
 
-        // DI Water filter — in-house Lab Consumables only
-        frm.set_query('di_water_rmb', () => ({
-            query: 'pluviago.pluviago_biotech.utils.stock_utils.di_water_rmb_query'
-        }));
-
-        // direct_chemicals RMB filter — submitted, approved, matching item_code
+        // direct_chemicals RMB filter — submitted, approved, matching item_code.
+        // For DI Water rows (item_code = CONS-001) this naturally limits the
+        // dropdown to in-house Lab Consumables DI Water batches.
         frm.set_query('raw_material_batch', 'direct_chemicals', function(doc, cdt, cdn) {
             const row = locals[cdt][cdn];
             const filters = { docstatus: 1, qc_status: 'Approved' };

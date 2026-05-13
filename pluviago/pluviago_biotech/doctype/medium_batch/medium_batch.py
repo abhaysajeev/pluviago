@@ -53,6 +53,9 @@ class MediumBatch(Document):
         if not self.medium_type:
             frappe.throw("Medium Type is required.")
 
+        self._validate_ssb_rows()
+        self._validate_direct_chemical_rows()
+
         if self.overall_qc_status == "Passed":
             if self.medium_type == "Green":
                 if self.qc_checkpoint_1_clarity != "Pass":
@@ -94,21 +97,93 @@ class MediumBatch(Document):
         from pluviago.pluviago_biotech.utils.stock_utils import apply_corrective_action_logic
         apply_corrective_action_logic(self)
 
+    _GREEN_SSB_TYPES = {"A1", "A2", "A3", "A4", "A5"}
+    _RED_SSB_TYPES = {"A5M", "A6", "A7-I", "A7-II", "A7-III", "A7-IV", "A7-V", "A7-VI"}
+
+    def _validate_ssb_rows(self):
+        if not self.ssb_used:
+            return
+        allowed = self._GREEN_SSB_TYPES if self.medium_type == "Green" else self._RED_SSB_TYPES
+        today_str = frappe.utils.today()
+        for row in self.ssb_used:
+            if row.solution_type and row.solution_type not in allowed:
+                frappe.throw(
+                    f"Row {row.idx}: Solution Type <b>{row.solution_type}</b> is not valid for "
+                    f"<b>{self.medium_type} Medium</b>. Allowed: {', '.join(sorted(allowed))}."
+                )
+            if not row.stock_solution_batch:
+                continue
+            ssb = frappe.db.get_value(
+                "Stock Solution Batch",
+                row.stock_solution_batch,
+                ["solution_type", "docstatus", "qc_status", "preparation_status", "expiry_date"],
+                as_dict=True,
+            )
+            if not ssb:
+                frappe.throw(
+                    f"Row {row.idx}: Stock Solution Batch <b>{row.stock_solution_batch}</b> not found."
+                )
+            if row.solution_type and ssb.solution_type != row.solution_type:
+                frappe.throw(
+                    f"Row {row.idx}: Selected SSB <b>{row.stock_solution_batch}</b> is type "
+                    f"<b>{ssb.solution_type}</b> but row asks for <b>{row.solution_type}</b>."
+                )
+            if ssb.docstatus != 1 or ssb.preparation_status != "Released" or ssb.qc_status != "Passed":
+                frappe.throw(
+                    f"Row {row.idx}: SSB <b>{row.stock_solution_batch}</b> is not Released "
+                    f"(QC={ssb.qc_status}, Status={ssb.preparation_status}). "
+                    "Only released, QC-passed SSBs may be used."
+                )
+            if ssb.expiry_date and str(ssb.expiry_date) < today_str:
+                frappe.throw(
+                    f"Row {row.idx}: SSB <b>{row.stock_solution_batch}</b> expired on "
+                    f"<b>{ssb.expiry_date}</b>."
+                )
+
+    def _validate_direct_chemical_rows(self):
+        if not self.direct_chemicals:
+            return
+        today_str = frappe.utils.today()
+        for row in self.direct_chemicals:
+            if not row.raw_material_batch:
+                continue
+            rmb = frappe.db.get_value(
+                "Raw Material Batch",
+                row.raw_material_batch,
+                ["docstatus", "qc_status", "expiry_date", "material_name"],
+                as_dict=True,
+            )
+            if not rmb:
+                frappe.throw(
+                    f"Row {row.idx}: Raw Material Batch <b>{row.raw_material_batch}</b> not found."
+                )
+            if rmb.docstatus != 1 or rmb.qc_status != "Approved":
+                frappe.throw(
+                    f"Row {row.idx}: RMB <b>{row.raw_material_batch}</b> is not approved "
+                    f"(docstatus={rmb.docstatus}, QC={rmb.qc_status})."
+                )
+            if rmb.expiry_date and str(rmb.expiry_date) < today_str:
+                frappe.throw(
+                    f"Row {row.idx}: RMB <b>{row.raw_material_batch}</b> "
+                    f"({rmb.material_name}) expired on <b>{rmb.expiry_date}</b>."
+                )
+
     @frappe.whitelist()
     def mark_preparation_complete(self):
         if self.preparation_status != "Draft":
             frappe.throw("Preparation is already marked complete.")
         if not self.direct_chemicals:
             frappe.throw("Add at least one direct chemical before marking preparation complete.")
+        if not self.ssb_used:
+            frappe.throw("Add at least one Stock Solution before marking preparation complete.")
         if self.medium_type == "Green" and not self.top_up_done:
             frappe.throw(
                 "<b>Top-up Done</b> must be ticked — confirm DI water has been added "
                 "to bring the batch to its final volume before marking complete."
             )
 
-        from pluviago.pluviago_biotech.utils.stock_utils import deduct_raw_materials, deduct_di_water
+        from pluviago.pluviago_biotech.utils.stock_utils import deduct_raw_materials
         deduct_raw_materials(self, action="Consumed")
-        deduct_di_water(self)
         self.db_set("preparation_status", "QC Pending")
         frappe.msgprint("Preparation marked complete. Stock deducted. Proceed to QC checkpoints.")
 
@@ -148,11 +223,10 @@ class MediumBatch(Document):
                 "Use 'Mark as Wasted' if QC failed."
             )
         from pluviago.pluviago_biotech.utils.stock_utils import (
-            reverse_raw_materials, reverse_ssb_volume, reverse_di_water
+            reverse_raw_materials, reverse_ssb_volume
         )
         reverse_ssb_volume(self)
         reverse_raw_materials(self)
-        reverse_di_water(self)
         self.db_set("status", "Draft")
 
 
@@ -212,17 +286,22 @@ def get_medium_formula(medium_type, target_volume):
             filters={
                 "solution_type": ssb_def["solution_type"],
                 "docstatus": 1,
-                "qc_status": "Approved",
+                "qc_status": "Passed",
                 "preparation_status": "Released",
             },
             fields=["name", "available_volume", "volume_used", "expiry_date"],
             order_by="expiry_date asc",
         )
+        today_str = frappe.utils.today()
         for s in ssbs:
             s["remaining_ml"] = round(
                 (s.available_volume or 0) * 1000 - (s.volume_used or 0), 2
             )
-        ssbs = [s for s in ssbs if s["remaining_ml"] > 0]
+        ssbs = [
+            s for s in ssbs
+            if s["remaining_ml"] > 0
+            and (not s.expiry_date or str(s.expiry_date) >= today_str)
+        ]
 
         stock_solutions.append({
             "solution_type": ssb_def["solution_type"],
@@ -230,6 +309,36 @@ def get_medium_formula(medium_type, target_volume):
             "add_last": ssb_def["add_last"],
             "available_ssbs": ssbs,
         })
+
+    # DI Water row — physical balance: total mL target minus SSB additions.
+    total_ssb_ml = sum(s["required_ml"] for s in stock_solutions)
+    di_water_ml = round(target_volume * 1000 - total_ssb_ml, 4)
+    di_water_item = frappe.db.get_value(
+        "Item",
+        {"item_code": "CONS-001"},
+        ["name", "item_name"],
+        as_dict=True,
+    )
+    di_water_rmbs = frappe.db.sql("""
+        SELECT rmb.name, rmb.material_name, rmb.remaining_qty, rmb.received_qty_uom, rmb.expiry_date
+        FROM `tabRaw Material Batch` rmb
+        INNER JOIN `tabItem` i ON i.name = rmb.item_code
+        WHERE i.item_group = 'Lab Consumables'
+          AND rmb.docstatus = 1
+          AND rmb.qc_status = 'Approved'
+          AND (rmb.remaining_qty IS NULL OR rmb.remaining_qty > 0)
+          AND (rmb.expiry_date IS NULL OR rmb.expiry_date >= %s)
+        ORDER BY rmb.expiry_date ASC
+    """, frappe.utils.today(), as_dict=True)
+
+    base_salts.append({
+        "chemical_name": "DI Water",
+        "item_code": di_water_item.name if di_water_item else "CONS-001",
+        "scaled_qty": di_water_ml,
+        "uom": "mL",
+        "available_rmbs": di_water_rmbs,
+        "is_di_water": True,
+    })
 
     return {
         "medium_type": medium_type,
