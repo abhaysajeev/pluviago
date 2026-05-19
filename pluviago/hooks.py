@@ -30,6 +30,10 @@ fixtures = [
         "Pluviago PO Approval",
         "Pluviago PR COA Approval",
     ]]]},
+    {"dt": "Custom Field", "filters": [
+        ["dt", "=", "Purchase Receipt"],
+        ["fieldname", "in", ["custom_coa_attach", "custom_coa_approved_by"]],
+    ]},
 ]
 
 # Override standard ERPNext doctype classes

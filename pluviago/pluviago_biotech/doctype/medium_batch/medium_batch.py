@@ -32,6 +32,9 @@ _RED_SSB_ADDITIONS = [
     {"solution_type": "A7-I",   "vol_per_L_ml": 1.0, "add_last": True},  # Calcium — LAST
 ]
 
+# Item code for DI / purified water used as the solvent base.
+_DI_WATER_ITEM_CODE = "DI"
+
 
 class MediumBatch(Document):
     def autoname(self):
@@ -315,25 +318,24 @@ def get_medium_formula(medium_type, target_volume):
     di_water_ml = round(target_volume * 1000 - total_ssb_ml, 4)
     di_water_item = frappe.db.get_value(
         "Item",
-        {"item_code": "CONS-001"},
+        _DI_WATER_ITEM_CODE,
         ["name", "item_name"],
         as_dict=True,
     )
     di_water_rmbs = frappe.db.sql("""
-        SELECT rmb.name, rmb.material_name, rmb.remaining_qty, rmb.received_qty_uom, rmb.expiry_date
-        FROM `tabRaw Material Batch` rmb
-        INNER JOIN `tabItem` i ON i.name = rmb.item_code
-        WHERE i.item_group = 'Lab Consumables'
-          AND rmb.docstatus = 1
-          AND rmb.qc_status = 'Approved'
-          AND (rmb.remaining_qty IS NULL OR rmb.remaining_qty > 0)
-          AND (rmb.expiry_date IS NULL OR rmb.expiry_date >= %s)
-        ORDER BY rmb.expiry_date ASC
-    """, frappe.utils.today(), as_dict=True)
+        SELECT name, material_name, remaining_qty, received_qty_uom, expiry_date
+        FROM `tabRaw Material Batch`
+        WHERE item_code = %s
+          AND docstatus = 1
+          AND qc_status = 'Approved'
+          AND (remaining_qty IS NULL OR remaining_qty > 0)
+          AND (expiry_date IS NULL OR expiry_date >= %s)
+        ORDER BY expiry_date ASC
+    """, (_DI_WATER_ITEM_CODE, frappe.utils.today()), as_dict=True)
 
     base_salts.append({
         "chemical_name": "DI Water",
-        "item_code": di_water_item.name if di_water_item else "CONS-001",
+        "item_code": di_water_item.name if di_water_item else _DI_WATER_ITEM_CODE,
         "scaled_qty": di_water_ml,
         "uom": "mL",
         "available_rmbs": di_water_rmbs,

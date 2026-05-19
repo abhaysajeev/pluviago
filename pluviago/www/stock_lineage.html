@@ -1,0 +1,125 @@
+{% extends "templates/web.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block head_include %}
+<link rel="stylesheet" href="/assets/pluviago/css/stock_lineage.css">
+{% endblock %}
+
+{% block page_content %}
+<div class="sl-page" data-initial-focus="{{ initial_focus }}">
+
+  <header class="sl-header">
+    <div class="sl-title">
+      <h1>Stock Lineage</h1>
+      <p class="sl-subtitle">Trace upstream sources and downstream consumption across the pipeline.</p>
+    </div>
+    <div class="sl-meta">
+      <span class="sl-meta-label">User</span>
+      <span class="sl-meta-value">{{ frappe.session.user }}</span>
+    </div>
+  </header>
+
+  <section class="sl-kpi-strip" aria-label="Inventory snapshot">
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Approved RMBs</span>
+      <span class="sl-kpi-value">{{ kpi.approved_rmbs }}</span>
+    </div>
+    <div class="sl-kpi {% if kpi.near_expiry_rmbs %}is-warn{% endif %}">
+      <span class="sl-kpi-label">RMBs expiring &le; 30 days</span>
+      <span class="sl-kpi-value">{{ kpi.near_expiry_rmbs }}</span>
+    </div>
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Stock Solutions released</span>
+      <span class="sl-kpi-value">{{ kpi.ssbs_released }}</span>
+    </div>
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Media in preparation</span>
+      <span class="sl-kpi-value">{{ kpi.media_in_prep }}</span>
+    </div>
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Final Media ready</span>
+      <span class="sl-kpi-value">{{ kpi.fmbs_ready }}</span>
+    </div>
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Active Production Batches</span>
+      <span class="sl-kpi-value">{{ kpi.active_pbs }}</span>
+    </div>
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Harvests (30d)</span>
+      <span class="sl-kpi-value">{{ kpi.harvests_30d }}</span>
+    </div>
+    <div class="sl-kpi">
+      <span class="sl-kpi-label">Extractions (30d)</span>
+      <span class="sl-kpi-value">{{ kpi.extractions_30d }}</span>
+    </div>
+  </section>
+
+  <section class="sl-search-row">
+    <label for="sl-search" class="sl-search-label">Select a batch</label>
+    <div class="sl-search-wrap">
+      <input type="text" id="sl-search" class="sl-search-input" autocomplete="off"
+             placeholder="Type an RMB / SSB / MED / FMB / PB / HB / EB name or chemical&hellip;">
+      <div class="sl-search-results" id="sl-search-results" hidden></div>
+    </div>
+    <button type="button" class="sl-clear-btn" id="sl-clear" hidden>Clear</button>
+  </section>
+
+  <section class="sl-flow" aria-label="Lineage flow">
+
+    <div class="sl-lane-headers">
+      <div class="sl-lane-header">Raw Material</div>
+      <div class="sl-lane-header">Stock Solution</div>
+      <div class="sl-lane-header">Medium</div>
+      <div class="sl-lane-header">Final Medium</div>
+      <div class="sl-lane-header">Production</div>
+      <div class="sl-lane-header">Harvest</div>
+      <div class="sl-lane-header">Extraction</div>
+    </div>
+
+    <div class="sl-flow-body">
+      <div class="sl-lane-grid" id="sl-lanes">
+        <div class="sl-lane" data-lane="RMB"></div>
+        <div class="sl-lane" data-lane="SSB"></div>
+        <div class="sl-lane" data-lane="MED"></div>
+        <div class="sl-lane" data-lane="FMB"></div>
+        <div class="sl-lane" data-lane="PB"></div>
+        <div class="sl-lane" data-lane="HB"></div>
+        <div class="sl-lane" data-lane="EB"></div>
+      </div>
+      <svg class="sl-edges" id="sl-edges" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+
+    <div class="sl-empty" id="sl-empty">
+      <p>Select a batch above to draw its lineage.</p>
+    </div>
+
+  </section>
+
+  <section class="sl-log-section" id="sl-log-section" hidden>
+    <div class="sl-log-header">
+      <h2>Consumption Log</h2>
+      <span class="sl-log-target" id="sl-log-target"></span>
+    </div>
+    <div class="sl-log-table-wrap">
+      <table class="sl-log-table">
+        <thead>
+          <tr>
+            <th class="sl-col-when">When</th>
+            <th class="sl-col-material">Material</th>
+            <th class="sl-num sl-col-delta">Change</th>
+            <th class="sl-num sl-col-balance">Balance after</th>
+            <th class="sl-col-action">Action</th>
+            <th class="sl-col-source">Triggered by</th>
+            <th class="sl-col-by">User</th>
+          </tr>
+        </thead>
+        <tbody id="sl-log-rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+</div>
+
+<script src="/assets/pluviago/js/stock_lineage.js"></script>
+{% endblock %}
