@@ -6,8 +6,6 @@ class HarvestBatch(Document):
     def before_save(self):
         if not self.batch_number:
             self.batch_number = self.name
-        if self.target_dry_weight and self.actual_dry_weight and self.target_dry_weight > 0:
-            self.yield_percentage = (self.actual_dry_weight / self.target_dry_weight) * 100
 
     def validate(self):
         if self.production_batch:
@@ -17,10 +15,10 @@ class HarvestBatch(Document):
             )
             if not pb:
                 frappe.throw(f"Production Batch <b>{self.production_batch}</b> not found.")
-            if pb.status not in ["Harvested", "Active", "Contaminated"]:
+            if pb.status not in ["Harvested", "Active", "Contaminated", "Scaled Up"]:
                 frappe.throw("Linked Production Batch is not in a harvestable state.")
-            # Active batch must have stage_decision = Harvest before HB can be created
-            if pb.status == "Active" and pb.stage_decision not in ("Harvest",):
+            # Non-terminal batch must have stage_decision = Harvest before HB can be created
+            if pb.status in ("Active", "Scaled Up") and pb.stage_decision not in ("Harvest",):
                 frappe.throw(
                     f"Production Batch <b>{self.production_batch}</b> has Stage Decision "
                     f"<b>{pb.stage_decision or 'Pending'}</b>. "
@@ -47,9 +45,11 @@ class HarvestBatch(Document):
                         f"Harvest Batch <b>{existing_hb}</b>. Cancel it first before creating a new one."
                     )
 
-    def on_submit(self):
+    def before_submit(self):
         if self.qc_status != "Passed":
             frappe.throw("Cannot submit: QC must be Passed")
+
+    def on_submit(self):
         self.db_set("status", "Approved")
         if self.production_batch:
             frappe.db.set_value("Production Batch", self.production_batch, {

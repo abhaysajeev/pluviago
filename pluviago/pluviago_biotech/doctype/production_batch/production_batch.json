@@ -11,22 +11,26 @@
   "strain",
   "generation_number",
   "parent_batch",
+  "column_break_header",
   "phase",
-  "sop_reference",
   "start_date",
-  "planned_volume",
   "expected_completion",
   "actual_completion",
+  "sop_reference",
   "section_break_stage",
   "current_stage",
-  "reactor_volume",
   "inoculation_date",
+  "column_break_stage",
+  "reactor_volume",
+  "planned_volume",
   "section_break_medium",
   "final_medium_batch",
+  "column_break_medium",
   "medium_volume_used",
   "section_break_culture",
   "culture_volume_available",
   "inoculum_volume_in",
+  "column_break_culture",
   "inoculum_volume_out",
   "section_break_qc",
   "qc_readings",
@@ -34,13 +38,20 @@
   "stage_decision",
   "decision_date",
   "decision_by",
+  "column_break_decision",
   "decision_remarks",
-  "section_break_harvest",
+  "section_break_outcome",
   "harvest_batch",
   "contamination_status",
-  "contamination_incident",
+  "column_break_outcome",
   "status",
   "lineage_status",
+  "section_break_phase_transition",
+  "phase_transition_date",
+  "phase_transitioned_by",
+  "column_break_phase_transition",
+  "phase_transition_notes",
+  "section_break_remarks",
   "remarks"
  ],
  "fields": [
@@ -83,6 +94,10 @@
    "options": "Production Batch"
   },
   {
+   "fieldname": "column_break_header",
+   "fieldtype": "Column Break"
+  },
+  {
    "default": "N/A",
    "fieldname": "phase",
    "fieldtype": "Select",
@@ -90,21 +105,10 @@
    "options": "Green Phase\nRed Phase\nN/A"
   },
   {
-   "fieldname": "sop_reference",
-   "fieldtype": "Data",
-   "label": "SOP Reference"
-  },
-  {
    "default": "Today",
    "fieldname": "start_date",
    "fieldtype": "Date",
    "label": "Start Date"
-  },
-  {
-   "fieldname": "planned_volume",
-   "fieldtype": "Float",
-   "label": "Planned Volume (L)",
-   "description": "Expected culture volume at this stage."
   },
   {
    "fieldname": "expected_completion",
@@ -119,9 +123,14 @@
    "description": "Auto-set when Stage Decision is Harvest or Dispose."
   },
   {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference"
+  },
+  {
    "fieldname": "section_break_stage",
    "fieldtype": "Section Break",
-   "label": "Current Stage"
+   "label": "Stage & Reactor"
   },
   {
    "default": "Flask",
@@ -133,25 +142,41 @@
    "reqd": 1
   },
   {
-   "fieldname": "reactor_volume",
-   "fieldtype": "Float",
-   "label": "Reactor Volume (L)"
-  },
-  {
    "fieldname": "inoculation_date",
    "fieldtype": "Date",
    "label": "Inoculation Date"
   },
   {
+   "fieldname": "column_break_stage",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reactor_volume",
+   "fieldtype": "Float",
+   "label": "Reactor Volume (L)",
+   "read_only": 1,
+   "description": "Auto-set from stage."
+  },
+  {
+   "fieldname": "planned_volume",
+   "fieldtype": "Float",
+   "label": "Planned Culture Volume (L)",
+   "description": "Expected culture volume at this stage."
+  },
+  {
    "fieldname": "section_break_medium",
    "fieldtype": "Section Break",
-   "label": "Medium Used"
+   "label": "Medium"
   },
   {
    "fieldname": "final_medium_batch",
    "fieldtype": "Link",
    "label": "Final Medium Batch",
    "options": "Final Medium Batch"
+  },
+  {
+   "fieldname": "column_break_medium",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "medium_volume_used",
@@ -174,6 +199,10 @@
    "fieldtype": "Float",
    "label": "Inoculum Received from Parent (L)",
    "description": "Volume of culture transferred from parent batch to seed this reactor."
+  },
+  {
+   "fieldname": "column_break_culture",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "inoculum_volume_out",
@@ -218,14 +247,18 @@
    "options": "User"
   },
   {
+   "fieldname": "column_break_decision",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "decision_remarks",
    "fieldtype": "Text",
    "label": "Decision Remarks"
   },
   {
-   "fieldname": "section_break_harvest",
+   "fieldname": "section_break_outcome",
    "fieldtype": "Section Break",
-   "label": "Harvest Info"
+   "label": "Outcome & Status"
   },
   {
    "fieldname": "harvest_batch",
@@ -243,10 +276,8 @@
    "options": "Clean\nContaminated\nSuspect\nUnder Investigation"
   },
   {
-   "fieldname": "contamination_incident",
-   "fieldtype": "Link",
-   "label": "Contamination Incident",
-   "options": "Contamination Incident"
+   "fieldname": "column_break_outcome",
+   "fieldtype": "Column Break"
   },
   {
    "default": "Active",
@@ -262,8 +293,40 @@
    "label": "Lineage Status",
    "options": "Active\nReturned\nArchived",
    "default": "Active",
-   "in_list_view": 0,
-   "description": "Biological lineage state. Active = normal run; Returned = culture withdrawn and sent back to Flask; Archived = batch permanently closed."
+   "description": "Active = normal run; Returned = culture withdrawn for Return-to-Cultivation; Archived = permanently closed."
+  },
+  {
+   "fieldname": "section_break_phase_transition",
+   "fieldtype": "Section Break",
+   "label": "Phase Transition (6600L PBR)",
+   "depends_on": "eval:doc.current_stage === '6600L PBR'"
+  },
+  {
+   "fieldname": "phase_transition_date",
+   "fieldtype": "Date",
+   "label": "Transition Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "phase_transitioned_by",
+   "fieldtype": "Link",
+   "label": "Transitioned By",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_phase_transition",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phase_transition_notes",
+   "fieldtype": "Text",
+   "label": "Transition Notes",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_remarks",
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "remarks",
@@ -272,8 +335,24 @@
   }
  ],
  "is_submittable": 1,
- "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "links": [
+  {
+   "link_doctype": "Contamination Incident",
+   "link_fieldname": "production_batch",
+   "label": "Contamination Incidents"
+  },
+  {
+   "link_doctype": "Cultivation Return Event",
+   "link_fieldname": "source_batch",
+   "label": "Return Events (as Source)"
+  },
+  {
+   "link_doctype": "Cultivation Return Event",
+   "link_fieldname": "child_batch",
+   "label": "Return Event (Origin)"
+  }
+ ],
+ "modified": "2026-05-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Production Batch",

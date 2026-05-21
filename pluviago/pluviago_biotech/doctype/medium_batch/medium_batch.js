@@ -249,15 +249,6 @@ frappe.ui.form.on('Medium Batch', {
             return { filters };
         });
 
-        // A7-I last-addition reminder for Red Medium
-        if (frm.doc.medium_type === 'Red' && (frm.doc.ssb_used || []).length > 0) {
-            frm.dashboard.add_comment(
-                '⚠ Procedural: Add A7-I (Calcium Nitrate) LAST when combining stock solutions into the vessel. ' +
-                'Calcium precipitates if mixed with sulphates or phosphates early.',
-                'yellow', true
-            );
-        }
-
         // Load Full Formula button
         if (frm.doc.docstatus === 0 && frm.doc.preparation_status === 'Draft' && frm.doc.medium_type) {
             frm.add_custom_button(__('Load Full Formula'), function () {

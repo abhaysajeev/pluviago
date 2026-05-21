@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "creation": "2026-05-20 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "medium_type",
+  "medium_batch",
+  "ratio_pct",
+  "volume_required"
+ ],
+ "fields": [
+  {
+   "fieldname": "medium_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Medium Type",
+   "options": "Green\nRed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "medium_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Medium Batch",
+   "options": "Medium Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ratio_pct",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Ratio (%)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "volume_required",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Volume Required (L)",
+   "read_only": 1
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-05-20 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "FMB Medium Source",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

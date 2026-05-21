@@ -225,11 +225,8 @@ class MediumBatch(Document):
                 "Cannot cancel a batch that has been physically prepared. "
                 "Use 'Mark as Wasted' if QC failed."
             )
-        from pluviago.pluviago_biotech.utils.stock_utils import (
-            reverse_raw_materials, reverse_ssb_volume
-        )
-        reverse_ssb_volume(self)
-        reverse_raw_materials(self)
+        # preparation_status == "Draft" means mark_preparation_complete was never called,
+        # so no raw materials or SSB volumes were ever deducted — nothing to reverse.
         self.db_set("status", "Draft")
 
 

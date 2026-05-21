@@ -15,7 +15,6 @@ RETURN_ELIGIBLE_STAGES = ("275L PBR", "6600L PBR")
 
 class ProductionBatch(Document):
     def before_validate(self):
-        # Set reactor_volume from stage so GAP 7 capacity check in validate() can use it
         if self.current_stage and self.current_stage in STAGE_VOLUMES:
             self.reactor_volume = STAGE_VOLUMES[self.current_stage]
         if not self.lineage_status:
@@ -31,8 +30,6 @@ class ProductionBatch(Document):
             frappe.throw("A batch cannot be its own parent")
 
         # ── Stage sequence enforcement ─────────────────────────────────────────
-        # Return-to-Cultivation always produces a Flask child from any stage — exempt.
-        # All other child batches must advance exactly one step in the sequence.
         if self.parent_batch:
             parent_stage = frappe.db.get_value(
                 "Production Batch", self.parent_batch, "current_stage"
@@ -69,21 +66,29 @@ class ProductionBatch(Document):
                     f"Generation Number = <b>{expected_gen}</b>."
                 )
         else:
-            parent_gen = frappe.db.get_value(
-                "Production Batch", self.parent_batch, "generation_number"
-            ) or 0
-            if self.generation_number != parent_gen + 1:
-                frappe.throw(
-                    f"Generation Number must be parent generation + 1 "
-                    f"(parent is Gen {parent_gen}, expected Gen {parent_gen + 1}, "
-                    f"got Gen {self.generation_number})."
-                )
+            if self.current_stage == "Flask":
+                # Return-to-Cultivation: each new Flask always resets to Gen 1
+                if self.generation_number != 1:
+                    frappe.throw(
+                        "Return-to-Cultivation Flask batch must have Generation Number = <b>1</b>. "
+                        "Each new Flask starts a fresh cultivation cycle (Roy's requirement)."
+                    )
+            else:
+                parent_gen = frappe.db.get_value(
+                    "Production Batch", self.parent_batch, "generation_number"
+                ) or 0
+                if self.generation_number != parent_gen + 1:
+                    frappe.throw(
+                        f"Generation Number must be parent generation + 1 "
+                        f"(parent is Gen {parent_gen}, expected Gen {parent_gen + 1}, "
+                        f"got Gen {self.generation_number})."
+                    )
 
         # ── Auto-set actual_completion on terminal decisions ───────────────────
         if self.stage_decision in ("Harvest", "Dispose") and not self.actual_completion:
             self.actual_completion = frappe.utils.today()
 
-        # ── GAP 1: Contamination gate — contaminated batch cannot be scaled up ─
+        # ── Contamination gate — contaminated batch cannot be scaled up ────────
         if self.contamination_status == "Contaminated" and self.stage_decision == "Scale Up":
             frappe.throw(
                 "Cannot scale up a <b>Contaminated</b> batch. "
@@ -102,7 +107,7 @@ class ProductionBatch(Document):
                     "can set Stage Decision to <b>Scale Up</b>."
                 )
 
-        # ── GAP 2: QC gate — must have at least one reading; any Fail or contamination blocks ─
+        # ── QC gate — must have at least one reading before Scale Up ──────────
         if self.stage_decision == "Scale Up":
             if not self.qc_readings:
                 frappe.throw(
@@ -111,24 +116,20 @@ class ProductionBatch(Document):
                 )
 
         if self.stage_decision == "Scale Up" and self.qc_readings:
-            contaminated_readings = [
-                r for r in self.qc_readings if r.contamination_detected
-            ]
+            contaminated_readings = [r for r in self.qc_readings if r.contamination_detected]
             if contaminated_readings:
                 frappe.throw(
                     f"Cannot scale up: {len(contaminated_readings)} QC reading(s) have "
                     f"<b>Contamination Detected</b> flagged."
                 )
-            failed_readings = [
-                r for r in self.qc_readings if r.overall_result == "Fail"
-            ]
+            failed_readings = [r for r in self.qc_readings if r.overall_result == "Fail"]
             if failed_readings:
                 frappe.throw(
                     f"Cannot scale up: {len(failed_readings)} QC reading(s) have "
                     f"<b>Overall Result = Fail</b>. Resolve before scaling up."
                 )
 
-        # ── GAP 7: Reactor capacity check ─────────────────────────────────────
+        # ── Reactor capacity check ─────────────────────────────────────────────
         if self.reactor_volume:
             total_vol = (self.inoculum_volume_in or 0) + (self.medium_volume_used or 0)
             if total_vol > self.reactor_volume:
@@ -140,19 +141,20 @@ class ProductionBatch(Document):
                     f"(<b>{self.reactor_volume:.0f} L</b>)."
                 )
 
-    def on_submit(self):
-        # Update parent strain's generation count
-        if self.strain:
-            strain_doc = frappe.get_doc("Pluviago Strain", self.strain)
-            strain_doc.generation_count = (strain_doc.generation_count or 0) + 1
-            strain_doc.save(ignore_permissions=True)
+    def before_submit(self):
+        if self.stage_decision == "Pending":
+            frappe.throw(
+                "Cannot submit: <b>Stage Decision</b> is still Pending. "
+                "Set it to Scale Up, Harvest, or Dispose before submitting."
+            )
 
+    def on_submit(self):
         # Deduct medium volume from linked Final Medium Batch
         if self.final_medium_batch and self.medium_volume_used:
             from pluviago.pluviago_biotech.utils.stock_utils import deduct_medium_volume
             deduct_medium_volume(self)
 
-        # ── GAP 5/6: Deduct inoculum from parent batch culture pool ───────────
+        # Deduct inoculum from parent batch culture pool
         if self.parent_batch and self.inoculum_volume_in:
             _deduct_inoculum_from_parent(self)
 
@@ -164,11 +166,11 @@ class ProductionBatch(Document):
             from pluviago.pluviago_biotech.utils.stock_utils import reverse_medium_volume
             reverse_medium_volume(self)
 
-        # ── GAP 5/6: Restore inoculum to parent batch ─────────────────────────
+        # Restore inoculum to parent batch
         if self.parent_batch and self.inoculum_volume_in:
             _restore_inoculum_to_parent(self)
 
-        # ── GAP 9: Restore parent status to Active if no other submitted children
+        # Restore parent status to Active if no other submitted children
         _restore_parent_status(self)
 
     def get_lineage(self):
@@ -196,12 +198,11 @@ class ProductionBatch(Document):
 
         old_phase = self.phase or "N/A"
         self.db_set("phase", new_phase)
-        audit_entry = (
-            f"\n[Phase Transition {transition_date}] "
-            f"{old_phase} → {new_phase} by {transitioned_by}."
-            + (f" Notes: {notes}" if notes else "")
-        )
-        self.db_set("remarks", (self.remarks or "") + audit_entry)
+        self.db_set("phase_transition_date", transition_date)
+        self.db_set("phase_transitioned_by", transitioned_by)
+        if notes:
+            self.db_set("phase_transition_notes", notes)
+
         frappe.msgprint(
             f"Phase transition recorded: <b>{old_phase}</b> → <b>{new_phase}</b>.",
             indicator="green"
@@ -228,13 +229,11 @@ class ProductionBatch(Document):
         Withdraws a volume of culture from a live 275L or 6600L reactor,
         dilutes it with fresh medium, and back-propagates it to a new Flask batch.
 
+        Per Roy's requirement: the new Flask always starts at Generation Number 1.
         This is a Material Transfer — the source batch is NOT closed.
-        The inoculum_volume_in on the child is set here; the actual deduction
-        from this batch's culture pool happens when the child is submitted.
         """
         from frappe.utils import flt
 
-        # ── Validations ───────────────────────────────────────────────────────
         if self.docstatus != 1:
             frappe.throw("Return-to-Cultivation can only be triggered from a Submitted batch.")
 
@@ -259,7 +258,6 @@ class ProductionBatch(Document):
         if withdrawal_volume <= 0:
             frappe.throw("Withdrawal volume must be greater than 0.")
 
-        # ── GAP 5: Validate culture pool before deducting ─────────────────────
         available = self.culture_volume_available or 0
         already_out = self.inoculum_volume_out or 0
         remaining_culture = available - already_out
@@ -271,25 +269,23 @@ class ProductionBatch(Document):
                 f"<b>{withdrawal_volume:.3f} L</b>."
             )
 
-        # ── Create child Flask batch ──────────────────────────────────────────
+        # New Flask always resets to Generation 1 (Roy's requirement)
         child = frappe.new_doc("Production Batch")
         child.strain = self.strain
         child.parent_batch = self.name
         child.current_stage = "Flask"
-        child.generation_number = (self.generation_number or 1) + 1
+        child.generation_number = 1
         child.lineage_status = "Active"
         child.inoculation_date = return_date
         child.final_medium_batch = dilution_medium_batch or None
         child.medium_volume_used = flt(dilution_volume) if dilution_volume else None
-        # Record inoculum received — deduction from parent pool on child submit
         child.inoculum_volume_in = withdrawal_volume
         child.remarks = (
-            f"Created via Return-to-Cultivation from {self.name}. "
+            f"Return-to-Cultivation from {self.name}. "
             f"Reason: {reason or 'N/A'}"
         )
         child.insert(ignore_permissions=True)
 
-        # ── Create audit record ───────────────────────────────────────────────
         event = frappe.new_doc("Cultivation Return Event")
         event.source_batch = self.name
         event.child_batch = child.name
@@ -300,15 +296,19 @@ class ProductionBatch(Document):
         event.returned_by = returned_by or frappe.session.user
         event.reason = reason
         event.status = "Completed"
+        event.source_stage = self.current_stage
+        event.source_phase = self.phase or "N/A"
+        event.total_volume_to_flask = round(
+            withdrawal_volume + (flt(dilution_volume) if dilution_volume else 0), 6
+        )
         event.insert(ignore_permissions=True)
 
-        # Mark source lineage as Returned (operational status stays Active)
         self.db_set("lineage_status", "Returned")
 
         frappe.msgprint(
             f"Return-to-Cultivation complete. New Flask batch "
-            f"<b><a href='/app/production-batch/{child.name}'>{child.name}</a></b> created. "
-            f"Event logged: <b>{event.name}</b>.",
+            f"<b><a href='/app/production-batch/{child.name}'>{child.name}</a></b> created "
+            f"at Generation 1. Event logged: <b>{event.name}</b>.",
             title="Return Successful",
             indicator="green"
         )
@@ -343,25 +343,14 @@ class ProductionBatch(Document):
     def create_split_batches(self, n, next_stage, inoculation_date,
                              medium_batch=None, inoculum_volume_per_child=None):
         """
-        Batch Splitting.
-
         Creates N sibling child batches at the specified next stage,
-        all sharing this batch as parent. inoculum_volume_per_child
-        (optional) records how much culture each child receives and
-        is deducted from this batch's culture pool when each child submits.
-
-        Args:
-            n (int): Number of child batches to create (min 2, max 10).
-            next_stage (str): Must be the immediate next stage in sequence.
-            inoculation_date (str): Date for all child batches.
-            medium_batch (str): Optional Final Medium Batch to pre-fill.
-            inoculum_volume_per_child (float): Optional inoculum L per child.
+        all sharing this batch as parent. Inoculum is deducted from this
+        batch's culture pool when each child is submitted.
         """
         from frappe.utils import cint, flt
 
         VALID_STAGES = ["Flask", "25L PBR", "275L PBR", "925L PBR", "6600L PBR"]
 
-        # ── Validations ───────────────────────────────────────────────────────
         if self.docstatus != 1:
             frappe.throw("Split Batch can only be triggered from a Submitted batch.")
 
@@ -374,11 +363,8 @@ class ProductionBatch(Document):
         if next_stage not in VALID_STAGES:
             frappe.throw(f"Invalid next stage: {next_stage}.")
 
-        # ── GAP 3: Enforce stage sequence — no skipping ───────────────────────
         if self.current_stage in STAGE_SEQUENCE:
             current_idx = STAGE_SEQUENCE.index(self.current_stage)
-            # next_stage must be exactly one step ahead (Flask children excluded
-            # from this check as they can come from Return-to-Cultivation)
             if next_stage in STAGE_SEQUENCE:
                 next_idx = STAGE_SEQUENCE.index(next_stage)
                 if next_idx != current_idx + 1:
@@ -395,7 +381,6 @@ class ProductionBatch(Document):
                 "Cannot split a closed batch."
             )
 
-        # ── GAP 6: Validate total inoculum does not exceed culture pool ────────
         inoculum_per_child = flt(inoculum_volume_per_child) if inoculum_volume_per_child else None
         if inoculum_per_child:
             available = self.culture_volume_available or 0
@@ -409,7 +394,6 @@ class ProductionBatch(Document):
                     f"(<b>{remaining_culture:.3f} L</b>) in this batch."
                 )
 
-        # ── Create N children ─────────────────────────────────────────────────
         created = []
         for i in range(n):
             child = frappe.new_doc("Production Batch")
@@ -422,10 +406,7 @@ class ProductionBatch(Document):
             child.final_medium_batch = medium_batch or None
             if inoculum_per_child:
                 child.inoculum_volume_in = inoculum_per_child
-            child.remarks = (
-                f"Split {i + 1}/{n} from {self.name} "
-                f"(Batch Split)"
-            )
+            child.remarks = f"Split {i + 1}/{n} from {self.name}"
             child.insert(ignore_permissions=True)
             created.append(child.name)
 
@@ -439,14 +420,11 @@ class ProductionBatch(Document):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Culture volume helpers (GAP 5 / GAP 6 / GAP 9)
+# Culture volume helpers
 # ──────────────────────────────────────────────────────────────────────────────
 
 def _deduct_inoculum_from_parent(doc):
-    """
-    Deduct inoculum_volume_in from the parent batch's culture pool on submit.
-    Only enforces the limit if culture_volume_available was entered by the operator.
-    """
+    """Deduct inoculum_volume_in from the parent batch's culture pool on submit."""
     parent = frappe.db.get_value(
         "Production Batch", doc.parent_batch,
         ["name", "culture_volume_available", "inoculum_volume_out",
@@ -460,7 +438,6 @@ def _deduct_inoculum_from_parent(doc):
     already_out = parent.inoculum_volume_out or 0
     remaining = available - already_out
 
-    # Enforce only when the operator has recorded a culture_volume_available
     if available > 0 and doc.inoculum_volume_in > remaining:
         frappe.throw(
             f"Parent batch <b>{doc.parent_batch}</b> ({parent.current_stage}) "
@@ -484,7 +461,7 @@ def _restore_inoculum_to_parent(doc):
 
 def _restore_parent_status(doc):
     """
-    GAP 9: When a child batch is cancelled, restore parent to Active
+    When a child batch is cancelled, restore parent to Active
     if no other submitted children remain from that parent.
     """
     if not doc.parent_batch:
@@ -492,7 +469,6 @@ def _restore_parent_status(doc):
     parent_status = frappe.db.get_value("Production Batch", doc.parent_batch, "status")
     if parent_status != "Scaled Up":
         return
-    # Only restore if this was the last submitted child
     other_submitted_children = frappe.db.count(
         "Production Batch",
         {"parent_batch": doc.parent_batch, "docstatus": 1, "name": ["!=", doc.name]}

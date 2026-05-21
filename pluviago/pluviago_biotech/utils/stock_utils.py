@@ -291,13 +291,12 @@ def get_medium_lineage(batch_name, batch_doctype):
     """Return all downstream batches that consumed the given Medium Batch or Final Medium Batch."""
     result = {}
     if batch_doctype == "Medium Batch":
-        medium_type = frappe.db.get_value("Medium Batch", batch_name, "medium_type")
-        link_field = "green_medium_batch" if medium_type == "Green" else "red_medium_batch"
-        fmbs = frappe.db.get_all(
-            "Final Medium Batch",
-            filters=[[link_field, "=", batch_name]],
-            fields=["name", "preparation_date", "status"],
-        )
+        fmbs = frappe.db.sql("""
+            SELECT DISTINCT fmb.name, fmb.preparation_date, fmb.status
+            FROM `tabFinal Medium Batch` fmb
+            JOIN `tabFMB Medium Source` src ON src.parent = fmb.name
+            WHERE src.medium_batch = %s
+        """, batch_name, as_dict=True)
         result["final_medium_batches"] = fmbs
         fmb_names = [f["name"] for f in fmbs]
         if fmb_names:
@@ -318,107 +317,155 @@ def get_medium_lineage(batch_name, batch_doctype):
 
 
 # ---------------------------------------------------------------------------
-# Medium Batch volume deduction (GAP 3)
+# Medium Batch volume deduction
 # ---------------------------------------------------------------------------
-
-# Maps FMB fields to (medium doctype, link field, volume field)
-_MEDIUM_VOLUME_PAIRS = [
-    ("green_medium_batch", "Medium Batch", "green_medium_volume"),
-    ("red_medium_batch",   "Medium Batch", "red_medium_volume"),
-]
-
 
 def deduct_medium_volume(doc):
     """
-    Deduct L volumes from linked Medium Batches when a Final Medium Batch or
-    Production Batch is submitted.
+    Deduct L volumes from linked Medium Batches when a Final Medium Batch is submitted,
+    or from a Final Medium Batch when a Production Batch is submitted.
     """
-    pairs = _MEDIUM_VOLUME_PAIRS if doc.doctype == "Final Medium Batch" else [
-        ("final_medium_batch", "Final Medium Batch", "medium_volume_used"),
-    ]
+    if doc.doctype == "Final Medium Batch":
+        _deduct_from_medium_sources(doc)
+    else:
+        # Production Batch → deduct from Final Medium Batch
+        _deduct_from_fmb(doc)
 
-    # Field sets differ per doctype — Medium Batch has medium_volume_calculated;
-    # Final Medium Batch uses actual_final_volume / final_required_volume instead.
-    _MEDIUM_BATCH_FIELDS = ["name", "status", "remaining_volume", "medium_volume_calculated",
-                            "volume_consumed", "expiry_date"]
-    _FMB_FIELDS = ["name", "status", "remaining_volume", "actual_final_volume",
-                   "final_required_volume", "volume_consumed", "expiry_date"]
 
+def _deduct_from_medium_sources(fmb_doc):
+    """Iterate FMB medium_sources child table and deduct each row from its Medium Batch."""
     to_deduct = []
-    for link_field, doctype, vol_field in pairs:
-        batch_name = doc.get(link_field)
-        vol = doc.get(vol_field) or 0
-        if not batch_name or vol <= 0:
+    for row in fmb_doc.medium_sources or []:
+        if not row.medium_batch or not (row.volume_required or 0):
             continue
-
-        fields = _MEDIUM_BATCH_FIELDS if doctype == "Medium Batch" else _FMB_FIELDS
-        mb = frappe.db.get_value(doctype, batch_name, fields, as_dict=True)
+        mb = frappe.db.get_value(
+            "Medium Batch", row.medium_batch,
+            ["name", "status", "remaining_volume", "medium_volume_calculated",
+             "volume_consumed", "expiry_date"],
+            as_dict=True,
+        )
         if not mb:
-            frappe.throw(f"{doctype} <b>{batch_name}</b> not found.")
+            frappe.throw(f"Row {row.idx}: Medium Batch <b>{row.medium_batch}</b> not found.")
         if mb.expiry_date and str(mb.expiry_date) < frappe.utils.today():
             frappe.throw(
-                f"{doctype} <b>{batch_name}</b> expired on <b>{mb.expiry_date}</b>. "
-                "Expired batches cannot be consumed."
+                f"Row {row.idx}: Medium Batch <b>{row.medium_batch}</b> expired on "
+                f"<b>{mb.expiry_date}</b>. Expired batches cannot be consumed."
             )
-
-        # Initialise remaining_volume on first consumption if not yet set
         remaining = mb.remaining_volume
         if remaining is None:
-            capacity = (mb.get("medium_volume_calculated")
-                        or mb.get("actual_final_volume")
-                        or mb.get("final_required_volume")
-                        or 0)
-            remaining = capacity
-
+            remaining = mb.medium_volume_calculated or 0
+        vol = row.volume_required
         if vol > remaining:
             frappe.throw(
-                f"{doctype} <b>{batch_name}</b>: only <b>{remaining:.3f} L</b> remaining, "
-                f"but <b>{vol:.3f} L</b> is being consumed."
+                f"Row {row.idx}: Medium Batch <b>{row.medium_batch}</b>: only "
+                f"<b>{remaining:.3f} L</b> remaining but <b>{vol:.3f} L</b> is being consumed."
             )
-        to_deduct.append((doctype, mb, vol, remaining))
+        to_deduct.append((mb, vol, remaining))
 
-    for doctype, mb, vol, remaining in to_deduct:
+    for mb, vol, remaining in to_deduct:
         new_remaining = round(remaining - vol, 6)
         new_consumed = round((mb.volume_consumed or 0) + vol, 6)
         new_status = "Used" if new_remaining <= 0 else "Partially Used"
-        frappe.db.set_value(doctype, mb.name, {
+        frappe.db.set_value("Medium Batch", mb.name, {
             "remaining_volume": new_remaining,
             "volume_consumed": new_consumed,
             "status": new_status,
         })
+
+
+def _deduct_from_fmb(prod_doc):
+    """Production Batch submission — deduct consumed volume from Final Medium Batch."""
+    batch_name = prod_doc.get("final_medium_batch")
+    vol = prod_doc.get("medium_volume_used") or 0
+    if not batch_name or vol <= 0:
+        return
+
+    fmb = frappe.db.get_value(
+        "Final Medium Batch", batch_name,
+        ["name", "status", "remaining_volume", "actual_final_volume",
+         "final_required_volume", "volume_consumed", "expiry_date"],
+        as_dict=True,
+    )
+    if not fmb:
+        frappe.throw(f"Final Medium Batch <b>{batch_name}</b> not found.")
+    if fmb.expiry_date and str(fmb.expiry_date) < frappe.utils.today():
+        frappe.throw(
+            f"Final Medium Batch <b>{batch_name}</b> expired on <b>{fmb.expiry_date}</b>. "
+            "Expired batches cannot be consumed."
+        )
+    remaining = fmb.remaining_volume
+    if remaining is None:
+        remaining = fmb.actual_final_volume or fmb.final_required_volume or 0
+    if vol > remaining:
+        frappe.throw(
+            f"Final Medium Batch <b>{batch_name}</b>: only <b>{remaining:.3f} L</b> remaining, "
+            f"but <b>{vol:.3f} L</b> is being consumed."
+        )
+    new_remaining = round(remaining - vol, 6)
+    new_consumed = round((fmb.volume_consumed or 0) + vol, 6)
+    new_status = "Used" if new_remaining <= 0 else "Partially Used"
+    frappe.db.set_value("Final Medium Batch", fmb.name, {
+        "remaining_volume": new_remaining,
+        "volume_consumed": new_consumed,
+        "status": new_status,
+    })
 
 
 def reverse_medium_volume(doc):
     """
     Restore medium batch volumes when a Final Medium Batch or Production Batch is cancelled.
     """
-    pairs = _MEDIUM_VOLUME_PAIRS if doc.doctype == "Final Medium Batch" else [
-        ("final_medium_batch", "Final Medium Batch", "medium_volume_used"),
-    ]
+    if doc.doctype == "Final Medium Batch":
+        _reverse_medium_sources(doc)
+    else:
+        _reverse_fmb(doc)
 
-    for link_field, doctype, vol_field in pairs:
-        batch_name = doc.get(link_field)
-        vol = doc.get(vol_field) or 0
-        if not batch_name or vol <= 0:
+
+def _reverse_medium_sources(fmb_doc):
+    """Restore Medium Batch volumes from FMB medium_sources child table rows."""
+    for row in fmb_doc.medium_sources or []:
+        if not row.medium_batch or not (row.volume_required or 0):
             continue
-
         mb = frappe.db.get_value(
-            doctype, batch_name,
+            "Medium Batch", row.medium_batch,
             ["name", "remaining_volume", "volume_consumed", "status"],
             as_dict=True,
         )
         if not mb:
             continue
-
+        vol = row.volume_required
         new_remaining = round((mb.remaining_volume or 0) + vol, 6)
         new_consumed = round(max((mb.volume_consumed or 0) - vol, 0), 6)
-        # "Approved" only when nothing has been consumed; otherwise "Partially Used"
         new_status = "Approved" if new_consumed <= 0 else "Partially Used"
-        frappe.db.set_value(doctype, mb.name, {
+        frappe.db.set_value("Medium Batch", mb.name, {
             "remaining_volume": new_remaining,
             "volume_consumed": new_consumed,
             "status": new_status,
         })
+
+
+def _reverse_fmb(prod_doc):
+    """Restore Final Medium Batch volume when a Production Batch is cancelled."""
+    batch_name = prod_doc.get("final_medium_batch")
+    vol = prod_doc.get("medium_volume_used") or 0
+    if not batch_name or vol <= 0:
+        return
+
+    fmb = frappe.db.get_value(
+        "Final Medium Batch", batch_name,
+        ["name", "remaining_volume", "volume_consumed", "status"],
+        as_dict=True,
+    )
+    if not fmb:
+        return
+    new_remaining = round((fmb.remaining_volume or 0) + vol, 6)
+    new_consumed = round(max((fmb.volume_consumed or 0) - vol, 0), 6)
+    new_status = "Approved" if new_consumed <= 0 else "Partially Used"
+    frappe.db.set_value("Final Medium Batch", fmb.name, {
+        "remaining_volume": new_remaining,
+        "volume_consumed": new_consumed,
+        "status": new_status,
+    })
 
 
 # ---------------------------------------------------------------------------

@@ -97,7 +97,7 @@
    "fieldname": "source_doctype",
    "fieldtype": "Select",
    "label": "Source DocType",
-   "options": "Stock Solution Batch\nMedium Batch\nFinal Medium Batch"
+   "options": "Stock Solution Batch\nMedium Batch\nFinal Medium Batch\nProduction Batch\nRaw Material Batch"
   },
   {
    "fieldname": "source_document",

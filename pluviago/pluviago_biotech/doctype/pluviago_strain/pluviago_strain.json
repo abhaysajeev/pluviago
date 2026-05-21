@@ -9,14 +9,27 @@
   "naming_series",
   "strain_id",
   "strain_name",
+  "column_break_identity",
   "strain_type",
   "species",
+  "status",
+  "section_break_lineage",
   "source",
-  "generation_count",
+  "acquisition_date",
   "parent_strain",
+  "generation_count",
+  "section_break_culture",
   "culture_conditions",
+  "column_break_culture",
   "notes",
-  "status"
+  "section_break_storage",
+  "storage_condition",
+  "storage_location",
+  "cryopreservation_date",
+  "revival_sop",
+  "column_break_storage",
+  "last_verification_date",
+  "verified_by"
  ],
  "fields": [
   {
@@ -44,6 +57,10 @@
    "reqd": 1
   },
   {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "strain_type",
    "fieldtype": "Select",
    "label": "Strain Type",
@@ -55,15 +72,29 @@
    "label": "Species"
   },
   {
-   "fieldname": "source",
-   "fieldtype": "Data",
-   "label": "Source"
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Active\nIn Use\nRetired\nQuarantined"
   },
   {
-   "default": "0",
-   "fieldname": "generation_count",
-   "fieldtype": "Int",
-   "label": "Generation Count"
+   "fieldname": "section_break_lineage",
+   "fieldtype": "Section Break",
+   "label": "Lineage & Origin"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "label": "Source",
+   "description": "Institution, supplier, or origin of this strain."
+  },
+  {
+   "fieldname": "acquisition_date",
+   "fieldtype": "Date",
+   "label": "Acquisition Date",
+   "description": "Date the strain was received or obtained."
   },
   {
    "fieldname": "parent_strain",
@@ -72,9 +103,27 @@
    "options": "Pluviago Strain"
   },
   {
+   "default": "0",
+   "fieldname": "generation_count",
+   "fieldtype": "Int",
+   "label": "Generation Count",
+   "read_only": 1,
+   "description": "Auto-counted: number of submitted Flask Production Batches linked to this strain. Use Update Generation Count to refresh."
+  },
+  {
+   "fieldname": "section_break_culture",
+   "fieldtype": "Section Break",
+   "label": "Culture Conditions"
+  },
+  {
    "fieldname": "culture_conditions",
    "fieldtype": "Text",
-   "label": "Culture Conditions"
+   "label": "Culture Conditions",
+   "description": "Optimal growth parameters: light intensity, temperature, CO₂, pH range, salinity, etc."
+  },
+  {
+   "fieldname": "column_break_culture",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "notes",
@@ -82,16 +131,61 @@
    "label": "Notes"
   },
   {
-   "default": "Active",
-   "fieldname": "status",
+   "fieldname": "section_break_storage",
+   "fieldtype": "Section Break",
+   "label": "Storage & Handling"
+  },
+  {
+   "fieldname": "storage_condition",
    "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Active\nRetired\nQuarantined"
+   "label": "Storage Condition",
+   "options": "\n4°C\nRoom Temperature\nLiquid Nitrogen\nCryopreserved\nOther"
+  },
+  {
+   "fieldname": "storage_location",
+   "fieldtype": "Data",
+   "label": "Storage Location",
+   "description": "Physical location: e.g. Freezer B3, Shelf 2, Box 4."
+  },
+  {
+   "fieldname": "cryopreservation_date",
+   "fieldtype": "Date",
+   "label": "Cryopreservation Date",
+   "description": "Date the strain was cryopreserved for long-term storage."
+  },
+  {
+   "fieldname": "revival_sop",
+   "fieldtype": "Data",
+   "label": "Revival SOP",
+   "description": "SOP reference number for strain revival protocol."
+  },
+  {
+   "fieldname": "column_break_storage",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_verification_date",
+   "fieldtype": "Date",
+   "label": "Last Verification Date",
+   "description": "Last date strain identity and viability was confirmed."
+  },
+  {
+   "fieldname": "verified_by",
+   "fieldtype": "Link",
+   "label": "Verified By",
+   "options": "User",
+   "description": "Who performed the last strain verification."
   }
  ],
- "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "is_submittable": 0,
+ "links": [
+  {
+   "link_doctype": "Production Batch",
+   "link_fieldname": "strain",
+   "label": "Production Batches"
+  }
+ ],
+ "modified": "2026-05-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Pluviago Strain",
@@ -176,5 +270,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "strain_name",
  "track_changes": 1
 }

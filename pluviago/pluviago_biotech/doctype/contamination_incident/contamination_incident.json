@@ -10,23 +10,37 @@
   "incident_date",
   "production_batch",
   "reactor_stage",
+  "column_break_identity",
   "reported_by",
+  "culture_phase_at_incident",
+  "status",
   "section_break_details",
   "contamination_type",
   "visual_observation",
+  "column_break_details",
   "microscopy_observation",
+  "section_break_rootcause",
+  "root_cause_category",
+  "root_cause_analysis",
   "section_break_decision",
   "decision",
   "decision_date",
   "decision_by",
+  "column_break_decision",
   "decision_rationale",
   "section_break_actions",
   "action_taken",
   "batch_disposed",
   "disposal_date",
   "disposal_by",
-  "status",
   "corrective_action",
+  "section_break_prevention",
+  "preventive_action",
+  "follow_up_date",
+  "column_break_prevention",
+  "follow_up_done",
+  "follow_up_notes",
+  "section_break_remarks",
   "remarks"
  ],
  "fields": [
@@ -50,6 +64,7 @@
   {
    "fieldname": "production_batch",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Production Batch",
    "options": "Production Batch",
    "reqd": 1
@@ -57,8 +72,13 @@
   {
    "fieldname": "reactor_stage",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Stage Where Detected",
    "options": "Flask\n25L PBR\n275L PBR\n925L PBR\n6600L PBR"
+  },
+  {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "reported_by",
@@ -68,6 +88,22 @@
    "reqd": 1
   },
   {
+   "default": "N/A",
+   "fieldname": "culture_phase_at_incident",
+   "fieldtype": "Select",
+   "label": "Culture Phase at Incident",
+   "options": "N/A\nGreen Phase\nRed Phase",
+   "description": "For 6600L PBR batches — which phase was active when contamination was detected."
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Open\nUnder Investigation\nResolved\nClosed"
+  },
+  {
    "fieldname": "section_break_details",
    "fieldtype": "Section Break",
    "label": "Contamination Details"
@@ -75,8 +111,9 @@
   {
    "fieldname": "contamination_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Contamination Type",
-   "options": "Bacterial\nFungal\nMixed\nUnknown",
+   "options": "Bacterial\nFungal\nYeast\nMixed\nUnknown",
    "reqd": 1
   },
   {
@@ -85,9 +122,30 @@
    "label": "Visual Observation / Symptoms"
   },
   {
+   "fieldname": "column_break_details",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "microscopy_observation",
    "fieldtype": "Text",
    "label": "Microscopy Observation"
+  },
+  {
+   "fieldname": "section_break_rootcause",
+   "fieldtype": "Section Break",
+   "label": "Root Cause Analysis"
+  },
+  {
+   "fieldname": "root_cause_category",
+   "fieldtype": "Select",
+   "label": "Root Cause Category",
+   "options": "\nOperator Error\nEquipment Failure\nMedia Contamination\nEnvironmental\nUnknown",
+   "description": "Categorise the most likely root cause to enable trend analysis."
+  },
+  {
+   "fieldname": "root_cause_analysis",
+   "fieldtype": "Text",
+   "label": "Root Cause Analysis (Detail)"
   },
   {
    "fieldname": "section_break_decision",
@@ -98,8 +156,9 @@
    "default": "Pending",
    "fieldname": "decision",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Decision",
-   "options": "Harvest Immediately\nDispose\nContinue with Monitoring\nPending"
+   "options": "Pending\nHarvest Immediately\nDispose\nContinue with Monitoring"
   },
   {
    "fieldname": "decision_date",
@@ -111,6 +170,10 @@
    "fieldtype": "Link",
    "label": "Decision By",
    "options": "User"
+  },
+  {
+   "fieldname": "column_break_decision",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "decision_rationale",
@@ -125,7 +188,7 @@
   {
    "fieldname": "action_taken",
    "fieldtype": "Text",
-   "label": "Action Taken"
+   "label": "Immediate Action Taken"
   },
   {
    "fieldname": "batch_disposed",
@@ -135,26 +198,54 @@
   {
    "fieldname": "disposal_date",
    "fieldtype": "Date",
-   "label": "Disposal Date"
+   "label": "Disposal Date",
+   "depends_on": "eval:doc.batch_disposed"
   },
   {
    "fieldname": "disposal_by",
    "fieldtype": "Link",
    "label": "Disposal By",
-   "options": "User"
-  },
-  {
-   "default": "Open",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Open\nUnder Investigation\nResolved\nClosed"
+   "options": "User",
+   "depends_on": "eval:doc.batch_disposed"
   },
   {
    "fieldname": "corrective_action",
    "fieldtype": "Text",
-   "label": "Corrective Action & Prevention"
+   "label": "Corrective Actions Taken"
+  },
+  {
+   "fieldname": "section_break_prevention",
+   "fieldtype": "Section Break",
+   "label": "Preventive Measures & Follow-Up"
+  },
+  {
+   "fieldname": "preventive_action",
+   "fieldtype": "Text",
+   "label": "Preventive Action Plan",
+   "description": "Steps taken to prevent recurrence of this contamination event."
+  },
+  {
+   "fieldname": "follow_up_date",
+   "fieldtype": "Date",
+   "label": "Follow-Up Due Date"
+  },
+  {
+   "fieldname": "column_break_prevention",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "follow_up_done",
+   "fieldtype": "Check",
+   "label": "Follow-Up Completed"
+  },
+  {
+   "fieldname": "follow_up_notes",
+   "fieldtype": "Text",
+   "label": "Follow-Up Notes"
+  },
+  {
+   "fieldname": "section_break_remarks",
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "remarks",
@@ -162,9 +253,9 @@
    "label": "Remarks"
   }
  ],
- "is_submittable": 0,
+ "is_submittable": 1,
  "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "modified": "2026-05-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Contamination Incident",
@@ -181,11 +272,13 @@
    "report": 1,
    "role": "Production Manager",
    "share": 1,
+   "submit": 1,
+   "cancel": 1,
    "write": 1
   },
   {
    "create": 1,
-   "delete": 1,
+   "delete": 0,
    "email": 1,
    "export": 1,
    "print": 1,
@@ -193,6 +286,8 @@
    "report": 1,
    "role": "QA Head",
    "share": 1,
+   "submit": 1,
+   "cancel": 1,
    "write": 1
   },
   {
@@ -205,12 +300,32 @@
    "report": 1,
    "role": "QC Manager",
    "share": 1,
+   "submit": 0,
+   "cancel": 0,
    "write": 1
   },
   {
    "create": 1,
    "read": 1,
    "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
    "write": 1
   },
   {
@@ -223,24 +338,14 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Pluviago Admin",
-   "share": 1,
+   "submit": 1,
+   "cancel": 1,
    "write": 1
   }
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "title_field": "incident_date",
+ "title_field": "production_batch",
  "track_changes": 1
 }

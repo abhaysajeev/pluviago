@@ -8,11 +8,15 @@
  "field_order": [
   "naming_series",
   "source_batch",
+  "source_stage",
   "child_batch",
+  "column_break_identity",
+  "source_phase",
   "section_break_withdrawal",
   "withdrawal_volume",
   "dilution_medium_batch",
   "dilution_volume",
+  "total_volume_to_flask",
   "section_break_meta",
   "return_date",
   "returned_by",
@@ -39,6 +43,13 @@
    "read_only": 1
   },
   {
+   "fieldname": "source_stage",
+   "fieldtype": "Data",
+   "label": "Source Stage",
+   "read_only": 1,
+   "description": "Reactor stage of the source batch at time of return."
+  },
+  {
    "fieldname": "child_batch",
    "fieldtype": "Link",
    "label": "Child Flask Batch Created",
@@ -46,6 +57,17 @@
    "reqd": 1,
    "in_list_view": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "source_phase",
+   "fieldtype": "Data",
+   "label": "Culture Phase at Return",
+   "read_only": 1,
+   "description": "Culture phase (Green Phase / Red Phase) at time of return. Relevant for 6600L PBR batches."
   },
   {
    "fieldname": "section_break_withdrawal",
@@ -56,7 +78,7 @@
    "fieldname": "withdrawal_volume",
    "fieldtype": "Float",
    "label": "Withdrawal Volume (L)",
-   "description": "Volume of culture withdrawn from source reactor",
+   "description": "Volume of culture withdrawn from source reactor.",
    "reqd": 1,
    "read_only": 1
   },
@@ -71,8 +93,15 @@
    "fieldname": "dilution_volume",
    "fieldtype": "Float",
    "label": "Dilution Volume (L)",
-   "description": "Volume of fresh medium added for dilution",
+   "description": "Volume of fresh medium added for dilution.",
    "read_only": 1
+  },
+  {
+   "fieldname": "total_volume_to_flask",
+   "fieldtype": "Float",
+   "label": "Total Volume to Flask (L)",
+   "read_only": 1,
+   "description": "withdrawal_volume + dilution_volume — total culture volume the new Flask was started with."
   },
   {
    "fieldname": "section_break_meta",
@@ -83,6 +112,7 @@
    "fieldname": "return_date",
    "fieldtype": "Date",
    "label": "Return Date",
+   "in_list_view": 1,
    "reqd": 1,
    "read_only": 1
   },
@@ -105,13 +135,13 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Status",
-   "options": "Completed\nCancelled",
+   "options": "Completed",
    "read_only": 1
   }
  ],
  "is_submittable": 0,
  "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "modified": "2026-05-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Cultivation Return Event",
@@ -137,6 +167,10 @@
   {
    "read": 1,
    "role": "QA Head"
+  },
+  {
+   "read": 1,
+   "role": "Production Supervisor"
   },
   {
    "create": 1,

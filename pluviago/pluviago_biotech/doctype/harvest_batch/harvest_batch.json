@@ -12,31 +12,32 @@
   "harvest_date",
   "harvested_by",
   "harvested_volume",
+  "column_break_identity",
+  "wet_biomass_kg",
   "sop_reference",
-  "section_break_drying",
-  "drying_method",
-  "drying_start",
-  "drying_end",
-  "target_dry_weight",
-  "actual_dry_weight",
-  "yield_percentage",
+  "drying_batch",
   "section_break_qc",
   "qc_status",
   "assay_type",
   "assay_results",
   "extract_purity",
+  "column_break_qc",
   "qc_checked_by",
   "qc_date",
+  "actual_dry_weight",
+  "yield_percentage",
   "section_break_packing",
   "packing_date",
   "packed_by",
   "batch_size_packed",
+  "column_break_packing",
   "no_of_units",
   "label_batch_no",
   "section_break_links",
   "warehouse",
   "item_code",
   "erpnext_batch",
+  "column_break_links",
   "status",
   "remarks"
  ],
@@ -85,46 +86,27 @@
    "label": "Harvested Volume (L)"
   },
   {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "wet_biomass_kg",
+   "fieldtype": "Float",
+   "label": "Wet Biomass after Centrifugation (kg)",
+   "description": "Weight of wet paste after centrifugation, before drying. This is the input to the Drying Batch."
+  },
+  {
    "fieldname": "sop_reference",
    "fieldtype": "Data",
    "label": "SOP Reference"
   },
   {
-   "fieldname": "section_break_drying",
-   "fieldtype": "Section Break",
-   "label": "Drying"
-  },
-  {
-   "fieldname": "drying_method",
-   "fieldtype": "Select",
-   "label": "Drying Method",
-   "options": "Spray Drying\nFreeze Drying\nOven Drying\nNone"
-  },
-  {
-   "fieldname": "drying_start",
-   "fieldtype": "Datetime",
-   "label": "Drying Start"
-  },
-  {
-   "fieldname": "drying_end",
-   "fieldtype": "Datetime",
-   "label": "Drying End"
-  },
-  {
-   "fieldname": "target_dry_weight",
-   "fieldtype": "Float",
-   "label": "Target Dry Weight (kg)"
-  },
-  {
-   "fieldname": "actual_dry_weight",
-   "fieldtype": "Float",
-   "label": "Actual Dry Weight (kg)"
-  },
-  {
-   "fieldname": "yield_percentage",
-   "fieldtype": "Float",
-   "label": "Yield %",
-   "read_only": 1
+   "fieldname": "drying_batch",
+   "fieldtype": "Link",
+   "label": "Drying Batch",
+   "options": "Drying Batch",
+   "read_only": 1,
+   "description": "Auto-set when a Drying Batch is submitted against this Harvest Batch."
   },
   {
    "fieldname": "section_break_qc",
@@ -156,6 +138,10 @@
    "label": "Extract Purity (%)"
   },
   {
+   "fieldname": "column_break_qc",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "qc_checked_by",
    "fieldtype": "Link",
    "label": "QC Checked By",
@@ -165,6 +151,20 @@
    "fieldname": "qc_date",
    "fieldtype": "Date",
    "label": "QC Date"
+  },
+  {
+   "fieldname": "actual_dry_weight",
+   "fieldtype": "Float",
+   "label": "Actual Dry Weight (kg)",
+   "read_only": 1,
+   "description": "Auto-populated when Drying Batch is submitted."
+  },
+  {
+   "fieldname": "yield_percentage",
+   "fieldtype": "Float",
+   "label": "Yield %",
+   "read_only": 1,
+   "description": "Auto-populated when Drying Batch is submitted."
   },
   {
    "fieldname": "section_break_packing",
@@ -186,6 +186,10 @@
    "fieldname": "batch_size_packed",
    "fieldtype": "Float",
    "label": "Packed Quantity (kg)"
+  },
+  {
+   "fieldname": "column_break_packing",
+   "fieldtype": "Column Break"
   },
   {
    "fieldname": "no_of_units",
@@ -221,6 +225,10 @@
    "options": "Batch"
   },
   {
+   "fieldname": "column_break_links",
+   "fieldtype": "Column Break"
+  },
+  {
    "default": "Draft",
    "fieldname": "status",
    "fieldtype": "Select",
@@ -235,8 +243,14 @@
   }
  ],
  "is_submittable": 1,
- "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "links": [
+  {
+   "link_doctype": "Drying Batch",
+   "link_fieldname": "harvest_batch",
+   "label": "Drying Batches"
+  }
+ ],
+ "modified": "2026-05-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Harvest Batch",

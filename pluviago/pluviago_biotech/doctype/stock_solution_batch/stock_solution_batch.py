@@ -151,6 +151,6 @@ class StockSolutionBatch(Document):
                 "Cannot cancel a batch that has been physically prepared. "
                 "Use 'Mark as Wasted' if QC failed, or contact an administrator."
             )
-        from pluviago.pluviago_biotech.utils.stock_utils import reverse_raw_materials
-        reverse_raw_materials(self)
+        # preparation_status == "Draft" means mark_preparation_complete was never called,
+        # so no raw materials were ever deducted — nothing to reverse.
         self.db_set("status", "Draft")

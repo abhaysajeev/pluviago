@@ -1,0 +1,305 @@
+{
+ "actions": [],
+ "autoname": "naming_series:",
+ "creation": "2026-05-20 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "batch_number",
+  "harvest_batch",
+  "column_break_identity",
+  "drying_date",
+  "operator",
+  "sop_reference",
+  "section_break_input",
+  "wet_biomass_in",
+  "drying_method",
+  "drying_temperature",
+  "column_break_input",
+  "drying_start",
+  "drying_end",
+  "section_break_output",
+  "target_dry_weight",
+  "actual_dry_weight",
+  "column_break_output",
+  "yield_percentage",
+  "moisture_content",
+  "section_break_qc",
+  "qc_status",
+  "qc_checked_by",
+  "qc_date",
+  "column_break_qc",
+  "qc_remarks",
+  "section_break_status",
+  "status",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Series",
+   "no_copy": 1,
+   "options": "DB-.YYYY.-.####",
+   "set_only_once": 1,
+   "default": "DB-.YYYY.-.####"
+  },
+  {
+   "fieldname": "batch_number",
+   "fieldtype": "Data",
+   "label": "Batch Number",
+   "no_copy": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "harvest_batch",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Harvest Batch",
+   "options": "Harvest Batch",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "drying_date",
+   "fieldtype": "Date",
+   "label": "Drying Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "operator",
+   "fieldtype": "Link",
+   "label": "Operator",
+   "options": "User"
+  },
+  {
+   "fieldname": "sop_reference",
+   "fieldtype": "Data",
+   "label": "SOP Reference"
+  },
+  {
+   "fieldname": "section_break_input",
+   "fieldtype": "Section Break",
+   "label": "Drying Input"
+  },
+  {
+   "fieldname": "wet_biomass_in",
+   "fieldtype": "Float",
+   "label": "Wet Biomass In (kg)",
+   "description": "Pre-filled from Harvest Batch wet biomass weight. Confirm or adjust."
+  },
+  {
+   "fieldname": "drying_method",
+   "fieldtype": "Select",
+   "label": "Drying Method",
+   "options": "Spray Drying\nFreeze Drying\nOven Drying",
+   "reqd": 1
+  },
+  {
+   "fieldname": "drying_temperature",
+   "fieldtype": "Float",
+   "label": "Drying Temperature (°C)"
+  },
+  {
+   "fieldname": "column_break_input",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "drying_start",
+   "fieldtype": "Datetime",
+   "label": "Drying Start"
+  },
+  {
+   "fieldname": "drying_end",
+   "fieldtype": "Datetime",
+   "label": "Drying End"
+  },
+  {
+   "fieldname": "section_break_output",
+   "fieldtype": "Section Break",
+   "label": "Drying Output"
+  },
+  {
+   "fieldname": "target_dry_weight",
+   "fieldtype": "Float",
+   "label": "Target Dry Weight (kg)"
+  },
+  {
+   "fieldname": "actual_dry_weight",
+   "fieldtype": "Float",
+   "label": "Actual Dry Weight (kg)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_output",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "yield_percentage",
+   "fieldtype": "Float",
+   "label": "Yield % (Wet → Dry)",
+   "read_only": 1,
+   "description": "Auto-calculated: actual_dry_weight / wet_biomass_in × 100"
+  },
+  {
+   "fieldname": "moisture_content",
+   "fieldtype": "Float",
+   "label": "Moisture Content (%)"
+  },
+  {
+   "fieldname": "section_break_qc",
+   "fieldtype": "Section Break",
+   "label": "QC"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "QC Status",
+   "options": "Pending\nPassed\nFailed"
+  },
+  {
+   "fieldname": "qc_checked_by",
+   "fieldtype": "Link",
+   "label": "QC Checked By",
+   "options": "User"
+  },
+  {
+   "fieldname": "qc_date",
+   "fieldtype": "Date",
+   "label": "QC Date"
+  },
+  {
+   "fieldname": "column_break_qc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "qc_remarks",
+   "fieldtype": "Text",
+   "label": "QC Remarks"
+  },
+  {
+   "fieldname": "section_break_status",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nRejected"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
+  }
+ ],
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2026-05-20 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Pluviago Biotech",
+ "name": "Drying Batch",
+ "naming_rule": "By Naming Series",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Production Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QA Head",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 0,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "QC Manager",
+   "share": 1,
+   "submit": 0,
+   "cancel": 0,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Production Supervisor",
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Production Operator"
+  },
+  {
+   "read": 1,
+   "role": "Store Keeper"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Pluviago Admin",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "cancel": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "title_field": "batch_number",
+ "track_changes": 1
+}

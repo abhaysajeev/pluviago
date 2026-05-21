@@ -8,39 +8,43 @@
  "field_order": [
   "naming_series",
   "batch_number",
+  "column_break_identity",
   "preparation_date",
   "prepared_by",
+  "section_break_volume",
   "final_required_volume",
+  "actual_final_volume",
+  "column_break_volume",
+  "remaining_volume",
+  "volume_consumed",
+  "section_break_sources",
+  "medium_sources",
+  "section_break_storage",
   "shelf_life_days",
   "expiry_date",
   "storage_condition",
-  "green_medium_batch",
-  "green_medium_volume",
-  "red_medium_batch",
-  "red_medium_volume",
-  "actual_final_volume",
-  "remaining_volume",
-  "volume_consumed",
-  "column_break_1",
+  "column_break_storage",
+  "status",
+  "section_break_aseptic",
   "aseptic_mixing_done",
   "aseptic_mixing_date",
+  "column_break_aseptic",
   "sop_reference",
   "section_break_qc",
-  "qc_status",
   "qc_checkpoint_5_clarity",
   "qc_checkpoint_5_sterility",
   "ph_value",
   "turbidity",
-  "qc_remarks",
+  "column_break_qc",
+  "qc_status",
   "qc_checked_by",
   "qc_date",
-  "section_break_links",
-  "warehouse",
-  "status",
-  "remarks",
+  "qc_remarks",
   "section_break_corrective",
   "corrective_actions",
-  "quality_flag"
+  "quality_flag",
+  "section_break_remarks",
+  "remarks"
  ],
  "fields": [
   {
@@ -60,6 +64,10 @@
    "read_only": 1
   },
   {
+   "fieldname": "column_break_identity",
+   "fieldtype": "Column Break"
+  },
+  {
    "default": "Today",
    "fieldname": "preparation_date",
    "fieldtype": "Date",
@@ -75,10 +83,56 @@
    "reqd": 1
   },
   {
+   "fieldname": "section_break_volume",
+   "fieldtype": "Section Break",
+   "label": "Volume"
+  },
+  {
    "fieldname": "final_required_volume",
    "fieldtype": "Float",
    "label": "Final Required Volume (L)",
    "reqd": 1
+  },
+  {
+   "fieldname": "actual_final_volume",
+   "fieldtype": "Float",
+   "label": "Actual Volume Prepared (L)",
+   "description": "Actual volume after top-up. Defaults to Final Required Volume if not entered."
+  },
+  {
+   "fieldname": "column_break_volume",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "remaining_volume",
+   "fieldtype": "Float",
+   "label": "Remaining Volume (L)",
+   "read_only": 1,
+   "description": "Auto-decremented when consumed by Production Batch"
+  },
+  {
+   "fieldname": "volume_consumed",
+   "fieldtype": "Float",
+   "label": "Volume Consumed (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_sources",
+   "fieldtype": "Section Break",
+   "label": "Medium Sources (75% Green + 25% Red)"
+  },
+  {
+   "fieldname": "medium_sources",
+   "fieldtype": "Table",
+   "label": "Medium Sources",
+   "options": "FMB Medium Source",
+   "reqd": 1,
+   "description": "Use Load Formula to auto-populate with the correct Green (75%) and Red (25%) batches."
+  },
+  {
+   "fieldname": "section_break_storage",
+   "fieldtype": "Section Break",
+   "label": "Shelf Life & Storage"
   },
   {
    "fieldname": "shelf_life_days",
@@ -101,53 +155,21 @@
    "default": "2-8°C"
   },
   {
-   "fieldname": "green_medium_batch",
-   "fieldtype": "Link",
-   "label": "Green Medium Batch",
-   "options": "Medium Batch",
-   "reqd": 1
-  },
-  {
-   "fieldname": "green_medium_volume",
-   "fieldtype": "Float",
-   "label": "Green Medium Volume (L) [75%]",
-   "read_only": 1
-  },
-  {
-   "fieldname": "red_medium_batch",
-   "fieldtype": "Link",
-   "label": "Red Medium Batch",
-   "options": "Medium Batch",
-   "reqd": 1
-  },
-  {
-   "fieldname": "red_medium_volume",
-   "fieldtype": "Float",
-   "label": "Red Medium Volume (L) [25%]",
-   "read_only": 1
-  },
-  {
-   "fieldname": "actual_final_volume",
-   "fieldtype": "Float",
-   "label": "Actual Volume Prepared (L)",
-   "description": "Actual volume after top-up. Defaults to Final Required Volume if not entered."
-  },
-  {
-   "fieldname": "remaining_volume",
-   "fieldtype": "Float",
-   "label": "Remaining Volume (L)",
-   "read_only": 1,
-   "description": "Auto-decremented when consumed by Production Batch"
-  },
-  {
-   "fieldname": "volume_consumed",
-   "fieldtype": "Float",
-   "label": "Volume Consumed (L)",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_1",
+   "fieldname": "column_break_storage",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nApproved\nPartially Used\nUsed\nRejected"
+  },
+  {
+   "fieldname": "section_break_aseptic",
+   "fieldtype": "Section Break",
+   "label": "Aseptic Mixing"
   },
   {
    "fieldname": "aseptic_mixing_done",
@@ -160,6 +182,10 @@
    "label": "Mixing Date & Time"
   },
   {
+   "fieldname": "column_break_aseptic",
+   "fieldtype": "Column Break"
+  },
+  {
    "fieldname": "sop_reference",
    "fieldtype": "Data",
    "label": "SOP Reference Number"
@@ -167,28 +193,20 @@
   {
    "fieldname": "section_break_qc",
    "fieldtype": "Section Break",
-   "label": "QC Checkpoint"
-  },
-  {
-   "default": "Pending",
-   "fieldname": "qc_status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "QC Status",
-   "options": "Pending\nPassed\nFailed"
+   "label": "QC Checkpoint 5"
   },
   {
    "default": "Pending",
    "fieldname": "qc_checkpoint_5_clarity",
    "fieldtype": "Select",
-   "label": "QC Checkpoint 5: Clarity",
+   "label": "Clarity",
    "options": "Pass\nFail\nPending"
   },
   {
    "default": "Pending",
    "fieldname": "qc_checkpoint_5_sterility",
    "fieldtype": "Select",
-   "label": "QC Checkpoint 5: Sterility",
+   "label": "Sterility",
    "options": "Pass\nFail\nPending\nBy Process",
    "description": "By Process = sterility assured via validated aseptic technique, no direct test performed"
   },
@@ -203,9 +221,16 @@
    "label": "Turbidity"
   },
   {
-   "fieldname": "qc_remarks",
-   "fieldtype": "Text",
-   "label": "QC Remarks"
+   "fieldname": "column_break_qc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Pending",
+   "fieldname": "qc_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "QC Status",
+   "options": "Pending\nPassed\nFailed"
   },
   {
    "fieldname": "qc_checked_by",
@@ -219,27 +244,9 @@
    "label": "QC Date"
   },
   {
-   "fieldname": "section_break_links",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "warehouse",
-   "fieldtype": "Link",
-   "label": "Warehouse",
-   "options": "Warehouse"
-  },
-  {
-   "default": "Draft",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "label": "Status",
-   "options": "Draft\nApproved\nPartially Used\nUsed\nRejected"
-  },
-  {
-   "fieldname": "remarks",
+   "fieldname": "qc_remarks",
    "fieldtype": "Text",
-   "label": "Remarks"
+   "label": "QC Remarks"
   },
   {
    "fieldname": "section_break_corrective",
@@ -261,11 +268,20 @@
    "default": "Normal",
    "in_list_view": 1,
    "description": "Normal = clean pass. Conditional Release = passed after corrective action. Rejected = batch unrecoverable."
+  },
+  {
+   "fieldname": "section_break_remarks",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Text",
+   "label": "Remarks"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2024-01-01 00:00:00.000000",
+ "modified": "2026-05-20 00:00:00.000000",
  "modified_by": "Administrator",
  "module": "Pluviago Biotech",
  "name": "Final Medium Batch",

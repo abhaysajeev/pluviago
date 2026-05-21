@@ -32,12 +32,21 @@ function _step1_volume_dialog(frm) {
         ],
         primary_action_label: __('Next: Select Batches'),
         primary_action(values) {
+            const tv = values.target_volume;
+            // Keep form field in sync with what the dialog was told to scale for
+            if (frm.doc.final_required_volume && frm.doc.final_required_volume !== tv) {
+                frappe.show_alert({
+                    message: __('Final Required Volume updated to {0} L to match the formula target.', [tv]),
+                    indicator: 'blue',
+                }, 5);
+            }
+            frm.set_value('final_required_volume', tv);
             d.hide();
             frappe.call({
                 method: 'pluviago.pluviago_biotech.doctype.medium_batch.medium_batch.get_medium_formula',
                 args: {
                     medium_type: frm.doc.medium_type,
-                    target_volume: values.target_volume,
+                    target_volume: tv,
                 },
                 freeze: true,
                 freeze_message: __('Fetching available batches...'),
@@ -83,9 +92,6 @@ function _step2_batch_dialog(frm, data) {
 
     // ---- Stock Solutions Section ----
     const ssb_rows = stock_solutions.map((item, idx) => {
-        const last_badge = item.add_last
-            ? `<span class="badge" style="background:#e67e22;color:#fff;margin-left:6px">Add LAST ⚠</span>`
-            : '';
         let ssb_cell;
         if (!item.available_ssbs.length) {
             ssb_cell = `<span class="text-danger" style="font-size:12px">⚠ No approved SSB available</span>`;
@@ -103,22 +109,13 @@ function _step2_batch_dialog(frm, data) {
                             ${opts}
                          </select>${vol_warn_cell}`;
         }
-        const row_style = item.add_last ? 'background:#fff8f0' : '';
-        return `<tr style="${row_style}">
-            <td style="vertical-align:middle">${frappe.utils.escape_html(item.solution_type)}${last_badge}</td>
+        return `<tr>
+            <td style="vertical-align:middle">${frappe.utils.escape_html(item.solution_type)}</td>
             <td style="vertical-align:middle;text-align:right">${item.required_ml}</td>
             <td style="vertical-align:middle">mL</td>
             <td style="vertical-align:middle;min-width:260px">${ssb_cell}</td>
         </tr>`;
     }).join('');
-
-    const a7_note = medium_type === 'Red'
-        ? `<div class="alert alert-warning" style="margin-top:10px;font-size:12px">
-               <strong>⚠ Red Medium Procedural Note:</strong> Add A7-I (Calcium Nitrate) <strong>LAST</strong>
-               when physically combining stock solutions into the medium vessel.
-               Calcium precipitates if mixed with sulphates or phosphates early.
-           </div>`
-        : '';
 
     const table_html = `
         <h6 style="margin-bottom:6px;color:#555">Section A — Direct Ingredients (Base Salts &amp; DI Water)</h6>
@@ -149,7 +146,6 @@ function _step2_batch_dialog(frm, data) {
                 <tbody>${ssb_rows}</tbody>
             </table>
         </div>
-        ${a7_note}
         <p class="text-muted" style="margin-top:8px;font-size:12px">
             Batch selections can be changed after loading. Rows with no stock available must be filled manually.
         </p>`;
@@ -172,6 +168,19 @@ function _step2_batch_dialog(frm, data) {
             const existing_chems = (frm.doc.direct_chemicals || []).filter(r => r.chemical_name).length;
             const existing_ssbs  = (frm.doc.ssb_used || []).filter(r => r.solution_type).length;
             const total_existing = existing_chems + existing_ssbs;
+
+            // Guard: final_required_volume on the form must match the target this formula was scaled for
+            const form_vol = frm.doc.final_required_volume;
+            const formula_vol = data.target_volume;
+            if (form_vol && Math.abs(form_vol - formula_vol) > 0.0001) {
+                frappe.msgprint({
+                    title: __('Volume Mismatch'),
+                    message: __('The formula was scaled for <b>{0} L</b> but Final Required Volume on the form is <b>{1} L</b>. '
+                        + 'Please reload the formula after correcting the volume.', [formula_vol, form_vol]),
+                    indicator: 'red',
+                });
+                return;
+            }
 
             if (total_existing > 0) {
                 frappe.confirm(
