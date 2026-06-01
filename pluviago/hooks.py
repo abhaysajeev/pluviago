@@ -34,6 +34,7 @@ fixtures = [
         ["dt", "=", "Purchase Receipt"],
         ["fieldname", "in", ["custom_coa_attach", "custom_coa_approved_by"]],
     ]},
+    {"dt": "Custom HTML Block", "filters": [["name", "in", ["pluviago"]]]},
 ]
 
 # Override standard ERPNext doctype classes
